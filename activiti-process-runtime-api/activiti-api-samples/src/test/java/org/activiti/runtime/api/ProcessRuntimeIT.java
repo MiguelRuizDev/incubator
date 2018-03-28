@@ -51,7 +51,7 @@ public class ProcessRuntimeIT {
                 .withProcessDefinitionKey("SimpleProcess")
                 .withBusinessKey("myBusinessKey")
                 .withVariables(variables)
-                .getCommand();
+                .build();
 
         //when
         ProcessInstance processInstance = processRuntime.startProcess(command);

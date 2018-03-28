@@ -51,7 +51,7 @@ public class StartProcessInstanceCommandBuilderImpl implements StartProcessInsta
         return this;
     }
 
-    public StartProcessInstanceCommand getCommand() {
+    public StartProcessInstanceCommand build() {
         return command;
     }
 }

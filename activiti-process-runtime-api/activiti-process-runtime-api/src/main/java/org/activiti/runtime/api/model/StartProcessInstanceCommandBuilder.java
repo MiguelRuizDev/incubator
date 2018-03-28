@@ -28,5 +28,5 @@ public interface StartProcessInstanceCommandBuilder {
 
     StartProcessInstanceCommandBuilder withBusinessKey(String businessKey);
 
-    StartProcessInstanceCommand getCommand();
+    StartProcessInstanceCommand build();
 }
