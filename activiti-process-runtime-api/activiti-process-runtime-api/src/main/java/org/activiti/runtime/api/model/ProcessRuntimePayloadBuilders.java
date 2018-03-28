@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.model;
 
-import java.util.List;
+public interface ProcessRuntimePayloadBuilders {
 
-import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.StartProcessPayload;
-
-public interface ProcessRuntime {
-
-    ProcessInstance startProcess(StartProcessPayload payload);
-
-    ProcessInstance getProcessInstance(String processInstanceId);
-
-    List<ProcessInstance> getProcessInstances(int firstResult, int maxResults);
+    StartProcessPayloadBuilder startProcessPayload();
 
 }

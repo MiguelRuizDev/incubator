@@ -18,15 +18,14 @@ package org.activiti.runtime.api.model;
 
 import java.util.Map;
 
-public interface StartProcessInstanceCommandBuilder {
+public interface StartProcessPayload {
 
-    StartProcessInstanceCommandBuilder withProcessDefinitionKey(String processDefinitionKey);
+    String getProcessDefinitionKey();
 
-    StartProcessInstanceCommandBuilder withProcessDefinitionId(String processDefinitionId);
+    String getProcessDefinitionId();
 
-    StartProcessInstanceCommandBuilder withVariables(Map<String, Object> variables);
+    Map<String, Object> getVariables();
 
-    StartProcessInstanceCommandBuilder withBusinessKey(String businessKey);
+    String getBusinessKey();
 
-    StartProcessInstanceCommand build();
 }

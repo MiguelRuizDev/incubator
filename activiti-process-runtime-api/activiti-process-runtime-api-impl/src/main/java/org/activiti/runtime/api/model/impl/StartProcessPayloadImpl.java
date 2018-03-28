@@ -18,9 +18,9 @@ package org.activiti.runtime.api.model.impl;
 
 import java.util.Map;
 
-import org.activiti.runtime.api.model.StartProcessInstanceCommand;
+import org.activiti.runtime.api.model.StartProcessPayload;
 
-public class StartProcessInstanceCommandImpl implements StartProcessInstanceCommand {
+public class StartProcessPayloadImpl implements StartProcessPayload {
 
     private String processDefinitionKey;
     private String processDefinitionId;

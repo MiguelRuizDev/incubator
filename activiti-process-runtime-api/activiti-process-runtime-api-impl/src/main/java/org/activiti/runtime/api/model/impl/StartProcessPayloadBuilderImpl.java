@@ -18,40 +18,40 @@ package org.activiti.runtime.api.model.impl;
 
 import java.util.Map;
 
-import org.activiti.runtime.api.model.StartProcessInstanceCommand;
-import org.activiti.runtime.api.model.StartProcessInstanceCommandBuilder;
+import org.activiti.runtime.api.model.StartProcessPayload;
+import org.activiti.runtime.api.model.StartProcessPayloadBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartProcessInstanceCommandBuilderImpl implements StartProcessInstanceCommandBuilder {
+public class StartProcessPayloadBuilderImpl implements StartProcessPayloadBuilder {
 
-    private final StartProcessInstanceCommandImpl command;
+    private final StartProcessPayloadImpl command;
 
-    public StartProcessInstanceCommandBuilderImpl() {
-        command = new StartProcessInstanceCommandImpl();
+    public StartProcessPayloadBuilderImpl() {
+        command = new StartProcessPayloadImpl();
     }
 
-    public StartProcessInstanceCommandBuilderImpl withProcessDefinitionKey(String processDefinitionKey){
+    public StartProcessPayloadBuilderImpl withProcessDefinitionKey(String processDefinitionKey){
         command.setProcessDefinitionKey(processDefinitionKey);
         return this;
     }
 
-    public StartProcessInstanceCommandBuilderImpl withProcessDefinitionId(String processDefinitionId){
+    public StartProcessPayloadBuilderImpl withProcessDefinitionId(String processDefinitionId){
         command.setProcessDefinitionId(processDefinitionId);
         return this;
     }
 
-    public StartProcessInstanceCommandBuilderImpl withVariables(Map<String, Object> variables){
+    public StartProcessPayloadBuilderImpl withVariables(Map<String, Object> variables){
         command.setVariables(variables);
         return this;
     }
 
-    public StartProcessInstanceCommandBuilderImpl withBusinessKey(String businessKey){
+    public StartProcessPayloadBuilderImpl withBusinessKey(String businessKey){
         command.setBusinessKey(businessKey);
         return this;
     }
 
-    public StartProcessInstanceCommand build() {
+    public StartProcessPayload build() {
         return command;
     }
 }

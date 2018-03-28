@@ -19,8 +19,8 @@ package org.activiti.runtime.api;
 import java.util.HashMap;
 
 import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.StartProcessInstanceCommand;
-import org.activiti.runtime.api.model.StartProcessInstanceCommandBuilder;
+import org.activiti.runtime.api.model.StartProcessPayload;
+import org.activiti.runtime.api.model.StartProcessPayloadBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class ProcessRuntimeIT {
     private ProcessRuntime processRuntime;
 
     @Autowired
-    private StartProcessInstanceCommandBuilder startProcessInstanceCommandBuilder;
+    private StartProcessPayloadBuilder startProcessPayloadBuilder;
 
     @Test
     public void shouldStartProcessInstance() throws Exception {
@@ -47,7 +47,7 @@ public class ProcessRuntimeIT {
                       "John");
         variables.put("lastName",
                       "Doe");
-        StartProcessInstanceCommand command = startProcessInstanceCommandBuilder
+        StartProcessPayload command = startProcessPayloadBuilder
                 .withProcessDefinitionKey("SimpleProcess")
                 .withBusinessKey("myBusinessKey")
                 .withVariables(variables)
