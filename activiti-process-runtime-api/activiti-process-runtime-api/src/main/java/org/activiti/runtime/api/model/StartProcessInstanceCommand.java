@@ -16,6 +16,16 @@
 
 package org.activiti.runtime.api.model;
 
-public interface ProcessInstance {
+import java.util.Map;
+
+public interface StartProcessInstanceCommand {
+
+    String getProcessDefinitionKey();
+
+    String getProcessDefinitionId();
+
+    Map<String, Object> getVariables();
+
+    String getBusinessKey();
 
 }

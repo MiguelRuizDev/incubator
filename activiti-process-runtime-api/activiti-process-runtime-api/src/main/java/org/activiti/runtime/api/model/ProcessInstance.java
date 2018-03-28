@@ -14,19 +14,34 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.model;
 
-import java.util.List;
+import java.util.Date;
 
-import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.StartProcessInstanceDescriptor;
+public interface ProcessInstance {
 
-public interface ProcessRuntime {
+    enum ProcessInstanceStatus {
+        RUNNING,
+        SUSPENDED,
+        COMPLETED
+    }
 
-    ProcessInstance startProcess(StartProcessInstanceDescriptor descriptor);
+    String getId();
 
-    ProcessInstance getProcessInstance(String processInstanceId);
+    String getName();
 
-    List<ProcessInstance> getProcessInstances(int firstResult, int maxResults);
+    String getDescription();
+
+    Date getStartDate();
+
+    String getInitiator();
+
+    String getBusinessKey();
+
+    ProcessInstanceStatus getStatus();
+
+    String getProcessDefinitionId();
+
+    String getProcessDefinitionKey();
 
 }

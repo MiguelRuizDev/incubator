@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.model;
+package org.activiti;
 
-public class ProcessInstanceImpl implements ProcessInstance {
+import org.activiti.cloud.starter.configuration.ActivitiRuntimeBundle;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@ActivitiRuntimeBundle
+@SpringBootApplication
+public class APISampleApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(APISampleApplication.class, args);
+    }
 
 }
