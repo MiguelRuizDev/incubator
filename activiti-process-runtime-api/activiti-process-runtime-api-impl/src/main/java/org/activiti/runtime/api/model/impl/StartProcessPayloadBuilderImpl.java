@@ -25,33 +25,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class StartProcessPayloadBuilderImpl implements StartProcessPayloadBuilder {
 
-    private final StartProcessPayloadImpl command;
+    private final StartProcessPayloadImpl payload;
 
     public StartProcessPayloadBuilderImpl() {
-        command = new StartProcessPayloadImpl();
+        payload = new StartProcessPayloadImpl();
     }
 
     public StartProcessPayloadBuilderImpl withProcessDefinitionKey(String processDefinitionKey){
-        command.setProcessDefinitionKey(processDefinitionKey);
+        payload.setProcessDefinitionKey(processDefinitionKey);
         return this;
     }
 
     public StartProcessPayloadBuilderImpl withProcessDefinitionId(String processDefinitionId){
-        command.setProcessDefinitionId(processDefinitionId);
+        payload.setProcessDefinitionId(processDefinitionId);
         return this;
     }
 
     public StartProcessPayloadBuilderImpl withVariables(Map<String, Object> variables){
-        command.setVariables(variables);
+        payload.setVariables(variables);
         return this;
     }
 
     public StartProcessPayloadBuilderImpl withBusinessKey(String businessKey){
-        command.setBusinessKey(businessKey);
+        payload.setBusinessKey(businessKey);
         return this;
     }
 
     public StartProcessPayload build() {
-        return command;
+        return payload;
     }
 }
