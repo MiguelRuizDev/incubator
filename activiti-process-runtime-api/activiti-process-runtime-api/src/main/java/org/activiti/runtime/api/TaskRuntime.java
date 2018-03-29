@@ -18,7 +18,7 @@ package org.activiti.runtime.api;
 
 import java.util.List;
 
-import org.activiti.runtime.api.model.CompleteTaskDescriptor;
+import org.activiti.runtime.api.model.builder.CompleteTaskPayload;
 import org.activiti.runtime.api.model.Task;
 
 public interface TaskRuntime {
@@ -29,7 +29,7 @@ public interface TaskRuntime {
 
     void complete(String taskId);
 
-    void complete(CompleteTaskDescriptor descriptor);
+    void complete(CompleteTaskPayload payload);
 
     List<Task> getTasks(int firstResult, int maxResults);
 

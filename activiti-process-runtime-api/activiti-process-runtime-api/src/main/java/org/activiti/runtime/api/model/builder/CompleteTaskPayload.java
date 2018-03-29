@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.model;
+package org.activiti.runtime.api.model.builder;
 
 import java.util.Map;
 
-public interface CompleteTaskDescriptor {
+public interface CompleteTaskPayload {
 
     String getTaskId();
 

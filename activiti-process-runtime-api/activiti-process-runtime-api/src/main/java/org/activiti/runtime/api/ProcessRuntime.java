@@ -19,11 +19,11 @@ package org.activiti.runtime.api;
 import java.util.List;
 
 import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.StartProcessPayload;
+import org.activiti.runtime.api.model.builder.ProcessStarter;
 
 public interface ProcessRuntime {
 
-    ProcessInstance startProcess(StartProcessPayload payload);
+    ProcessStarter startProcessWith();
 
     ProcessInstance getProcessInstance(String processInstanceId);
 

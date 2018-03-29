@@ -21,8 +21,9 @@ import java.util.List;
 import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.ProcessRuntime;
 import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.StartProcessPayload;
+import org.activiti.runtime.api.model.builder.ProcessStarter;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
+import org.activiti.runtime.api.model.impl.ProcessStarterImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,15 +42,9 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
     }
 
     @Override
-    public ProcessInstance startProcess(StartProcessPayload payload) {
-        org.activiti.engine.runtime.ProcessInstance internal = runtimeService
-                .createProcessInstanceBuilder()
-                .processDefinitionId(payload.getProcessDefinitionId())
-                .processDefinitionKey(payload.getProcessDefinitionKey())
-                .businessKey(payload.getBusinessKey())
-                .variables(payload.getVariables())
-                .start();
-        return processInstanceConverter.from(internal);
+    public ProcessStarter startProcessWith() {
+        return new ProcessStarterImpl(runtimeService,
+                                      processInstanceConverter);
     }
 
     @Override

@@ -16,18 +16,16 @@
 
 package org.activiti.runtime.api.model.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import org.activiti.runtime.api.model.StartProcessPayload;
-
-public class StartProcessPayloadImpl implements StartProcessPayload {
+public class StartProcessPayloadImpl {
 
     private String processDefinitionKey;
     private String processDefinitionId;
     private Map<String, Object> variables;
     private String businessKey;
 
-    @Override
     public String getProcessDefinitionKey() {
         return processDefinitionKey;
     }
@@ -36,7 +34,6 @@ public class StartProcessPayloadImpl implements StartProcessPayload {
         this.processDefinitionKey = processDefinitionKey;
     }
 
-    @Override
     public String getProcessDefinitionId() {
         return processDefinitionId;
     }
@@ -45,7 +42,6 @@ public class StartProcessPayloadImpl implements StartProcessPayload {
         this.processDefinitionId = processDefinitionId;
     }
 
-    @Override
     public Map<String, Object> getVariables() {
         return variables;
     }
@@ -54,7 +50,13 @@ public class StartProcessPayloadImpl implements StartProcessPayload {
         this.variables = variables;
     }
 
-    @Override
+    public <T> void addVariable(String  key, T value) {
+        if (variables == null) {
+            variables = new HashMap<>();
+        }
+        variables.put(key, value);
+    }
+
     public String getBusinessKey() {
         return businessKey;
     }

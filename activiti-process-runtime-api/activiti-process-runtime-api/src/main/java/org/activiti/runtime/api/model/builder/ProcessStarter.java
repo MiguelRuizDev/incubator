@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.model;
+package org.activiti.runtime.api.model.builder;
 
 import java.util.Map;
 
-public interface StartProcessPayloadBuilder {
+import org.activiti.runtime.api.model.ProcessInstance;
 
-    StartProcessPayloadBuilder withProcessDefinitionKey(String processDefinitionKey);
+public interface ProcessStarter {
 
-    StartProcessPayloadBuilder withProcessDefinitionId(String processDefinitionId);
+    ProcessStarter processDefinitionKey(String processDefinitionKey);
 
-    StartProcessPayloadBuilder withVariables(Map<String, Object> variables);
+    ProcessStarter processDefinitionId(String processDefinitionId);
 
-    StartProcessPayloadBuilder withBusinessKey(String businessKey);
+    ProcessStarter variables(Map<String, Object> variables);
 
-    StartProcessPayload build();
+    <T> ProcessStarter variable(String key, T value);
+
+    ProcessStarter businessKey(String businessKey);
+
+    ProcessInstance start();
+
 }

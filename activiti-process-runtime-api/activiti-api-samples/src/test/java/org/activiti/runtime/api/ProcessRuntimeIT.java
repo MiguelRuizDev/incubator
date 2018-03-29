@@ -16,11 +16,7 @@
 
 package org.activiti.runtime.api;
 
-import java.util.HashMap;
-
 import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.ProcessRuntimePayloadBuilders;
-import org.activiti.runtime.api.model.StartProcessPayload;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,26 +32,18 @@ public class ProcessRuntimeIT {
     @Autowired
     private ProcessRuntime processRuntime;
 
-    @Autowired
-    private ProcessRuntimePayloadBuilders payloadBuilders;
-
     @Test
     public void shouldStartProcessInstance() throws Exception {
-        //given
-        HashMap<String, Object> variables = new HashMap<>();
-        variables.put("firstName",
-                      "John");
-        variables.put("lastName",
-                      "Doe");
-        StartProcessPayload payload = payloadBuilders
-                .startProcessPayload()
-                .withProcessDefinitionKey("SimpleProcess")
-                .withBusinessKey("myBusinessKey")
-                .withVariables(variables)
-                .build();
-
         //when
-        ProcessInstance processInstance = processRuntime.startProcess(payload);
+        ProcessInstance processInstance = processRuntime
+                .startProcessWith()
+                .processDefinitionKey("SimpleProcess")
+                .businessKey("myBusinessKey")
+                .variable("firstName",
+                          "John")
+                .variable("lastName",
+                          "Doe")
+                .start();
 
         //then
         assertThat(processInstance).isNotNull();
@@ -64,7 +52,4 @@ public class ProcessRuntimeIT {
         assertThat(processInstance.getProcessDefinitionId()).isNotEmpty();
         assertThat(processInstance.getProcessDefinitionKey()).isEqualTo("SimpleProcess");
     }
-
-
-
 }
