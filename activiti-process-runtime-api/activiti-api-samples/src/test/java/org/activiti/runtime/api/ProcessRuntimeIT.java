@@ -43,7 +43,7 @@ public class ProcessRuntimeIT {
                           "John")
                 .variable("lastName",
                           "Doe")
-                .start();
+                .doIt();
 
         //then
         assertThat(processInstance).isNotNull();

@@ -65,7 +65,7 @@ public class ProcessStarterImpl implements ProcessStarter {
     }
 
     @Override
-    public ProcessInstance start() {
+    public ProcessInstance doIt() {
         return processInstanceConverter.from(runtimeService
                 .createProcessInstanceBuilder()
                 .processDefinitionId(payload.getProcessDefinitionId())

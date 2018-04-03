@@ -32,6 +32,6 @@ public interface ProcessStarter {
 
     ProcessStarter businessKey(String businessKey);
 
-    ProcessInstance start();
+    ProcessInstance doIt();
 
 }
