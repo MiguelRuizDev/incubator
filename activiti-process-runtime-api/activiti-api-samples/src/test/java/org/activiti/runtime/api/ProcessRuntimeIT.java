@@ -16,6 +16,9 @@
 
 package org.activiti.runtime.api;
 
+import java.util.List;
+
+import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +36,7 @@ public class ProcessRuntimeIT {
     private ProcessRuntime processRuntime;
 
     @Test
-    public void shouldStartProcessInstance() throws Exception {
+    public void shouldStartProcessInstance() {
         //when
         ProcessInstance processInstance = processRuntime
                 .startProcessWith()
@@ -52,4 +55,15 @@ public class ProcessRuntimeIT {
         assertThat(processInstance.getProcessDefinitionId()).isNotEmpty();
         assertThat(processInstance.getProcessDefinitionKey()).isEqualTo("SimpleProcess");
     }
+
+    @Test
+    public void shouldGetDeployedProcessDefinitions() {
+        //when
+        List<ProcessDefinition> processDefinitions = processRuntime.getProcessDefinitions();
+
+        //then
+        assertThat(processDefinitions).isNotNull();
+        assertThat(processDefinitions).extracting(ProcessDefinition::getName).contains("SimpleProcess");
+    }
+
 }

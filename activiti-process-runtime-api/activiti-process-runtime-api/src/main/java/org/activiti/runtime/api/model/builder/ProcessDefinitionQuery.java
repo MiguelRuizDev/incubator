@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.model.builder;
 
 import java.util.List;
 
 import org.activiti.runtime.api.model.ProcessDefinition;
-import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.builder.ProcessDefinitionQuery;
-import org.activiti.runtime.api.model.builder.ProcessStarter;
 
-public interface ProcessRuntime {
+public interface ProcessDefinitionQuery {
 
-    List<ProcessDefinition> getProcessDefinitions();
+    ProcessDefinitionQuery processDefinitionKey(String processDefinitionKey);
 
-    ProcessDefinitionQuery getProcessDefinitionsFilteredOn();
-
-    ProcessStarter startProcessWith();
-
-    ProcessInstance getProcessInstance(String processInstanceId);
-
-    List<ProcessInstance> getProcessInstances(int firstResult, int maxResults);
+    List<ProcessDefinition> list();
 
 }

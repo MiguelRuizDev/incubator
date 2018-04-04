@@ -18,10 +18,14 @@ package org.activiti.runtime.api.impl;
 
 import java.util.List;
 
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.ProcessRuntime;
+import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.builder.ProcessDefinitionQuery;
 import org.activiti.runtime.api.model.builder.ProcessStarter;
+import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
 import org.activiti.runtime.api.model.impl.ProcessStarterImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +38,29 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
 
     private final APIProcessInstanceConverter processInstanceConverter;
 
+    private final RepositoryService repositoryService;
+
+    private final APIProcessDefinitionConverter processDefinitionConverter;
+
     @Autowired
     public ProcessRuntimeImpl(RuntimeService runtimeService,
-                              APIProcessInstanceConverter processInstanceConverter) {
+                              APIProcessInstanceConverter processInstanceConverter,
+                              RepositoryService repositoryService,
+                              APIProcessDefinitionConverter processDefinitionConverter) {
         this.runtimeService = runtimeService;
         this.processInstanceConverter = processInstanceConverter;
+        this.repositoryService = repositoryService;
+        this.processDefinitionConverter = processDefinitionConverter;
+    }
+
+    @Override
+    public List<ProcessDefinition> getProcessDefinitions() {
+        return processDefinitionConverter.from(repositoryService.createProcessDefinitionQuery().list());
+    }
+
+    @Override
+    public ProcessDefinitionQuery getProcessDefinitionsFilteredOn() {
+        return null;
     }
 
     @Override

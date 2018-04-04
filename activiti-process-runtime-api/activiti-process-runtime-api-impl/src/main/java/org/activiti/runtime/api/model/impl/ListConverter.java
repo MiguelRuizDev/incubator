@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.activiti.runtime.api.model.impl;
 
-package org.activiti.runtime.api;
-
+import java.util.ArrayList;
 import java.util.List;
 
-import org.activiti.runtime.api.model.ProcessDefinition;
-import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.builder.ProcessDefinitionQuery;
-import org.activiti.runtime.api.model.builder.ProcessStarter;
+public abstract class ListConverter<SOURCE, TARGET> implements ModelConverter<SOURCE, TARGET> {
 
-public interface ProcessRuntime {
-
-    List<ProcessDefinition> getProcessDefinitions();
-
-    ProcessDefinitionQuery getProcessDefinitionsFilteredOn();
-
-    ProcessStarter startProcessWith();
-
-    ProcessInstance getProcessInstance(String processInstanceId);
-
-    List<ProcessInstance> getProcessInstances(int firstResult, int maxResults);
+    public List<TARGET> from(List<SOURCE> sources) {
+        List<TARGET> targetElements = new ArrayList<>();
+        for (SOURCE sourceElement : sources) {
+            targetElements.add(from(sourceElement));
+        }
+        return targetElements;
+    }
 
 }
