@@ -14,7 +14,7 @@ public class Task {
     private Long id;
     private String title;
 
-    private State state = State.ACTIVE; //this is the default state
+    private State state = State.ACTIVE;
 
     @Temporal(TemporalType.TIMESTAMP) //make sure this is a DATE+TIME in the database
     private Date creationDate;
@@ -24,14 +24,9 @@ public class Task {
     private String assignedUser;
     private int priority; //from 1 down to 10 (DESC)
 
-    private Long  parent; //stores parent's id; if there is no parent, id = -1
+    private Long  parent; //stores parent's id; if there is no parent, id = null
 
     private String content;
-
-    //constructor
-    public Task(){}
-
-    //getters and setters
 
     public Long getId() { return id; }
 
@@ -68,6 +63,5 @@ public class Task {
     public String getContent() { return content; }
 
     public void setContent(String content) { this.content = content; }
-
 
 }

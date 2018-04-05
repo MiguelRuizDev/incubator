@@ -9,12 +9,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import org.springframework.data.jpa.repository.Query;
 
-
-
-
-
-
-@RepositoryRestResource (collectionResourceRel = "tasks", path = "tasks")
+@RepositoryRestResource (/*collectionResourceRel = "tasks", path = "tasks") */ exported = false)
 public interface TaskRepository extends PagingAndSortingRepository <Task, Long>
 
 {
@@ -32,7 +27,7 @@ public interface TaskRepository extends PagingAndSortingRepository <Task, Long>
 
     List<Task> findByState(@Param("state") State state);
 
-    //dsl queries
+    //custom queries
 
     @Query("select t from Task t where t.parent = ?1")
     List<Task> findAllChildren(@Param("children") Long id);
