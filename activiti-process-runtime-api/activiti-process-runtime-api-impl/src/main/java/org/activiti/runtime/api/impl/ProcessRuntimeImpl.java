@@ -19,10 +19,13 @@ package org.activiti.runtime.api.impl;
 import java.util.List;
 
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.NotFoundException;
 import org.activiti.runtime.api.ProcessRuntime;
 import org.activiti.runtime.api.model.ProcessDefinition;
+import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
+import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,10 +35,18 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
 
     private final APIProcessDefinitionConverter processDefinitionConverter;
 
+    private final RuntimeService runtimeService;
+
+    private final APIProcessInstanceConverter processInstanceConverter;
+
     public ProcessRuntimeImpl(RepositoryService repositoryService,
-                              APIProcessDefinitionConverter processDefinitionConverter) {
+                              APIProcessDefinitionConverter processDefinitionConverter,
+                              RuntimeService runtimeService,
+                              APIProcessInstanceConverter processInstanceConverter) {
         this.repositoryService = repositoryService;
         this.processDefinitionConverter = processDefinitionConverter;
+        this.runtimeService = runtimeService;
+        this.processInstanceConverter = processInstanceConverter;
     }
 
     @Override
@@ -51,5 +62,14 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
             throw new NotFoundException("No process definition found for key `" + processDefinitionKey + "`");
         }
         return processDefinitionConverter.from(processDefinitions.get(0));
+    }
+
+    @Override
+    public ProcessInstance processInstance(String processInstanceId) {
+        return processInstanceConverter.from(
+                runtimeService
+                        .createProcessInstanceQuery()
+                        .processInstanceId(processInstanceId)
+                        .singleResult());
     }
 }

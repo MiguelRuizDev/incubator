@@ -19,11 +19,14 @@ package org.activiti.runtime.api;
 import java.util.List;
 
 import org.activiti.runtime.api.model.ProcessDefinition;
+import org.activiti.runtime.api.model.ProcessInstance;
 
 public interface ProcessRuntime {
 
     List<ProcessDefinition> processDefinitions();
 
     ProcessDefinition processDefinitionWithKey(String processDefinitionKey);
+
+    ProcessInstance processInstance(String processInstanceId);
 
 }

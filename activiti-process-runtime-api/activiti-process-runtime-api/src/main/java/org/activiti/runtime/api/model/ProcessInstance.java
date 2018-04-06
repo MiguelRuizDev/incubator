@@ -44,4 +44,8 @@ public interface ProcessInstance {
 
     String getProcessDefinitionKey();
 
+    void suspend();
+
+    void resume();
+
 }

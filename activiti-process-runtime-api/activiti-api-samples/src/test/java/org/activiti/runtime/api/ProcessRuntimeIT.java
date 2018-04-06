@@ -72,6 +72,53 @@ public class ProcessRuntimeIT {
     }
 
     @Test
+    public void shouldGetProcessInstanceById() {
+        //given
+        ProcessInstance processInstance = aProcessInstance();
+
+        //when
+        ProcessInstance retrievedProcessInstance = processRuntime.processInstance(processInstance.getId());
+
+        //then
+        assertThat(retrievedProcessInstance).isEqualTo(processInstance);
+    }
+
+    private ProcessInstance aProcessInstance() {
+        return processRuntime
+                    .processDefinitionWithKey("SimpleProcess")
+                    .start();
+    }
+
+    @Test
+    public void shouldSuspendRunningProcessInstance() {
+        //given
+        ProcessInstance processInstance = aProcessInstance();
+
+        //when
+        processInstance.suspend();
+
+        //then
+        ProcessInstance retrievedProcessInstance = processRuntime.processInstance(processInstance.getId());
+        assertThat(retrievedProcessInstance).isNotNull();
+        assertThat(retrievedProcessInstance.getStatus()).isEqualTo(ProcessInstance.ProcessInstanceStatus.SUSPENDED);
+    }
+
+    @Test
+    public void shouldResumeSuspendedProcessInstance() {
+        //given
+        ProcessInstance processInstance = aProcessInstance();
+        processInstance.suspend();
+
+        //when
+        processInstance.resume();
+
+        //then
+        ProcessInstance retrievedProcessInstance = processRuntime.processInstance(processInstance.getId());
+        assertThat(retrievedProcessInstance).isNotNull();
+        assertThat(retrievedProcessInstance.getStatus()).isEqualTo(ProcessInstance.ProcessInstanceStatus.RUNNING);
+    }
+
+    @Test
     public void shouldGetDeployedProcessDefinitions() {
         //when
         List<ProcessDefinition> processDefinitions = processRuntime.processDefinitions();
