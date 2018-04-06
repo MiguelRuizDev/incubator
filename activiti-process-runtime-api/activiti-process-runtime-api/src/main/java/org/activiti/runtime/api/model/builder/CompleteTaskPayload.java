@@ -16,15 +16,10 @@
 
 package org.activiti.runtime.api.model.builder;
 
-import java.util.Map;
-
 public interface CompleteTaskPayload {
 
-    String getTaskId();
+    <T> CompleteTaskPayload variable(String name, T value);
 
-    Map<String, Object> getVariables();
-
-    Map<String, Object> getTransientVariables();
-
+    void doIt();
 
 }

@@ -18,19 +18,12 @@ package org.activiti.runtime.api;
 
 import java.util.List;
 
-import org.activiti.runtime.api.model.builder.CompleteTaskPayload;
 import org.activiti.runtime.api.model.Task;
 
 public interface TaskRuntime {
 
-    void claim(String taskId, String userId);
+    Task task(String taskId);
 
-    void release(String taskId);
-
-    void complete(String taskId);
-
-    void complete(CompleteTaskPayload payload);
-
-    List<Task> getTasks(int firstResult, int maxResults);
+    List<Task> tasks(int firstResult, int maxResults);
 
 }

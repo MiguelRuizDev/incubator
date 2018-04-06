@@ -16,6 +16,44 @@
 
 package org.activiti.runtime.api.model;
 
+import java.util.Date;
+
+import org.activiti.runtime.api.model.builder.CompleteTaskPayload;
+
 public interface Task {
+
+    enum TaskStatus {
+        CREATED, ASSIGNED, SUSPENDED
+    }
+
+    String getId();
+
+    String getOwner();
+
+    String getAssignee();
+
+    String getName();
+
+    String getDescription();
+
+    Date getCreatedDate();
+
+    Date getClaimedDate();
+
+    Date getDueDate();
+
+    int getPriority();
+
+    String getProcessDefinitionId();
+
+    String getProcessInstanceId();
+
+    String getParentTaskId();
+
+    TaskStatus getStatus();
+
+    void complete();
+
+    CompleteTaskPayload completeWith();
 
 }
