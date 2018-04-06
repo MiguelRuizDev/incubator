@@ -16,14 +16,26 @@
 
 package org.activiti.runtime.api.model;
 
+import java.util.List;
+
+import org.activiti.runtime.api.model.builder.ProcessStarter;
+
 public interface ProcessDefinition {
 
     String getId();
 
     String getName();
 
+    String getKey();
+
     String getDescription();
 
     int getVersion();
+
+    ProcessInstance start();
+
+    ProcessStarter startProcessWith();
+
+    List<ProcessInstance> processInstances(int startIndex, int maxResults);
 
 }

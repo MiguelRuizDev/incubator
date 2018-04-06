@@ -16,22 +16,34 @@
 
 package org.activiti.runtime.api.model.impl;
 
+import java.util.List;
+
+import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.model.ProcessDefinition;
+import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.builder.ProcessStarter;
 
 public class ProcessDefinitionImpl implements ProcessDefinition {
 
+    private final ProcessStarterFactory processStarterFactory;
+    private final RuntimeService runtimeService;
+    private final APIProcessInstanceConverter processInstanceConverter;
     private String id;
     private String name;
     private String description;
     private int version;
+    private String key;
 
-    public ProcessDefinitionImpl() {
-    }
-
-    public ProcessDefinitionImpl(String id,
+    public ProcessDefinitionImpl(ProcessStarterFactory processStarterFactory,
+                                 RuntimeService runtimeService,
+                                 APIProcessInstanceConverter processInstanceConverter,
+                                 String id,
                                  String name,
                                  String description,
                                  int version) {
+        this.processStarterFactory = processStarterFactory;
+        this.runtimeService = runtimeService;
+        this.processInstanceConverter = processInstanceConverter;
         this.id = id;
         this.name = name;
         this.version = version;
@@ -49,6 +61,15 @@ public class ProcessDefinitionImpl implements ProcessDefinition {
     }
 
     @Override
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    @Override
     public String getDescription() {
         return description;
     }
@@ -57,4 +78,22 @@ public class ProcessDefinitionImpl implements ProcessDefinition {
         return version;
     }
 
+    @Override
+    public ProcessStarter startProcessWith() {
+        return processStarterFactory.createNewInstance(getId());
+    }
+
+    @Override
+    public ProcessInstance start() {
+        return startProcessWith().doIt();
+    }
+
+    @Override
+    public List<ProcessInstance> processInstances(int startIndex,
+                                                  int maxResults) {
+        return processInstanceConverter.from(runtimeService
+                .createProcessInstanceQuery()
+                .processDefinitionId(getId())
+                .listPage(startIndex, maxResults));
+    }
 }

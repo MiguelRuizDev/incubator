@@ -17,6 +17,7 @@
 package org.activiti.runtime.api.model.impl;
 
 import java.util.Date;
+import java.util.Objects;
 
 import org.activiti.runtime.api.model.ProcessInstance;
 
@@ -109,5 +110,47 @@ public class ProcessInstanceImpl implements ProcessInstance {
 
     public void setStatus(ProcessInstanceStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ProcessInstanceImpl that = (ProcessInstanceImpl) o;
+        return Objects.equals(id,
+                              that.id) &&
+                Objects.equals(name,
+                               that.name) &&
+                Objects.equals(description,
+                               that.description) &&
+                Objects.equals(processDefinitionId,
+                               that.processDefinitionId) &&
+                Objects.equals(processDefinitionKey,
+                               that.processDefinitionKey) &&
+                Objects.equals(initiator,
+                               that.initiator) &&
+                Objects.equals(startDate,
+                               that.startDate) &&
+                Objects.equals(businessKey,
+                               that.businessKey) &&
+                status == that.status;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id,
+                            name,
+                            description,
+                            processDefinitionId,
+                            processDefinitionKey,
+                            initiator,
+                            startDate,
+                            businessKey,
+                            status);
     }
 }

@@ -21,17 +21,12 @@ import java.util.Map;
 
 public class StartProcessPayloadImpl {
 
-    private String processDefinitionKey;
     private String processDefinitionId;
     private Map<String, Object> variables;
     private String businessKey;
 
-    public String getProcessDefinitionKey() {
-        return processDefinitionKey;
-    }
-
-    public void setProcessDefinitionKey(String processDefinitionKey) {
-        this.processDefinitionKey = processDefinitionKey;
+    public StartProcessPayloadImpl(String processDefinitionId) {
+        this.processDefinitionId = processDefinitionId;
     }
 
     public String getProcessDefinitionId() {

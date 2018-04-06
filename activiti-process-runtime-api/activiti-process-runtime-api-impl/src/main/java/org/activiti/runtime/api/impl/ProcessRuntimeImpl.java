@@ -19,64 +19,37 @@ package org.activiti.runtime.api.impl;
 import java.util.List;
 
 import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
+import org.activiti.runtime.api.NotFoundException;
 import org.activiti.runtime.api.ProcessRuntime;
 import org.activiti.runtime.api.model.ProcessDefinition;
-import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.builder.ProcessDefinitionQuery;
-import org.activiti.runtime.api.model.builder.ProcessStarter;
 import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
-import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
-import org.activiti.runtime.api.model.impl.ProcessStarterImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProcessRuntimeImpl implements ProcessRuntime {
 
-    private final RuntimeService runtimeService;
-
-    private final APIProcessInstanceConverter processInstanceConverter;
-
     private final RepositoryService repositoryService;
 
     private final APIProcessDefinitionConverter processDefinitionConverter;
 
-    @Autowired
-    public ProcessRuntimeImpl(RuntimeService runtimeService,
-                              APIProcessInstanceConverter processInstanceConverter,
-                              RepositoryService repositoryService,
+    public ProcessRuntimeImpl(RepositoryService repositoryService,
                               APIProcessDefinitionConverter processDefinitionConverter) {
-        this.runtimeService = runtimeService;
-        this.processInstanceConverter = processInstanceConverter;
         this.repositoryService = repositoryService;
         this.processDefinitionConverter = processDefinitionConverter;
     }
 
     @Override
-    public List<ProcessDefinition> getProcessDefinitions() {
+    public List<ProcessDefinition> processDefinitions() {
         return processDefinitionConverter.from(repositoryService.createProcessDefinitionQuery().list());
     }
 
     @Override
-    public ProcessDefinitionQuery getProcessDefinitionsFilteredOn() {
-        return null;
-    }
+    public ProcessDefinition processDefinitionWithKey(String processDefinitionKey) {
+        List<org.activiti.engine.repository.ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).list();
 
-    @Override
-    public ProcessStarter startProcessWith() {
-        return new ProcessStarterImpl(runtimeService,
-                                      processInstanceConverter);
-    }
-
-    @Override
-    public ProcessInstance getProcessInstance(String processInstanceId) {
-        return null;
-    }
-
-    @Override
-    public List<ProcessInstance> getProcessInstances(int firstResult,
-                                                     int maxResults) {
-        return null;
+        if (processDefinitions == null || processDefinitions.isEmpty()) {
+            throw new NotFoundException("No process definition found for key `" + processDefinitionKey + "`");
+        }
+        return processDefinitionConverter.from(processDefinitions.get(0));
     }
 }

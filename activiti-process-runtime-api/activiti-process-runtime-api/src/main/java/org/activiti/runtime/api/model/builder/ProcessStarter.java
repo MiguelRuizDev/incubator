@@ -22,10 +22,6 @@ import org.activiti.runtime.api.model.ProcessInstance;
 
 public interface ProcessStarter {
 
-    ProcessStarter processDefinitionKey(String processDefinitionKey);
-
-    ProcessStarter processDefinitionId(String processDefinitionId);
-
     ProcessStarter variables(Map<String, Object> variables);
 
     <T> ProcessStarter variable(String key, T value);

@@ -16,14 +16,10 @@
 
 package org.activiti.runtime.api;
 
-import java.util.List;
+public class NotFoundException extends RuntimeException {
 
-import org.activiti.runtime.api.model.ProcessDefinition;
-
-public interface ProcessRuntime {
-
-    List<ProcessDefinition> processDefinitions();
-
-    ProcessDefinition processDefinitionWithKey(String processDefinitionKey);
+    public NotFoundException(String message) {
+        super(message);
+    }
 
 }

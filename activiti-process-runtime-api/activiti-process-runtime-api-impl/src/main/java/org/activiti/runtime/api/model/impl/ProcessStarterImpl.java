@@ -30,16 +30,12 @@ public class ProcessStarterImpl implements ProcessStarter {
 
     private final APIProcessInstanceConverter processInstanceConverter;
 
-    public ProcessStarterImpl(RuntimeService runtimeService,
+    public ProcessStarterImpl(String processDefinitionId,
+                              RuntimeService runtimeService,
                               APIProcessInstanceConverter processInstanceConverter) {
         this.runtimeService = runtimeService;
         this.processInstanceConverter = processInstanceConverter;
-        payload = new StartProcessPayloadImpl();
-    }
-
-    public ProcessStarterImpl processDefinitionKey(String processDefinitionKey){
-        payload.setProcessDefinitionKey(processDefinitionKey);
-        return this;
+        payload = new StartProcessPayloadImpl(processDefinitionId);
     }
 
     public ProcessStarterImpl processDefinitionId(String processDefinitionId){
@@ -69,7 +65,6 @@ public class ProcessStarterImpl implements ProcessStarter {
         return processInstanceConverter.from(runtimeService
                 .createProcessInstanceBuilder()
                 .processDefinitionId(payload.getProcessDefinitionId())
-                .processDefinitionKey(payload.getProcessDefinitionKey())
                 .businessKey(payload.getBusinessKey())
                 .variables(payload.getVariables())
                 .start());

@@ -16,6 +16,7 @@
 
 package org.activiti.runtime.api.model.impl;
 
+import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +24,28 @@ import org.springframework.stereotype.Component;
 public class APIProcessDefinitionConverter extends ListConverter<org.activiti.engine.repository.ProcessDefinition, ProcessDefinition>
         implements ModelConverter<org.activiti.engine.repository.ProcessDefinition, ProcessDefinition> {
 
+    private final ProcessStarterFactory processStarterFactory;
+    private final RuntimeService runtimeService;
+    private final APIProcessInstanceConverter processInstanceConverter;
+
+    public APIProcessDefinitionConverter(ProcessStarterFactory processStarterFactory,
+                                         RuntimeService runtimeService,
+                                         APIProcessInstanceConverter processInstanceConverter) {
+        this.processStarterFactory = processStarterFactory;
+        this.runtimeService = runtimeService;
+        this.processInstanceConverter = processInstanceConverter;
+    }
+
     public ProcessDefinition from(org.activiti.engine.repository.ProcessDefinition internalProcessDefinition) {
-        return new ProcessDefinitionImpl(internalProcessDefinition.getId(),
-                                         internalProcessDefinition.getName(),
-                                         internalProcessDefinition.getDescription(),
-                                         internalProcessDefinition.getVersion());
+        ProcessDefinitionImpl processDefinition = new ProcessDefinitionImpl(processStarterFactory,
+                                                                            runtimeService,
+                                                                            processInstanceConverter,
+                                                                            internalProcessDefinition.getId(),
+                                                                            internalProcessDefinition.getName(),
+                                                                            internalProcessDefinition.getDescription(),
+                                                                            internalProcessDefinition.getVersion());
+        processDefinition.setKey(internalProcessDefinition.getKey());
+        return processDefinition;
     }
 
 }

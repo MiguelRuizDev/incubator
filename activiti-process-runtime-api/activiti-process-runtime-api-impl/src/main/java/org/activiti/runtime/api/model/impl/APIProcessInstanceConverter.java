@@ -20,8 +20,10 @@ import org.activiti.runtime.api.model.ProcessInstance;
 import org.springframework.stereotype.Component;
 
 @Component
-public class APIProcessInstanceConverter {
+public class APIProcessInstanceConverter extends ListConverter<org.activiti.engine.runtime.ProcessInstance, ProcessInstance>
+implements ModelConverter<org.activiti.engine.runtime.ProcessInstance, ProcessInstance> {
 
+    @Override
     public ProcessInstance from(org.activiti.engine.runtime.ProcessInstance internalProcessInstance) {
         ProcessInstanceImpl processInstance = new ProcessInstanceImpl();
         processInstance.setId(internalProcessInstance.getId());

@@ -39,8 +39,23 @@ public class ProcessRuntimeIT {
     public void shouldStartProcessInstance() {
         //when
         ProcessInstance processInstance = processRuntime
+                .processDefinitionWithKey("SimpleProcess")
+                .start();
+
+        //then
+        assertThat(processInstance).isNotNull();
+        assertThat(processInstance.getId()).isNotEmpty();
+        assertThat(processInstance.getBusinessKey()).isNull();
+        assertThat(processInstance.getProcessDefinitionId()).isNotEmpty();
+        assertThat(processInstance.getProcessDefinitionKey()).isEqualTo("SimpleProcess");
+    }
+
+    @Test
+    public void shouldStartProcessInstanceWithExtraInformation() {
+        //when
+        ProcessInstance processInstance = processRuntime
+                .processDefinitionWithKey("SimpleProcess")
                 .startProcessWith()
-                .processDefinitionKey("SimpleProcess")
                 .businessKey("myBusinessKey")
                 .variable("firstName",
                           "John")
@@ -59,11 +74,47 @@ public class ProcessRuntimeIT {
     @Test
     public void shouldGetDeployedProcessDefinitions() {
         //when
-        List<ProcessDefinition> processDefinitions = processRuntime.getProcessDefinitions();
+        List<ProcessDefinition> processDefinitions = processRuntime.processDefinitions();
 
         //then
         assertThat(processDefinitions).isNotNull();
         assertThat(processDefinitions).extracting(ProcessDefinition::getName).contains("SimpleProcess");
     }
 
+    @Test
+    public void shouldGetProcessInstancesFromProcessDefinition() {
+        //given
+        ProcessInstance firstSimpleProcess = processRuntime
+                .processDefinitionWithKey("SimpleProcess")
+                .start();
+        ProcessInstance processWithVariables = processRuntime
+                .processDefinitionWithKey("ProcessWithVariables")
+                .start();
+        ProcessInstance secondSimpleProcess = processRuntime
+                .processDefinitionWithKey("SimpleProcess")
+                .start();
+
+        //when
+        List<ProcessInstance> processInstances = processRuntime
+                .processDefinitionWithKey("SimpleProcess")
+                .processInstances(0,
+                                  500);
+        //then
+        assertThat(processInstances)
+                .contains(firstSimpleProcess,
+                          secondSimpleProcess)
+                .doesNotContain(processWithVariables);
+
+        //when
+        processInstances = processRuntime
+                .processDefinitionWithKey("ProcessWithVariables")
+                .processInstances(0,
+                                  500);
+
+        //then
+        assertThat(processInstances)
+                .contains(processWithVariables)
+                .doesNotContain(firstSimpleProcess,
+                                secondSimpleProcess);
+    }
 }
