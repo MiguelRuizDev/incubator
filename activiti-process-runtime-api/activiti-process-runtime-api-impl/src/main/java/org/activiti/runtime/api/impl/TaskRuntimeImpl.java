@@ -39,7 +39,7 @@ public class TaskRuntimeImpl implements TaskRuntime {
 
     @Override
     public Task task(String taskId) {
-        return null;
+        return taskConverter.from(taskService.createTaskQuery().taskId(taskId).singleResult());
     }
 
     @Override

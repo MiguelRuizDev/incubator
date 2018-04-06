@@ -154,6 +154,16 @@ public class TaskImpl implements Task {
     }
 
     @Override
+    public void claim(String username) {
+        taskService.setAssignee(getId(), username);
+    }
+
+    @Override
+    public void release() {
+        taskService.unclaim(getId());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

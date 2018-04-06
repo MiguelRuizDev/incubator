@@ -101,4 +101,45 @@ public class TaskRuntimeIT {
         //then
         assertCompleted(currentTask);
     }
+
+    @Test
+    public void shouldGetTaskById() {
+        //given
+        Task task = aTask();
+
+        //when
+        Task retrievedTask = taskRuntime.task(task.getId());
+
+        //then
+        assertThat(retrievedTask).isEqualTo(task);
+    }
+
+    @Test
+    public void claimTaskShouldSetAssignee() {
+        //given
+        Task task = aTask();
+
+        //when
+        task.claim("paul");
+
+        //then
+        Task retrievedTask = taskRuntime.task(task.getId());
+        assertThat(retrievedTask.getAssignee()).isEqualTo("paul");
+        assertThat(retrievedTask.getStatus()).isEqualTo(Task.TaskStatus.ASSIGNED);
+    }
+
+    @Test
+    public void releaseShouldUnSetAssignee() {
+        //given
+        Task task = aTask();
+        task.claim("paul");
+
+        //when
+        task.release();
+
+        //then
+        Task retrievedTask = taskRuntime.task(task.getId());
+        assertThat(retrievedTask.getAssignee()).isNull();
+        assertThat(retrievedTask.getStatus()).isEqualTo(Task.TaskStatus.CREATED);
+    }
 }

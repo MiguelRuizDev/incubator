@@ -56,4 +56,8 @@ public interface Task {
 
     CompleteTaskPayload completeWith();
 
+    void claim(String username);
+
+    void release();
+
 }
