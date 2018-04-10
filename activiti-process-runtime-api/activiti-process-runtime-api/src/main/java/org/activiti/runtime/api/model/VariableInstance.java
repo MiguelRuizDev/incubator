@@ -16,39 +16,14 @@
 
 package org.activiti.runtime.api.model;
 
-import java.util.Date;
-import java.util.List;
-
-public interface ProcessInstance {
-
-    enum ProcessInstanceStatus {
-        RUNNING,
-        SUSPENDED,
-        COMPLETED
-    }
-
-    String getId();
+public interface VariableInstance {
 
     String getName();
 
-    String getDescription();
+    String getType();
 
-    Date getStartDate();
+    String getProcessInstanceId();
 
-    String getInitiator();
-
-    String getBusinessKey();
-
-    ProcessInstanceStatus getStatus();
-
-    String getProcessDefinitionId();
-
-    String getProcessDefinitionKey();
-
-    void suspend();
-
-    void resume();
-
-    List<VariableInstance> variables();
+    <T> T getValue();
 
 }

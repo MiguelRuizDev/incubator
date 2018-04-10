@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.VariableInstance;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -61,6 +63,8 @@ public class ProcessRuntimeIT {
                           "John")
                 .variable("lastName",
                           "Doe")
+                .variable("age",
+                          12)
                 .doIt();
 
         //then
@@ -69,6 +73,29 @@ public class ProcessRuntimeIT {
         assertThat(processInstance.getBusinessKey()).isEqualTo("myBusinessKey");
         assertThat(processInstance.getProcessDefinitionId()).isNotEmpty();
         assertThat(processInstance.getProcessDefinitionKey()).isEqualTo("SimpleProcess");
+
+        //when
+        List<VariableInstance> variables = processInstance.variables();
+
+        //then
+        assertThat(variables).hasSize(3);
+        assertThat(variables)
+                .extracting(VariableInstance::getName,
+                            VariableInstance::getValue,
+                            VariableInstance::getType,
+                            VariableInstance::getProcessInstanceId)
+                .contains(tuple("firstName",
+                                "John",
+                                String.class.getSimpleName().toLowerCase(),
+                                processInstance.getId()),
+                          tuple("lastName",
+                                "Doe",
+                                String.class.getSimpleName().toLowerCase(),
+                                processInstance.getId()),
+                          tuple("age",
+                                12,
+                                Integer.class.getSimpleName().toLowerCase(),
+                                processInstance.getId()));
     }
 
     @Test
@@ -85,8 +112,8 @@ public class ProcessRuntimeIT {
 
     private ProcessInstance aProcessInstance() {
         return processRuntime
-                    .processDefinitionWithKey("SimpleProcess")
-                    .start();
+                .processDefinitionWithKey("SimpleProcess")
+                .start();
     }
 
     @Test

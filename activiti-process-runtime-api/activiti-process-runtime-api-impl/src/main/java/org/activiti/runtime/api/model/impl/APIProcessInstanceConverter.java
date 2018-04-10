@@ -22,17 +22,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class APIProcessInstanceConverter extends ListConverter<org.activiti.engine.runtime.ProcessInstance, ProcessInstance>
-implements ModelConverter<org.activiti.engine.runtime.ProcessInstance, ProcessInstance> {
+        implements ModelConverter<org.activiti.engine.runtime.ProcessInstance, ProcessInstance> {
 
     private final RuntimeService runtimeService;
+    private final APIVariableInstanceConverter variableInstanceConverter;
 
-    public APIProcessInstanceConverter(RuntimeService runtimeService) {
+    public APIProcessInstanceConverter(RuntimeService runtimeService,
+                                       APIVariableInstanceConverter variableInstanceConverter) {
         this.runtimeService = runtimeService;
+        this.variableInstanceConverter = variableInstanceConverter;
     }
 
     @Override
     public ProcessInstance from(org.activiti.engine.runtime.ProcessInstance internalProcessInstance) {
-        ProcessInstanceImpl processInstance = new ProcessInstanceImpl(runtimeService);
+        ProcessInstanceImpl processInstance = new ProcessInstanceImpl(runtimeService,
+                                                                      variableInstanceConverter);
         processInstance.setId(internalProcessInstance.getId());
         processInstance.setProcessDefinitionId(internalProcessInstance.getProcessDefinitionId());
         processInstance.setProcessDefinitionKey(internalProcessInstance.getProcessDefinitionKey());
@@ -49,5 +53,4 @@ implements ModelConverter<org.activiti.engine.runtime.ProcessInstance, ProcessIn
         }
         return org.activiti.runtime.api.model.ProcessInstance.ProcessInstanceStatus.RUNNING;
     }
-
 }

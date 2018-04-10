@@ -15,11 +15,12 @@
 
 package org.activiti.runtime.api.model.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ModelConverter<SOURCE, TARGET> {
 
     TARGET from(SOURCE source);
 
-    List<TARGET> from(List<SOURCE> sources);
+    List<TARGET> from(Collection<SOURCE> sources);
 }
