@@ -41,7 +41,7 @@ public class ProcessRuntimeIT {
     public void shouldStartProcessInstance() {
         //when
         ProcessInstance processInstance = processRuntime
-                .processDefinitionWithKey("SimpleProcess")
+                .processDefinitionByKey("SimpleProcess")
                 .start();
 
         //then
@@ -56,7 +56,7 @@ public class ProcessRuntimeIT {
     public void shouldStartProcessInstanceWithExtraInformation() {
         //when
         ProcessInstance processInstance = processRuntime
-                .processDefinitionWithKey("SimpleProcess")
+                .processDefinitionByKey("SimpleProcess")
                 .startProcessWith()
                 .businessKey("myBusinessKey")
                 .variable("firstName",
@@ -112,7 +112,7 @@ public class ProcessRuntimeIT {
 
     private ProcessInstance aProcessInstance() {
         return processRuntime
-                .processDefinitionWithKey("SimpleProcess")
+                .processDefinitionByKey("SimpleProcess")
                 .start();
     }
 
@@ -159,18 +159,18 @@ public class ProcessRuntimeIT {
     public void shouldGetProcessInstancesFromProcessDefinition() {
         //given
         ProcessInstance firstSimpleProcess = processRuntime
-                .processDefinitionWithKey("SimpleProcess")
+                .processDefinitionByKey("SimpleProcess")
                 .start();
         ProcessInstance processWithVariables = processRuntime
-                .processDefinitionWithKey("ProcessWithVariables")
+                .processDefinitionByKey("ProcessWithVariables")
                 .start();
         ProcessInstance secondSimpleProcess = processRuntime
-                .processDefinitionWithKey("SimpleProcess")
+                .processDefinitionByKey("SimpleProcess")
                 .start();
 
         //when
         List<ProcessInstance> processInstances = processRuntime
-                .processDefinitionWithKey("SimpleProcess")
+                .processDefinitionByKey("SimpleProcess")
                 .processInstances(0,
                                   500);
         //then
@@ -181,7 +181,7 @@ public class ProcessRuntimeIT {
 
         //when
         processInstances = processRuntime
-                .processDefinitionWithKey("ProcessWithVariables")
+                .processDefinitionByKey("ProcessWithVariables")
                 .processInstances(0,
                                   500);
 

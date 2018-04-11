@@ -55,7 +55,7 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
     }
 
     @Override
-    public ProcessDefinition processDefinitionWithKey(String processDefinitionKey) {
+    public ProcessDefinition processDefinitionByKey(String processDefinitionKey) {
         List<org.activiti.engine.repository.ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).list();
 
         if (processDefinitions == null || processDefinitions.isEmpty()) {

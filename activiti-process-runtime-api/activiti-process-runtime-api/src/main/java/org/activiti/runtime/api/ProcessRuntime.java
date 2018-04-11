@@ -25,7 +25,7 @@ public interface ProcessRuntime {
 
     List<ProcessDefinition> processDefinitions();
 
-    ProcessDefinition processDefinitionWithKey(String processDefinitionKey);
+    ProcessDefinition processDefinitionByKey(String processDefinitionKey);
 
     ProcessInstance processInstance(String processInstanceId);
 

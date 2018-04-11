@@ -42,8 +42,8 @@ public class TaskRuntimeIT {
     @Test
     public void shouldRetrieveTasks() {
         //given
-        ProcessInstance firstSimpleProcess = processRuntime.processDefinitionWithKey("SimpleProcess").start();
-        ProcessInstance secondSimpleProcess = processRuntime.processDefinitionWithKey("SimpleProcess").start();
+        ProcessInstance firstSimpleProcess = processRuntime.processDefinitionByKey("SimpleProcess").start();
+        ProcessInstance secondSimpleProcess = processRuntime.processDefinitionByKey("SimpleProcess").start();
 
         //when
         List<Task> tasks = taskRuntime.tasks(0,
@@ -71,7 +71,7 @@ public class TaskRuntimeIT {
     }
 
     private Task aTask() {
-        ProcessInstance processInstance = processRuntime.processDefinitionWithKey("SimpleProcess").start();
+        ProcessInstance processInstance = processRuntime.processDefinitionByKey("SimpleProcess").start();
         Task currentTask = taskRuntime.tasks(0,
                                              500).stream()
                 .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
