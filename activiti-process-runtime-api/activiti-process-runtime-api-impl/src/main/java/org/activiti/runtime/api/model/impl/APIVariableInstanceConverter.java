@@ -25,10 +25,12 @@ public class APIVariableInstanceConverter
         implements ModelConverter <org.activiti.engine.impl.persistence.entity.VariableInstance, VariableInstance> {
 
     @Override
-    public VariableInstance from(org.activiti.engine.impl.persistence.entity.VariableInstance variableInstance) {
-        return new VariableInstanceImpl<>(variableInstance.getName(),
-                                          variableInstance.getTypeName(),
-                                          variableInstance.getValue(),
-                                          variableInstance.getProcessInstanceId());
+    public VariableInstance from(org.activiti.engine.impl.persistence.entity.VariableInstance internalVariableInstance) {
+        VariableInstanceImpl<Object> variableInstance = new VariableInstanceImpl<>(internalVariableInstance.getName(),
+                                                                                         internalVariableInstance.getTypeName(),
+                                                                                         internalVariableInstance.getValue(),
+                                                                                         internalVariableInstance.getProcessInstanceId());
+        variableInstance.setTaskId(internalVariableInstance.getTaskId());
+        return variableInstance;
     }
 }

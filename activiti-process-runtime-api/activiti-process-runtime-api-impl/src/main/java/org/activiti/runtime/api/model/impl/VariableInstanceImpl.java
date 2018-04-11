@@ -24,6 +24,7 @@ public class VariableInstanceImpl<T> implements VariableInstance {
     private String type;
     private String processInstanceId;
     private T value;
+    private String taskId;
 
     public VariableInstanceImpl(String name,
                                 String type,
@@ -48,6 +49,15 @@ public class VariableInstanceImpl<T> implements VariableInstance {
     @Override
     public String getProcessInstanceId() {
         return processInstanceId;
+    }
+
+    @Override
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
     @Override

@@ -17,15 +17,18 @@
 package org.activiti.runtime.api.model.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import org.activiti.engine.TaskService;
 import org.activiti.runtime.api.model.Task;
+import org.activiti.runtime.api.model.VariableInstance;
 import org.activiti.runtime.api.model.builder.CompleteTaskPayload;
 
 public class TaskImpl implements Task {
 
     private final TaskService taskService;
+    private final APIVariableInstanceConverter variableInstanceConverter;
 
     private String id;
     private String owner;
@@ -42,10 +45,12 @@ public class TaskImpl implements Task {
     private TaskStatus status;
 
     public TaskImpl(TaskService taskService,
+                    APIVariableInstanceConverter variableInstanceConverter,
                     String id,
                     String name,
                     TaskStatus status) {
         this.taskService = taskService;
+        this.variableInstanceConverter = variableInstanceConverter;
         this.id = id;
         this.name = name;
         this.status = status;
@@ -144,18 +149,42 @@ public class TaskImpl implements Task {
     }
 
     @Override
+    public <T> void variable(String name,
+                                               T value) {
+        taskService.setVariable(getId(), name, value);
+    }
+
+    @Override
+    public <T> void localVariable(String name,
+                                  T value) {
+        taskService.setVariableLocal(getId(), name, value);
+    }
+
+    @Override
+    public List<VariableInstance> variables() {
+        return variableInstanceConverter.from(taskService.getVariableInstances(getId()).values());
+    }
+
+    @Override
+    public List<VariableInstance> localVariables() {
+        return variableInstanceConverter.from(taskService.getVariableInstancesLocal(getId()).values());
+    }
+
+    @Override
     public void complete() {
         taskService.complete(getId());
     }
 
     @Override
     public CompleteTaskPayload completeWith() {
-        return new CompleteTaskPayloadImpl(taskService, getId());
+        return new CompleteTaskPayloadImpl(taskService,
+                                           getId());
     }
 
     @Override
     public void claim(String username) {
-        taskService.setAssignee(getId(), username);
+        taskService.setAssignee(getId(),
+                                username);
     }
 
     @Override

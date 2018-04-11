@@ -24,14 +24,18 @@ import org.springframework.stereotype.Component;
 public class APITaskConverter extends ListConverter<org.activiti.engine.task.Task, Task> implements ModelConverter<org.activiti.engine.task.Task, Task> {
 
     private final TaskService taskService;
+    private final APIVariableInstanceConverter variableInstanceConverter;
 
-    public APITaskConverter(TaskService taskService) {
+    public APITaskConverter(TaskService taskService,
+                            APIVariableInstanceConverter variableInstanceConverter) {
         this.taskService = taskService;
+        this.variableInstanceConverter = variableInstanceConverter;
     }
 
     @Override
     public Task from(org.activiti.engine.task.Task internalTask) {
         TaskImpl task = new TaskImpl(taskService,
+                                     variableInstanceConverter,
                                      internalTask.getId(),
                                      internalTask.getName(),
                                      calculateStatus(internalTask));

@@ -16,16 +16,8 @@
 
 package org.activiti.runtime.api.model.builder;
 
-import java.util.Map;
+public interface VariableContainer<C extends VariableContainer<C>> {
 
-import org.activiti.runtime.api.model.ProcessInstance;
-
-public interface ProcessStarter extends VariableContainer<ProcessStarter>{
-
-    ProcessStarter variables(Map<String, Object> variables);
-
-    ProcessStarter businessKey(String businessKey);
-
-    ProcessInstance doIt();
+    <T> C variable(String key, T value);
 
 }

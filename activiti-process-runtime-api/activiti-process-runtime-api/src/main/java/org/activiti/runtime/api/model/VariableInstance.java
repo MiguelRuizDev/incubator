@@ -24,6 +24,8 @@ public interface VariableInstance {
 
     String getProcessInstanceId();
 
+    String getTaskId();
+
     <T> T getValue();
 
 }

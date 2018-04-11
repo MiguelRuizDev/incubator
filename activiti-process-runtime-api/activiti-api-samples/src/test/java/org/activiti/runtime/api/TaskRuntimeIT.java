@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.Task;
+import org.activiti.runtime.api.model.VariableInstance;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,99 @@ public class TaskRuntimeIT {
                 .contains(tuple("Perform action",
                                 firstSimpleProcess.getId()),
                           tuple("Perform action", secondSimpleProcess.getId()));
+    }
+
+    @Test
+    public void shouldSetAndRetrieveGlobalVariables() {
+        //given
+        ProcessInstance processInstance = processRuntime
+                .processDefinitionByKey("SimpleProcess")
+                .startProcessWith()
+                .variable("processVariable", "myProcVar")
+                .doIt();
+        Task currentTask = taskRuntime.tasks(0,
+                                             500).stream()
+                .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
+                .findFirst().orElse(null);
+        assertThat(currentTask).isNotNull();
+        currentTask.variable("processVariableFromTask", "myProcVarFromTask");
+
+        //when
+        List<VariableInstance> variables = currentTask.variables();
+
+        //then
+        assertThat(variables).hasSize(2);
+        assertThat(variables)
+                .extracting(VariableInstance::getName,
+                            VariableInstance::getValue,
+                            VariableInstance::getType,
+                            VariableInstance::getProcessInstanceId,
+                            VariableInstance::getTaskId)
+                .contains(tuple("processVariable",
+                                "myProcVar",
+                                String.class.getSimpleName().toLowerCase(),
+                                processInstance.getId(),
+                                null),
+                          tuple("processVariableFromTask",
+                                "myProcVarFromTask",
+                                String.class.getSimpleName().toLowerCase(),
+                                processInstance.getId(),
+                                null));
+    }
+
+    @Test
+    public void shouldSetAndRetrieveLocalVariables() {
+        //given
+        ProcessInstance processInstance = processRuntime
+                .processDefinitionByKey("SimpleProcess")
+                .startProcessWith()
+                .variable("processVariable", "myProcVar")
+                .doIt();
+        Task currentTask = taskRuntime.tasks(0,
+                                             500).stream()
+                .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
+                .findFirst().orElse(null);
+        assertThat(currentTask).isNotNull();
+        currentTask.localVariable("taskVariable", "myTaskVar");
+
+        //when
+        List<VariableInstance> localVariables = currentTask.localVariables();
+
+        //then
+        assertThat(localVariables).hasSize(1);
+        assertThat(localVariables)
+                .extracting(VariableInstance::getName,
+                            VariableInstance::getValue,
+                            VariableInstance::getType,
+                            VariableInstance::getProcessInstanceId,
+                            VariableInstance::getTaskId)
+                .contains(tuple("taskVariable",
+                                "myTaskVar",
+                                String.class.getSimpleName().toLowerCase(),
+                                processInstance.getId(),
+                                currentTask.getId()));
+
+        //when
+        List<VariableInstance> variables = currentTask.variables();
+
+        //then
+        assertThat(variables).hasSize(2);
+        assertThat(variables)
+                .extracting(VariableInstance::getName,
+                            VariableInstance::getValue,
+                            VariableInstance::getType,
+                            VariableInstance::getProcessInstanceId,
+                            VariableInstance::getTaskId)
+                .contains(tuple("processVariable",
+                                "myProcVar",
+                                String.class.getSimpleName().toLowerCase(),
+                                processInstance.getId(),
+                                null),
+                          tuple("taskVariable",
+                                "myTaskVar",
+                                String.class.getSimpleName().toLowerCase(),
+                                processInstance.getId(),
+                                currentTask.getId()));
     }
 
     @Test

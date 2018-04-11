@@ -16,9 +16,7 @@
 
 package org.activiti.runtime.api.model.builder;
 
-public interface CompleteTaskPayload {
-
-    <T> CompleteTaskPayload variable(String name, T value);
+public interface CompleteTaskPayload extends VariableContainer<CompleteTaskPayload> {
 
     void doIt();
 
