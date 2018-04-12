@@ -19,31 +19,36 @@ package org.activiti.runtime.api.model.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.activiti.engine.TaskService;
-import org.activiti.runtime.api.model.builder.CompleteTaskPayload;
+import org.activiti.engine.RuntimeService;
+import org.activiti.runtime.api.model.builder.SignalPayload;
 
-public class CompleteTaskPayloadImpl implements CompleteTaskPayload {
+public class SignalPayloadImpl implements SignalPayload {
 
-    private final TaskService taskService;
-    private final String taskId;
+    private final RuntimeService runtimeService;
 
+    private String name;
     private Map<String, Object> variables = new HashMap<>();
 
-    public CompleteTaskPayloadImpl(TaskService taskService, String taskId) {
-        this.taskService = taskService;
-        this.taskId = taskId;
+    public SignalPayloadImpl(RuntimeService runtimeService) {
+        this.runtimeService = runtimeService;
     }
 
     @Override
-    public <T> CompleteTaskPayload variable(String name,
-                                            T value) {
-        variables.put(name, value);
+    public SignalPayload name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    @Override
+    public <T> SignalPayload variable(String key,
+                                      T value) {
+        variables.put(key, value);
         return this;
     }
 
     @Override
     public Void doIt() {
-        taskService.complete(taskId, variables);
+        runtimeService.signalEventReceived(name, variables);
         return null;
     }
 }

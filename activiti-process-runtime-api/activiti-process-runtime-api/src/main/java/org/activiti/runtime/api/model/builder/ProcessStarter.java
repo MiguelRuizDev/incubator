@@ -20,12 +20,11 @@ import java.util.Map;
 
 import org.activiti.runtime.api.model.ProcessInstance;
 
-public interface ProcessStarter extends VariableContainer<ProcessStarter>{
+public interface ProcessStarter extends VariableContainer<ProcessStarter>,
+                                        ActionExecutor<ProcessInstance> {
 
     ProcessStarter variables(Map<String, Object> variables);
 
     ProcessStarter businessKey(String businessKey);
-
-    ProcessInstance doIt();
 
 }

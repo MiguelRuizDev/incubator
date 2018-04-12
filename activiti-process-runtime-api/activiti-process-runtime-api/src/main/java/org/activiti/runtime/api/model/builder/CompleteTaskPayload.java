@@ -16,8 +16,6 @@
 
 package org.activiti.runtime.api.model.builder;
 
-public interface CompleteTaskPayload extends VariableContainer<CompleteTaskPayload> {
-
-    void doIt();
-
+public interface CompleteTaskPayload extends VariableContainer<CompleteTaskPayload>,
+                                             ActionExecutor<Void> {
 }

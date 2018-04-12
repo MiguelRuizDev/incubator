@@ -24,8 +24,10 @@ import org.activiti.runtime.api.NotFoundException;
 import org.activiti.runtime.api.ProcessRuntime;
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.builder.SignalPayload;
 import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
+import org.activiti.runtime.api.model.impl.SignalPayloadImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -71,5 +73,15 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
                         .createProcessInstanceQuery()
                         .processInstanceId(processInstanceId)
                         .singleResult());
+    }
+
+    @Override
+    public SignalPayload sendSignalWith() {
+        return new SignalPayloadImpl(runtimeService);
+    }
+
+    @Override
+    public void sendSignal(String name) {
+        sendSignalWith().name(name).doIt();
     }
 }

@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.model.builder;
 
-import java.util.List;
-
-import org.activiti.runtime.api.model.ProcessDefinition;
-import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.builder.SignalPayload;
-
-public interface ProcessRuntime {
-
-    List<ProcessDefinition> processDefinitions();
-
-    ProcessDefinition processDefinitionByKey(String processDefinitionKey);
-
-    ProcessInstance processInstance(String processInstanceId);
-
-    SignalPayload sendSignalWith();
-
-    void sendSignal(String name);
-
+public interface SignalPayload extends VariableContainer<SignalPayload>,
+                                       ActionExecutor<Void> {
+    SignalPayload name(String name);
+    
 }
