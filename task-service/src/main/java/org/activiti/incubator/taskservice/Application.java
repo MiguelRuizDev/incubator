@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
 
 
 @SpringBootApplication
-public class TaskServiceApplication {
+public class Application {
 
-    private static final Logger log = LoggerFactory.getLogger(TaskServiceApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	public static void main(String[] args) {
 
-		SpringApplication.run(TaskServiceApplication.class, args);
+		SpringApplication.run(Application.class, args);
 
         log.info("Everything OK"); //checking
     }

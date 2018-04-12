@@ -1,89 +1,116 @@
-package org.activiti.incubator.taskservice;
+package org.activiti.incubator.taskservice.controller;
 
-import org.activiti.incubator.taskservice.domain.State;
+import org.activiti.incubator.taskservice.exceptions.TaskNotFoundException;
+import org.activiti.incubator.taskservice.exceptions.TaskNotModifiedException;
+import org.activiti.incubator.taskservice.resource.TaskResource;
+import org.activiti.incubator.taskservice.resource.TaskResourceAssembler;
 import org.activiti.incubator.taskservice.domain.Task;
-import org.activiti.incubator.taskservice.repository.TaskRepository;
+import org.activiti.incubator.taskservice.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.data.domain.Page;
 
 @RestController
-@RequestMapping(path = "/tasks")
+@RequestMapping(value = "/tasks")
 public class TaskController {
 
-    private TaskRepository taskRepository;
+    private TaskService taskService;
 
-    private TaskAssembler taskAssembler;
+    private TaskResourceAssembler taskResourceAssembler;
 
     private PagedResourcesAssembler <Task> pagedResourcesAssembler;
 
     @Autowired
-    public TaskController(TaskRepository taskRepository, TaskAssembler taskAssembler, PagedResourcesAssembler pagedResourcesAssembler ) {
-        this.taskRepository = taskRepository;
-        this.taskAssembler = taskAssembler;
+    public TaskController(TaskService taskService,
+                          TaskResourceAssembler taskResourceAssembler,
+                          PagedResourcesAssembler pagedResourcesAssembler ) {
+
+        this.taskService = taskService;
+        this.taskResourceAssembler = taskResourceAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
-    /*
-    @RequestMapping(path= "search/findByTitle/{title}", method = RequestMethod.GET)
-    public PagedResources <Resource <Task> >findByTitle(@PathVariable("title") String title){
+    @GetMapping
+    public ResponseEntity <PagedResources<TaskResource>> findAll(@RequestParam(value="state", defaultValue= "none") String state,
+                                                                                                                    Pageable page){
+        Page <Task> pages = taskService.findAll(state, page);
 
-        return pagedResourcesAssembler.toResource(taskRepository.findByTitle(title));
+        return new ResponseEntity<>(pagedResourcesAssembler.toResource(pages,taskResourceAssembler), HttpStatus.OK );
+    }
+
+    @GetMapping (path = "/{id}")
+    public ResponseEntity<TaskResource> findById(@PathVariable("id") Long id){
+
+        Task task = taskService.findById(id);
+
+        return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "/{id}/suspend")
+    public ResponseEntity<TaskResource> suspendTask(@PathVariable("id") Long id) {
+
+        Task task = taskService.suspendTask(id);
+
+        return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "{id}/activate")
+    public ResponseEntity<TaskResource> activateTask (@PathVariable("id") Long id){
+
+        Task task = taskService.activateTask(id);
+
+        return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "{id}/complete")
+    public ResponseEntity<TaskResource> completeTask (@PathVariable("id") Long id){
+
+        Task task = taskService.completeTask(id);
+
+        return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "{id}/assign")
+    public ResponseEntity<TaskResource> assignTask (@PathVariable("id") Long id, @RequestParam(value="user") String user){
+        Task task = taskService.assignTask(id, user);
+        return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "{id}/release")
+    public ResponseEntity<TaskResource> releaseTask (@PathVariable("id") Long id){
+        Task task = taskService.releaseTask(id);
+        return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
     }
 
 
-    @RequestMapping(path = "demo", method = RequestMethod.GET)
-    public PagedResources <Resource <Task> >findAll(){
-        return pagedResourcesAssembler.toResource(taskRepository.findAll());
-    }*/
-
-
-    @RequestMapping(path = "/{id}/suspend", method = RequestMethod.POST)
-    public Resource <Task> suspendTask(@PathVariable("id") Long id){
-
-        Task task = taskRepository.findById(id).get();
-
-        if(task.getState() == State.ACTIVE){
-            task.setState(State.SUSPENDED);
-            taskRepository.save(task);
-        }else{
-
-        }
-        return taskAssembler.toResource(task);
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<TaskResource> createTask (@RequestBody Task task) {
+        taskService.saveTask(task);
+        return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.CREATED);
     }
 
-
-    @RequestMapping(path = "{id}/activate", method = RequestMethod.POST)
-    public Resource <Task> activateTask (@PathVariable("id") Long id){
-
-        Task task = taskRepository.findById(id).get();
-
-        if(task.getState() == State.SUSPENDED){
-            task.setState(State.ACTIVE);
-            taskRepository.save(task);
-        }else{
-
-        }
-        return taskAssembler.toResource(task);
+    @DeleteMapping(path = "{id}/delete")
+    public ResponseEntity<TaskResource> deleteTask (@PathVariable("id") Long id){
+        taskService.deleteTask(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
-    @RequestMapping(path = "{id}/complete", method = RequestMethod.POST)
-    public Resource <Task> completeTask (@PathVariable("id") Long id){
-
-        Task task = taskRepository.findById(id).get();
-
-        if(task.getState() == State.ACTIVE){
-            task.setState(State.COMPLETED);
-            taskRepository.save(task);
-        }else{
-
-        }
-        return taskAssembler.toResource(task);
+    @ExceptionHandler(TaskNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handlerTaskNotFoundException(TaskNotFoundException ex) {
+        return ex.getMessage();
     }
 
-
+    @ExceptionHandler(TaskNotModifiedException.class)
+    @ResponseStatus(HttpStatus.NOT_MODIFIED)
+    public String handlerTaskNotModifiedException(TaskNotModifiedException ex) {
+        return ex.getMessage();
+    }
 
 }
 

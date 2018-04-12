@@ -1,7 +1,8 @@
-package org.activiti.incubator.taskservice;
+package org.activiti.incubator.taskservice.domain;
 
 import java.util.Date;
 import javax.persistence.*;
+import java.util.UUID;
 
 
 @Entity
@@ -17,11 +18,13 @@ public class Task {
 
     @Temporal(TemporalType.TIMESTAMP) //make sure this is a DATE+TIME in the database
     private Date creationDate;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
 
     private String assignedUser;
-    private int priority; //from 1 down to 10 (DESC)
+
+    private int priority; //from 1 down to 3 (DESC)
 
     private Long  parent; //stores parent's id; if there is no parent, id = null
 
