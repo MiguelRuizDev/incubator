@@ -3,18 +3,22 @@ package org.activiti.incubator.taskservice;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import org.springframework.data.jpa.repository.Query;
 
-@RepositoryRestResource (/*collectionResourceRel = "tasks", path = "tasks") */ exported = false)
+import org.springframework.data.domain.Page;
+
+@RepositoryRestResource (/*collectionResourceRel = "tasks", path = "tasks")  exported = false*/)
 public interface TaskRepository extends PagingAndSortingRepository <Task, Long>
 
 {
+    Page <Task> findAll();
 
-    List<Task> findByTitle(@Param("title") String title);
+    List <Task> findByTitle(@Param("title") String title);
 
     List<Task> findByCreationDate(@Param("creationDate") Date creation_date); //not working in URL, don't know how to feed the proper data format
     List<Task> findByDueDate(@Param("dueDate") Date due_date);//same

@@ -1,7 +1,6 @@
 package org.activiti.incubator.taskservice;
 
 import java.util.Date;
-
 import javax.persistence.*;
 
 

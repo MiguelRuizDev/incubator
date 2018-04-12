@@ -1,21 +1,19 @@
 package org.activiti.incubator.taskservice;
 
+import org.activiti.incubator.taskservice.domain.State;
+import org.activiti.incubator.taskservice.domain.Task;
+import org.activiti.incubator.taskservice.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.web.PagedResourcesAssembler;
 
-import java.util.List;
-
 @RestController
-@RequestMapping(path = "/tasks/")
+@RequestMapping(path = "/tasks")
 public class TaskController {
 
     private TaskRepository taskRepository;
 
-    @Autowired
     private TaskAssembler taskAssembler;
 
     private PagedResourcesAssembler <Task> pagedResourcesAssembler;
@@ -27,14 +25,21 @@ public class TaskController {
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
+    /*
     @RequestMapping(path= "search/findByTitle/{title}", method = RequestMethod.GET)
-    public List<Task> findByTitle(@PathVariable("title") String title){
-        return taskRepository.findByTitle(title);
+    public PagedResources <Resource <Task> >findByTitle(@PathVariable("title") String title){
+
+        return pagedResourcesAssembler.toResource(taskRepository.findByTitle(title));
     }
 
 
+    @RequestMapping(path = "demo", method = RequestMethod.GET)
+    public PagedResources <Resource <Task> >findAll(){
+        return pagedResourcesAssembler.toResource(taskRepository.findAll());
+    }*/
 
-    @RequestMapping(path = "{id}/suspend", method = RequestMethod.POST)
+
+    @RequestMapping(path = "/{id}/suspend", method = RequestMethod.POST)
     public Resource <Task> suspendTask(@PathVariable("id") Long id){
 
         Task task = taskRepository.findById(id).get();

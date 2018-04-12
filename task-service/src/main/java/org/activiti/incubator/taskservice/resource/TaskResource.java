@@ -1,5 +1,6 @@
 package org.activiti.incubator.taskservice;
 
+import org.activiti.incubator.taskservice.domain.Task;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 
