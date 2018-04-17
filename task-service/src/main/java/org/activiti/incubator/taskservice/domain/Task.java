@@ -1,6 +1,7 @@
 package org.activiti.incubator.taskservice.domain;
 
-import java.util.Date;
+import org.hibernate.annotations.GenericGenerator;
+import java.sql.Timestamp;
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -9,18 +10,23 @@ import java.util.UUID;
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     @Column(nullable = false, updatable = false)
-    private Long id;
+    private UUID id;
+
     private String title;
 
     private State state = State.ACTIVE;
 
-    @Temporal(TemporalType.TIMESTAMP) //make sure this is a DATE+TIME in the database
-    private Date creationDate;
+    //@Temporal(TemporalType.TIMESTAMP) //make sure this is a DATE+TIME in the database
+    private Timestamp creationDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dueDate;
+    //@Temporal(TemporalType.TIMESTAMP)
+    private Timestamp dueDate;
 
     private String assignedUser;
 
@@ -30,9 +36,9 @@ public class Task {
 
     private String content;
 
-    public Long getId() { return id; }
+    public UUID getId() { return id; }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(UUID id) { this.id = id; }
 
     public String getTitle() { return title; }
 
@@ -42,13 +48,13 @@ public class Task {
 
     public void setState(State state) { this.state = state; }
 
-    public Date getCreationDate() { return creationDate; }
+    public Timestamp getCreationDate() { return creationDate; }
 
-    public void setCreationDate(Date creationDate) { this.creationDate = creationDate; }
+    public void setCreationDate(Timestamp creationDate) { this.creationDate = creationDate; }
 
-    public Date getDueDate() {return dueDate; }
+    public Timestamp getDueDate() {return dueDate; }
 
-    public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
+    public void setDueDate(Timestamp dueDate) { this.dueDate = dueDate; }
 
     public String getAssignedUser() { return assignedUser; }
 
@@ -65,5 +71,20 @@ public class Task {
     public String getContent() { return content; }
 
     public void setContent(String content) { this.content = content; }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", state=" + state +
+                ", creationDate=" + creationDate +
+                ", dueDate=" + dueDate +
+                ", assignedUser='" + assignedUser + '\'' +
+                ", priority=" + priority +
+                ", parent=" + parent +
+                ", content='" + content + '\'' +
+                '}';
+    }
 
 }

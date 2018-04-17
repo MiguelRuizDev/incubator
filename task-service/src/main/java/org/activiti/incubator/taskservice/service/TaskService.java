@@ -7,61 +7,63 @@ import org.activiti.incubator.taskservice.exceptions.TaskNotModifiedException;
 import org.activiti.incubator.taskservice.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import java.sql.Timestamp;
+import java.util.UUID;
+import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Component
 public class TaskService {
 
     private TaskRepository taskRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(TaskService.class);
+
     @Autowired
     public TaskService(TaskRepository taskRepository){
         this.taskRepository = taskRepository;
     }
 
-    public Page<Task> findAll(String state,
-                              Pageable page){
+    public Page<Task> findAll(State state, Pageable page){
 
         Page<Task> pages;
-
-        switch (state) {
-            case "active":
-                pages = taskRepository.findByState(State.ACTIVE, page);
-                break;
-            case "suspended":
-                pages = taskRepository.findByState(State.SUSPENDED, page);
-                break;
-            case "completed":
-                pages = taskRepository.findByState(State.COMPLETED, page);
-                break;
-            case "assigned":
-                pages = taskRepository.findByState(State.ASSIGNED, page);
-                break;
-            default:
-                pages = taskRepository.findAll(page);
+        if (state != State.ANY){
+            pages = taskRepository.findByState(state, page);
+        }else{
+            pages = taskRepository.findAll(page);
         }
         return pages;
     }
 
-    public Task findById(Long id){
+    public Task findById(UUID id){
 
-        if(taskRepository.findById(id).isPresent()) {
-            return taskRepository.findById(id).get();
+        Optional<Task> task = taskRepository.findById(id);
+
+        if(task.isPresent()) {
+            return task.get();
         }else{
             throw new TaskNotFoundException("There is no task with id: " + id);
         }
     }
 
-    public void saveTask(Task task){
-        taskRepository.save(task);
+    public Task saveTask(Task task){
+        return taskRepository.save(task);
     }
 
-    public void deleteTask (Long id){
+    public void deleteTask (UUID id){
         taskRepository.deleteById(id);
     }
 
-    public Task suspendTask(Long id){
+    public Task suspendTask(UUID id){
 
         Task task = this.findById(id);
 
@@ -69,15 +71,15 @@ public class TaskService {
 
             task.setState(State.SUSPENDED);
             taskRepository.save(task);
+            return task;
 
         }else{
-
             throw new TaskNotModifiedException("The task with id: " + task.getId() + " could not be modified.");
         }
-        return task;
+
     }
 
-    public Task activateTask(Long id){
+    public Task activateTask(UUID id){
 
         Task task = this.findById(id);
 
@@ -85,15 +87,14 @@ public class TaskService {
 
             task.setState(State.ACTIVE);
             taskRepository.save(task);
-
+            return task;
         }else{
-
             throw new TaskNotModifiedException("The task with id: " + task.getId() + " could not be modified.");
         }
-        return task;
+
     }
 
-    public Task completeTask(Long id){
+    public Task completeTask(UUID id){
 
         Task task = this.findById(id);
 
@@ -101,15 +102,13 @@ public class TaskService {
 
             task.setState(State.COMPLETED);
             taskRepository.save(task);
-
+            return task;
         }else{
-
             throw new TaskNotModifiedException("The task with id: " + task.getId() + " could not be modified.");
         }
-        return task;
     }
 
-    public Task assignTask (Long id, String user){
+    public Task assignTask (UUID id, String user){
 
         Task task = this.findById(id);
 
@@ -118,21 +117,22 @@ public class TaskService {
             task.setAssignedUser(user);
             task.setState(State.ASSIGNED);
             taskRepository.save(task);
+            return task;
 
         }else{
 
             throw new TaskNotModifiedException("The task with id: " + task.getId() + " is already assigned to " + task.getAssignedUser());
         }
-        return task;
+
     }
 
-    public Task releaseTask (Long id){
+    public Task releaseTask (UUID id){
 
         Task task = this.findById(id);
 
         if(task.getState() == State.ASSIGNED ){
 
-            task.setAssignedUser(null);
+            task.setAssignedUser("");
             task.setState(State.ACTIVE);
             taskRepository.save(task);
 
@@ -142,4 +142,46 @@ public class TaskService {
         }
         return task;
     }
+
+    @Scheduled(fixedRate = 10000)
+    public void showNotAssignedTasks() {
+        Pageable page = PageRequest.of(0, 10);
+        List <Task> list = taskRepository.findByState(State.ACTIVE, page).getContent();
+        if(list.isEmpty()){
+            log("There are no tasks to be assigned.");
+        }else{
+            log("There are tasks to be assigned: " + list.toString());
+        }
+    }
+
+    protected void log(String message) {
+        log.info(message);
+    }
+
+
+    @Scheduled(fixedRate = 5000)
+    public void showDueTasks(){
+
+        Iterator<Task> all = taskRepository.findAll().iterator();
+
+        List <Task> dueTasks = new ArrayList();
+
+        while (all.hasNext()){
+            Task currentTask = all.next();
+            if (currentTask.getDueDate().getTime() < System.currentTimeMillis()){
+                dueTasks.add(currentTask);
+            }
+        }
+
+        if(dueTasks.isEmpty()){
+            log("There are no Due tasks.");
+        }else{
+            log("There are Due tasks: " + dueTasks.toString());
+        }
+
+
+    }
+
+
+
 }

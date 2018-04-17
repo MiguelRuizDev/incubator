@@ -2,19 +2,19 @@ package org.activiti.incubator.taskservice.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
 import org.activiti.incubator.taskservice.domain.State;
 import org.activiti.incubator.taskservice.domain.Task;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-
 import org.springframework.data.jpa.repository.Query;
-
 import org.springframework.data.domain.Page;
 
-@RepositoryRestResource ( exported = false)
-public interface TaskRepository extends PagingAndSortingRepository <Task, Long> {
+@RepositoryRestResource (exported = false)
+public interface TaskRepository extends PagingAndSortingRepository <Task, UUID> {
 
     Page <Task> findByState(@Param("state") State state, Pageable page);
 
