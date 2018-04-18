@@ -18,7 +18,7 @@ package org.activiti.runtime.api;
 
 import java.util.List;
 
-import org.activiti.runtime.api.events.DummyTaskCreatedRuntimeEventListener;
+import org.activiti.runtime.api.events.AssignTaskListener;
 import org.activiti.runtime.api.events.TaskRuntimeEventListener;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.Task;
@@ -49,7 +49,7 @@ public class TaskRuntimeIT {
 
         //then
         assertThat(eventListeners).hasSize(1);
-        assertThat(eventListeners.get(0)).isInstanceOf(DummyTaskCreatedRuntimeEventListener.class);
+        assertThat(eventListeners.get(0)).isInstanceOf(AssignTaskListener.class);
     }
 
     @Test

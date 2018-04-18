@@ -16,22 +16,20 @@
 
 package org.activiti.runtime.api.events;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.activiti.runtime.api.model.Task;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DummyTaskCreatedRuntimeEventListener implements TaskRuntimeEventListener {
-
-
-    private Map<String, String> tasks = new HashMap<>();
+public class AssignTaskListener implements TaskRuntimeEventListener {
 
     @Override
     public void onEvent(TaskRuntimeEvent event) {
         Task task = event.getEntity();
-        tasks.put(task.getProcessInstanceId(), task.getName());
+        task.claim(getUsername());
+    }
+
+    public String getUsername() {
+        return "listenerUser";
     }
 
     @Override
@@ -44,11 +42,4 @@ public class DummyTaskCreatedRuntimeEventListener implements TaskRuntimeEventLis
         return TaskRuntimeEvent.TaskEvents.TASK_CREATED;
     }
 
-    public Map<String, String> getTasks() {
-        return tasks;
-    }
-
-    public void clear() {
-        tasks.clear();
-    }
 }

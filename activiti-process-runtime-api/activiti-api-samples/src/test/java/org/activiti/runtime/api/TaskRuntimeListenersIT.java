@@ -16,9 +16,9 @@
 
 package org.activiti.runtime.api;
 
-import org.activiti.runtime.api.events.DummyProcessStartedEventListener;
+import org.activiti.runtime.api.events.AssignTaskListener;
 import org.activiti.runtime.api.model.ProcessInstance;
-import org.junit.Before;
+import org.activiti.runtime.api.model.Task;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,28 +29,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class ProcessRuntimeListenersIT {
+public class TaskRuntimeListenersIT {
 
     @Autowired
     private ProcessRuntime processRuntime;
 
     @Autowired
-    private DummyProcessStartedEventListener processStartedEventListener;
+    private TaskRuntime taskRuntime;
 
-    @Before
-    public void setUp() {
-        processStartedEventListener.clear();
-    }
+    @Autowired
+    private AssignTaskListener assignTaskListener;
 
     @Test
-    public void startProcessInstanceShouldTriggerStartProcessListeners() {
-        //when
+    public void taskCreatedShouldTriggerCreateTaskListeners() {
+        //when: the first task will be created as consequence of process start
         ProcessInstance processInstance = processRuntime
                 .processDefinitionByKey("SimpleProcess")
                 .start();
 
-        //then
-        assertThat(processStartedEventListener.getStartedProcesses()).contains(processInstance.getId());
+        //then: the task should be assigned by the listener
+        Task currentTask = taskRuntime.tasks(0,
+                                       500)
+                .stream()
+                .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
+                .findFirst().orElse(null);
+
+        assertThat(currentTask).isNotNull();
+        assertThat(currentTask.getAssignee()).isEqualTo(assignTaskListener.getUsername());
     }
 
 }
