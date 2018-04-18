@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.impl.conf;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.model.Task;
+import org.activiti.runtime.api.events.TaskRuntimeEventListener;
+import org.springframework.stereotype.Component;
 
-public interface TaskRuntime {
+@Component
+public class TaskRuntimeConfigurationImpl implements TaskRuntimeConfiguration {
 
-    TaskRuntimeConfiguration configuration();
+    private final List<TaskRuntimeEventListener> eventListeners;
 
-    Task task(String taskId);
+    public TaskRuntimeConfigurationImpl(List<TaskRuntimeEventListener> eventListeners) {
+        this.eventListeners = eventListeners;
+    }
 
-    List<Task> tasks(int firstResult, int maxResults);
-
+    @Override
+    public List<TaskRuntimeEventListener> eventListeners() {
+        return Collections.unmodifiableList(eventListeners);
+    }
 }

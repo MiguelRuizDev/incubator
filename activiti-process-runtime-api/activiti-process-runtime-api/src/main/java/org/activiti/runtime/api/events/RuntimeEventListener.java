@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.events;
 
-import java.util.List;
+public interface RuntimeEventListener<ENUM_TYPE extends Enum<ENUM_TYPE>, EVENT_TYPE extends RuntimeEvent<ENUM_TYPE, ?>> {
 
-import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.model.Task;
+  void onEvent(EVENT_TYPE event);
 
-public interface TaskRuntime {
+  boolean shouldIgnoreFailure();
 
-    TaskRuntimeConfiguration configuration();
-
-    Task task(String taskId);
-
-    List<Task> tasks(int firstResult, int maxResults);
+  ENUM_TYPE getHandledEvent();
 
 }

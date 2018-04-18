@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.events;
 
-import java.util.List;
-
-import org.activiti.runtime.api.config.ProcessRuntimeConfiguration;
-import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.builder.SignalPayload;
 
-public interface ProcessRuntime {
+public interface ProcessRuntimeEvent extends RuntimeEvent<ProcessRuntimeEvent.ProcessRuntimeEvents, ProcessInstance> {
 
-    ProcessRuntimeConfiguration configuration();
+    enum ProcessRuntimeEvents {
 
-    List<ProcessDefinition> processDefinitions();
+        PROCESS_STARTED,
 
-    ProcessDefinition processDefinitionByKey(String processDefinitionKey);
+        PROCESS_SUSPENDED,
 
-    ProcessInstance processInstance(String processInstanceId);
+        PROCESS_RESUMED,
 
-    SignalPayload sendSignalWith();
+        PROCESS_COMPLETED,
 
-    void sendSignal(String name);
+        PROCESS_CANCELLED
+
+    }
 
 }

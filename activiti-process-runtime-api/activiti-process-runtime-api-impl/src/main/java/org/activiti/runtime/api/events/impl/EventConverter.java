@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.events.impl;
 
-import java.util.List;
+import org.activiti.engine.delegate.event.ActivitiEvent;
+import org.activiti.engine.delegate.event.ActivitiEventType;
+import org.activiti.runtime.api.events.RuntimeEvent;
 
-import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.model.Task;
+public interface EventConverter<EVENT_TYPE extends RuntimeEvent<?, ?>> {
 
-public interface TaskRuntime {
+    EVENT_TYPE from(ActivitiEvent activitiEvent);
 
-    TaskRuntimeConfiguration configuration();
-
-    Task task(String taskId);
-
-    List<Task> tasks(int firstResult, int maxResults);
+    ActivitiEventType getHandledEvent();
 
 }

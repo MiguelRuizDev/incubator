@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.events;
 
-import java.util.List;
-
-import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
 import org.activiti.runtime.api.model.Task;
 
-public interface TaskRuntime {
+public interface TaskRuntimeEvent extends RuntimeEvent<TaskRuntimeEvent.TaskEvents, Task> {
 
-    TaskRuntimeConfiguration configuration();
+    enum TaskEvents {
 
-    Task task(String taskId);
+        TASK_CREATED,
 
-    List<Task> tasks(int firstResult, int maxResults);
+        TASK_ASSIGNED,
+
+        TASK_SUSPENDED,
+
+        TASK_COMPLETED
+
+    }
 
 }

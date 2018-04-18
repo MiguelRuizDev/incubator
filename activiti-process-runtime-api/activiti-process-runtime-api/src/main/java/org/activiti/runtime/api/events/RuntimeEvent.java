@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.events;
 
-import java.util.List;
+public interface RuntimeEvent<ENUM_TYPE extends Enum<ENUM_TYPE>, ENTITY_TYPE> {
 
-import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.model.Task;
+    ENUM_TYPE getType();
 
-public interface TaskRuntime {
-
-    TaskRuntimeConfiguration configuration();
-
-    Task task(String taskId);
-
-    List<Task> tasks(int firstResult, int maxResults);
+    ENTITY_TYPE getEntity();
 
 }

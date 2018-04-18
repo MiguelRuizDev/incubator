@@ -22,6 +22,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.NotFoundException;
 import org.activiti.runtime.api.ProcessRuntime;
+import org.activiti.runtime.api.config.ProcessRuntimeConfiguration;
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.builder.SignalPayload;
@@ -41,14 +42,18 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
 
     private final APIProcessInstanceConverter processInstanceConverter;
 
+    private final ProcessRuntimeConfiguration configuration;
+
     public ProcessRuntimeImpl(RepositoryService repositoryService,
                               APIProcessDefinitionConverter processDefinitionConverter,
                               RuntimeService runtimeService,
-                              APIProcessInstanceConverter processInstanceConverter) {
+                              APIProcessInstanceConverter processInstanceConverter,
+                              ProcessRuntimeConfiguration configuration) {
         this.repositoryService = repositoryService;
         this.processDefinitionConverter = processDefinitionConverter;
         this.runtimeService = runtimeService;
         this.processInstanceConverter = processInstanceConverter;
+        this.configuration = configuration;
     }
 
     @Override
@@ -83,5 +88,10 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
     @Override
     public void sendSignal(String name) {
         sendSignalWith().name(name).doIt();
+    }
+
+    @Override
+    public ProcessRuntimeConfiguration configuration() {
+        return configuration;
     }
 }

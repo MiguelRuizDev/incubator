@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.events.impl;
 
-import java.util.List;
+import org.activiti.runtime.api.events.RuntimeEvent;
 
-import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.model.Task;
+public abstract class RuntimeEventImpl<ENUM_TYPE extends Enum<ENUM_TYPE>, ENTITY_TYPE> implements RuntimeEvent<ENUM_TYPE, ENTITY_TYPE> {
 
-public interface TaskRuntime {
+    private final ENTITY_TYPE entity;
+    private final ENUM_TYPE type;
 
-    TaskRuntimeConfiguration configuration();
+    public RuntimeEventImpl(ENTITY_TYPE entity, ENUM_TYPE type) {
+        this.entity = entity;
+        this.type = type;
+    }
 
-    Task task(String taskId);
+    @Override
+    public ENUM_TYPE getType() {
+        return type;
+    }
 
-    List<Task> tasks(int firstResult, int maxResults);
-
+    @Override
+    public ENTITY_TYPE getEntity() {
+        return entity;
+    }
 }
