@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.events;
+package org.activiti.runtime.api.events.impl;
 
-public interface TaskRuntimeEventListener extends RuntimeEventListener {
+import org.activiti.runtime.api.events.task.TaskAssignedEvent;
+import org.activiti.runtime.api.model.Task;
 
-    void onTaskCreated(TaskRuntimeEvent event);
+public class TaskAssignedEventImpl extends RuntimeEventImpl<Task>
+        implements TaskAssignedEvent {
 
-    void onTaskAssigned(TaskRuntimeEvent event);
-
-    void onTaskSuspended(TaskRuntimeEvent event);
-
-    void onTaskCompleted(TaskRuntimeEvent event);
-
+    public TaskAssignedEventImpl(Task entity) {
+        super(entity);
+    }
 }

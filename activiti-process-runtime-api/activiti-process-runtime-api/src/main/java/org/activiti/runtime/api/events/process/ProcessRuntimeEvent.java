@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.events;
+package org.activiti.runtime.api.events.process;
 
+import org.activiti.runtime.api.events.RuntimeEvent;
 import org.activiti.runtime.api.model.ProcessInstance;
 
 public interface ProcessRuntimeEvent extends RuntimeEvent<ProcessInstance> {

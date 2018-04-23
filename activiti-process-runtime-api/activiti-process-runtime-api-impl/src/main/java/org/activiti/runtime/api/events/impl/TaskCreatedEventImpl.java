@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.events;
+package org.activiti.runtime.api.events.impl;
 
+import org.activiti.runtime.api.events.task.TaskCreatedEvent;
 import org.activiti.runtime.api.model.Task;
 
-public interface TaskRuntimeEvent extends RuntimeEvent<Task> {
+public class TaskCreatedEventImpl extends RuntimeEventImpl<Task>
+        implements TaskCreatedEvent {
 
-    enum TaskEvents {
-
-        TASK_CREATED,
-
-        TASK_ASSIGNED,
-
-        TASK_SUSPENDED,
-
-        TASK_COMPLETED
-
+    public TaskCreatedEventImpl(Task entity) {
+        super(entity);
     }
-
 }

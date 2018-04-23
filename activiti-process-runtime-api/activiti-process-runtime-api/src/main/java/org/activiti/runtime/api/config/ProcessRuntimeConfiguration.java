@@ -18,7 +18,7 @@ package org.activiti.runtime.api.config;
 
 import java.util.List;
 
-import org.activiti.runtime.api.events.ProcessRuntimeEventListener;
+import org.activiti.runtime.api.events.listener.ProcessRuntimeEventListener;
 
 public interface ProcessRuntimeConfiguration {
 

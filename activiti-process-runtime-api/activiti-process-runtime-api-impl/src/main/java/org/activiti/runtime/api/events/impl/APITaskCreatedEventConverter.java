@@ -17,15 +17,14 @@
 package org.activiti.runtime.api.events.impl;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
-import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.engine.delegate.event.impl.ActivitiEntityEventImpl;
 import org.activiti.engine.task.Task;
-import org.activiti.runtime.api.events.TaskRuntimeEvent;
+import org.activiti.runtime.api.events.task.TaskCreatedEvent;
 import org.activiti.runtime.api.model.impl.APITaskConverter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class APITaskCreatedEventConverter implements EventConverter<TaskRuntimeEvent> {
+public class APITaskCreatedEventConverter implements EventConverter<TaskCreatedEvent> {
 
     private final APITaskConverter taskConverter;
 
@@ -34,13 +33,8 @@ public class APITaskCreatedEventConverter implements EventConverter<TaskRuntimeE
     }
 
     @Override
-    public TaskRuntimeEvent from(ActivitiEvent event) {
-        return new TaskRuntimeEventImpl(taskConverter.from((Task) ((ActivitiEntityEventImpl) event).getEntity()));
-    }
-
-    @Override
-    public ActivitiEventType getHandledEvent() {
-        return ActivitiEventType.TASK_CREATED;
+    public TaskCreatedEvent from(ActivitiEvent event) {
+        return new TaskCreatedEventImpl(taskConverter.from((Task) ((ActivitiEntityEventImpl) event).getEntity()));
     }
 
 }

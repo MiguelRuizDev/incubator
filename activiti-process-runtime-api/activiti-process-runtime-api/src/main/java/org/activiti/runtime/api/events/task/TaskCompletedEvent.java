@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.events.impl;
+package org.activiti.runtime.api.events.task;
 
-import org.activiti.runtime.api.events.TaskRuntimeEvent;
-import org.activiti.runtime.api.model.Task;
+public interface TaskCompletedEvent extends TaskRuntimeEvent {
 
-public class TaskRuntimeEventImpl extends RuntimeEventImpl<Task>
-        implements TaskRuntimeEvent {
-
-    public TaskRuntimeEventImpl(Task entity) {
-        super(entity);
-    }
 }

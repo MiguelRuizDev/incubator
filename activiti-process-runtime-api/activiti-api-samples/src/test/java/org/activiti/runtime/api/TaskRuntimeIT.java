@@ -19,7 +19,7 @@ package org.activiti.runtime.api;
 import java.util.List;
 
 import org.activiti.runtime.api.events.AssignTaskListener;
-import org.activiti.runtime.api.events.TaskRuntimeEventListener;
+import org.activiti.runtime.api.events.listener.TaskRuntimeEventListener;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.Task;
 import org.activiti.runtime.api.model.VariableInstance;

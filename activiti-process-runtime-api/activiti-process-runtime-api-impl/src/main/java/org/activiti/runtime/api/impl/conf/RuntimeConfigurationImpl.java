@@ -21,29 +21,30 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.runtime.api.config.ProcessRuntimeConfiguration;
-import org.activiti.runtime.api.events.ProcessRuntimeEventListener;
-import org.activiti.runtime.api.events.impl.ProcessRuntimeEventListenerDelegate;
+import org.activiti.runtime.api.events.listener.ProcessRuntimeEventListener;
+import org.activiti.runtime.api.events.impl.ProcessStartedEventListenerDelegate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RuntimeConfigurationImpl implements ProcessRuntimeConfiguration {
 
     private final RuntimeService runtimeService;
-    private final ProcessRuntimeEventListenerDelegate processRuntimeEventListenerDelegate;
+    private final ProcessStartedEventListenerDelegate processStartedEventListenerDelegate;
     private final List<ProcessRuntimeEventListener> eventListeners;
 
     public RuntimeConfigurationImpl(RuntimeService runtimeService,
-                                    ProcessRuntimeEventListenerDelegate processRuntimeEventListenerDelegate,
+                                    ProcessStartedEventListenerDelegate processStartedEventListenerDelegate,
                                     List<ProcessRuntimeEventListener> eventListeners) {
         this.runtimeService = runtimeService;
-        this.processRuntimeEventListenerDelegate = processRuntimeEventListenerDelegate;
+        this.processStartedEventListenerDelegate = processStartedEventListenerDelegate;
         this.eventListeners = eventListeners;
     }
 
     @PostConstruct
     private void registerEventListeners() {
-        runtimeService.addEventListener(processRuntimeEventListenerDelegate);
+        runtimeService.addEventListener(processStartedEventListenerDelegate, ActivitiEventType.PROCESS_STARTED);
     }
 
     @Override

@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.events;
+package org.activiti.runtime.api.events.impl;
 
-import org.activiti.runtime.api.ProcessRuntime;
+import org.activiti.runtime.api.events.process.ProcessStartedEvent;
+import org.activiti.runtime.api.model.ProcessInstance;
 
-public interface ProcessRuntimeEventListener extends RuntimeEventListener {
+public class ProcessStartedEventImpl extends RuntimeEventImpl<ProcessInstance>
+        implements ProcessStartedEvent {
 
-    void onProcessStarted(ProcessRuntimeEvent event);
-
-    void onProcessSuspended(ProcessRuntimeEvent event);
-
-    void onProcessResumed(ProcessRuntimeEvent event);
-
-    void onProcessCompleted(ProcessRuntimeEvent event);
-
-    void onProcessCancelled(ProcessRuntime event);
+    public ProcessStartedEventImpl(ProcessInstance entity) {
+        super(entity);
+    }
 
 }

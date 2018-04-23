@@ -19,6 +19,7 @@ package org.activiti.runtime.api;
 import org.activiti.runtime.api.events.AssignTaskListener;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.Task;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,22 +41,44 @@ public class TaskRuntimeListenersIT {
     @Autowired
     private AssignTaskListener assignTaskListener;
 
+    @Before
+    public void setUp() {
+        assignTaskListener.clear();
+    }
+
     @Test
-    public void taskCreatedShouldTriggerCreateTaskListeners() {
+    public void taskCreatedShouldTriggerOnCreateTask() {
         //when: the first task will be created as consequence of process start
         ProcessInstance processInstance = processRuntime
                 .processDefinitionByKey("SimpleProcess")
                 .start();
 
         //then: the task should be assigned by the listener
-        Task currentTask = taskRuntime.tasks(0,
-                                       500)
-                .stream()
-                .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
-                .findFirst().orElse(null);
+        Task currentTask = getCurrentTask(processInstance);
 
         assertThat(currentTask).isNotNull();
         assertThat(currentTask.getAssignee()).isEqualTo(assignTaskListener.getUsername());
     }
 
+    @Test
+    public void taskAssignedShouldTriggerOnAssignTask() {
+        //when: the first task will be created as consequence of process start
+        ProcessInstance processInstance = processRuntime
+                .processDefinitionByKey("SimpleProcess")
+                .start();
+
+        //then: the task should be assigned by the listener
+        Task currentTask = getCurrentTask(processInstance);
+        currentTask.claim("jack");
+
+        assertThat(assignTaskListener.getAssignedTasks()).containsEntry(currentTask.getId(), "jack");
+    }
+
+    private Task getCurrentTask(ProcessInstance processInstance) {
+        return taskRuntime.tasks(0,
+                                           500)
+                    .stream()
+                    .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
+                    .findFirst().orElse(null);
+    }
 }

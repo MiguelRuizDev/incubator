@@ -16,23 +16,25 @@
 
 package org.activiti.runtime.api.events.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.activiti.engine.delegate.event.ActivitiEventType;
-import org.activiti.runtime.api.events.ProcessRuntimeEvent;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.activiti.engine.delegate.event.ActivitiEvent;
+import org.activiti.engine.delegate.event.impl.ActivitiEntityEventImpl;
+import org.activiti.engine.task.Task;
+import org.activiti.runtime.api.events.task.TaskAssignedEvent;
+import org.activiti.runtime.api.model.impl.APITaskConverter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProcessRuntimeEventsConverter extends EventsConverter<ProcessRuntimeEvent> {
+public class APITaskAssignedEventConverter implements EventConverter<TaskAssignedEvent> {
 
-    public ProcessRuntimeEventsConverter(Map<ActivitiEventType, EventConverter<ProcessRuntimeEvent>> convertersMap) {
-        super(convertersMap);
+    private final APITaskConverter taskConverter;
+
+    public APITaskAssignedEventConverter(APITaskConverter taskConverter) {
+        this.taskConverter = taskConverter;
     }
 
-    @Autowired
-    public ProcessRuntimeEventsConverter(List<EventConverter<ProcessRuntimeEvent>> eventConverters) {
-        super(eventConverters);
+    @Override
+    public TaskAssignedEvent from(ActivitiEvent event) {
+        return new TaskAssignedEventImpl(taskConverter.from((Task) ((ActivitiEntityEventImpl) event).getEntity()));
     }
+
 }

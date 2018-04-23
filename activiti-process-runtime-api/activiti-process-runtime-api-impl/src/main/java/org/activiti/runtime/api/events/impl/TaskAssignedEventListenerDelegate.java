@@ -20,38 +20,28 @@ import java.util.List;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
-import org.activiti.runtime.api.events.TaskRuntimeEvent;
-import org.activiti.runtime.api.events.TaskRuntimeEventListener;
+import org.activiti.runtime.api.events.listener.TaskRuntimeEventListener;
+import org.activiti.runtime.api.events.task.TaskAssignedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TaskRuntimeEventListenerDelegate implements ActivitiEventListener {
+public class TaskAssignedEventListenerDelegate implements ActivitiEventListener {
 
     private final List<TaskRuntimeEventListener> taskRuntimeEventListeners;
 
-    private final TaskRuntimeEventsConverter taskRuntimeEventsConverter;
+    private final APITaskAssignedEventConverter taskAssignedEventConverter;
 
-    public TaskRuntimeEventListenerDelegate(List<TaskRuntimeEventListener> taskRuntimeEventListeners,
-                                            TaskRuntimeEventsConverter taskRuntimeEventsConverter) {
+    public TaskAssignedEventListenerDelegate(List<TaskRuntimeEventListener> taskRuntimeEventListeners,
+                                             APITaskAssignedEventConverter taskAssignedEventConverter) {
         this.taskRuntimeEventListeners = taskRuntimeEventListeners;
-        this.taskRuntimeEventsConverter = taskRuntimeEventsConverter;
+        this.taskAssignedEventConverter = taskAssignedEventConverter;
     }
 
     @Override
     public void onEvent(ActivitiEvent event) {
-        TaskRuntimeEvent runtimeEvent = taskRuntimeEventsConverter.from(event);
-        if (runtimeEvent != null) {
-            for (TaskRuntimeEventListener listener : taskRuntimeEventListeners) {
-                switch (event.getType()) {
-                    case TASK_CREATED:
-                        listener.onTaskCreated(runtimeEvent);
-                        break;
-                    case TASK_ASSIGNED:
-                        break;
-                    case TASK_COMPLETED:
-                        break;
-                }
-            }
+        TaskAssignedEvent runtimeEvent = taskAssignedEventConverter.from(event);
+        for (TaskRuntimeEventListener listener : taskRuntimeEventListeners) {
+            listener.onTaskAssigned(runtimeEvent);
         }
     }
 

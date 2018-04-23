@@ -20,38 +20,28 @@ import java.util.List;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
-import org.activiti.runtime.api.events.ProcessRuntimeEvent;
-import org.activiti.runtime.api.events.ProcessRuntimeEventListener;
+import org.activiti.runtime.api.events.listener.ProcessRuntimeEventListener;
+import org.activiti.runtime.api.events.process.ProcessStartedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProcessRuntimeEventListenerDelegate implements ActivitiEventListener {
+public class ProcessStartedEventListenerDelegate implements ActivitiEventListener {
 
     private final List<ProcessRuntimeEventListener> processRuntimeEventListeners;
 
-    private final ProcessRuntimeEventsConverter processRuntimeEventsConverter;
+    private final APIProcessStartedEventConverter processInstanceStartedEventConverter;
 
-    public ProcessRuntimeEventListenerDelegate(List<ProcessRuntimeEventListener> processRuntimeEventListeners,
-                                               ProcessRuntimeEventsConverter processRuntimeEventsConverter) {
+    public ProcessStartedEventListenerDelegate(List<ProcessRuntimeEventListener> processRuntimeEventListeners,
+                                               APIProcessStartedEventConverter processInstanceStartedEventConverter) {
         this.processRuntimeEventListeners = processRuntimeEventListeners;
-        this.processRuntimeEventsConverter = processRuntimeEventsConverter;
+        this.processInstanceStartedEventConverter = processInstanceStartedEventConverter;
     }
 
     @Override
     public void onEvent(ActivitiEvent event) {
-        ProcessRuntimeEvent runtimeEvent = processRuntimeEventsConverter.from(event);
-        if (runtimeEvent != null) {
-            for (ProcessRuntimeEventListener listener : processRuntimeEventListeners) {
-                switch (event.getType()) {
-                    case PROCESS_STARTED:
-                        listener.onProcessStarted(runtimeEvent);
-                        break;
-                    case PROCESS_COMPLETED:
-                        break;
-                    case PROCESS_CANCELLED:
-                        break;
-                }
-            }
+        ProcessStartedEvent runtimeEvent = processInstanceStartedEventConverter.from(event);
+        for (ProcessRuntimeEventListener listener : processRuntimeEventListeners) {
+            listener.onProcessStarted(runtimeEvent);
         }
     }
 

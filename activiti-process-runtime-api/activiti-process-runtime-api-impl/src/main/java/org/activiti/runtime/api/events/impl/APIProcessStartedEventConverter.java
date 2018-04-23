@@ -17,32 +17,28 @@
 package org.activiti.runtime.api.events.impl;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
-import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.engine.delegate.event.ActivitiProcessStartedEvent;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
-import org.activiti.runtime.api.events.ProcessRuntimeEvent;
+import org.activiti.runtime.api.events.process.ProcessRuntimeEvent;
+import org.activiti.runtime.api.events.process.ProcessStartedEvent;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class APIProcessInstanceStartedEventConverter implements EventConverter<ProcessRuntimeEvent> {
+public class APIProcessStartedEventConverter implements EventConverter<ProcessRuntimeEvent> {
 
     private final APIProcessInstanceConverter processInstanceConverter;
 
-    public APIProcessInstanceStartedEventConverter(APIProcessInstanceConverter processInstanceConverter) {
+    public APIProcessStartedEventConverter(APIProcessInstanceConverter processInstanceConverter) {
         this.processInstanceConverter = processInstanceConverter;
     }
 
     @Override
-    public ProcessRuntimeEvent from(ActivitiEvent activitiEvent) {
+    public ProcessStartedEvent from(ActivitiEvent activitiEvent) {
         ExecutionEntity entity = (ExecutionEntity)
                 ((ActivitiProcessStartedEvent) activitiEvent).getEntity();
-        return new ProcessRuntimeEventImpl(
+        return new ProcessStartedEventImpl(
                 processInstanceConverter.from(entity.getProcessInstance()));
     }
 
-    @Override
-    public ActivitiEventType getHandledEvent() {
-        return ActivitiEventType.PROCESS_STARTED;
-    }
 }

@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.events.impl;
+package org.activiti.runtime.api.events.process;
 
-import org.activiti.runtime.api.events.ProcessRuntimeEvent;
-import org.activiti.runtime.api.model.ProcessInstance;
-
-public class ProcessRuntimeEventImpl extends RuntimeEventImpl<ProcessInstance>
-    implements ProcessRuntimeEvent {
-
-    public ProcessRuntimeEventImpl(ProcessInstance entity) {
-        super(entity);
-    }
+public interface ProcessStartedEvent extends ProcessRuntimeEvent {
 
 }

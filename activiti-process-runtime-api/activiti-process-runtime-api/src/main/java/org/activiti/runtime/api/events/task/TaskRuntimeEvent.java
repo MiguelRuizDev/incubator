@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.events.impl;
+package org.activiti.runtime.api.events.task;
 
-import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.runtime.api.events.RuntimeEvent;
+import org.activiti.runtime.api.model.Task;
 
-public interface EventConverter<EVENT_TYPE extends RuntimeEvent<?>> {
-
-    EVENT_TYPE from(ActivitiEvent activitiEvent);
+public interface TaskRuntimeEvent extends RuntimeEvent<Task> {
 
 }

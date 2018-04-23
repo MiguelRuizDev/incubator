@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.events.impl;
+package org.activiti.runtime.api.events.listener;
 
-import org.activiti.engine.delegate.event.ActivitiEvent;
-import org.activiti.runtime.api.events.RuntimeEvent;
+import org.activiti.runtime.api.events.RuntimeEventListener;
+import org.activiti.runtime.api.events.process.ProcessStartedEvent;
 
-public interface EventConverter<EVENT_TYPE extends RuntimeEvent<?>> {
+public interface ProcessRuntimeEventListener extends RuntimeEventListener {
 
-    EVENT_TYPE from(ActivitiEvent activitiEvent);
+    void onProcessStarted(ProcessStartedEvent event);
+
+    void onProcessSuspended(ProcessSuspendedEvent event);
+
+    void onProcessResumed(ProcessResumedEvent event);
+
+    void onProcessCompleted(ProcessCompletedEvent event);
+
+    void onProcessCancelled(ProcessCancelledEvent event);
 
 }

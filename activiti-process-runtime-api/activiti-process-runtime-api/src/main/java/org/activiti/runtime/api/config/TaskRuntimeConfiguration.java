@@ -18,7 +18,7 @@ package org.activiti.runtime.api.config;
 
 import java.util.List;
 
-import org.activiti.runtime.api.events.TaskRuntimeEventListener;
+import org.activiti.runtime.api.events.listener.TaskRuntimeEventListener;
 
 public interface TaskRuntimeConfiguration {
 

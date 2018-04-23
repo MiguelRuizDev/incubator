@@ -21,29 +21,35 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.events.TaskRuntimeEventListener;
-import org.activiti.runtime.api.events.impl.TaskRuntimeEventListenerDelegate;
+import org.activiti.runtime.api.events.impl.TaskAssignedEventListenerDelegate;
+import org.activiti.runtime.api.events.listener.TaskRuntimeEventListener;
+import org.activiti.runtime.api.events.impl.TaskCreatedEventListenerDelegate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TaskRuntimeConfigurationImpl implements TaskRuntimeConfiguration {
 
     private final RuntimeService runtimeService;
-    private final TaskRuntimeEventListenerDelegate taskRuntimeEventListenerDelegate;
     private final List<TaskRuntimeEventListener> eventListeners;
+    private final TaskCreatedEventListenerDelegate taskCreatedEventListenerDelegate;
+    private final TaskAssignedEventListenerDelegate taskAssignedEventListenerDelegate;
 
     public TaskRuntimeConfigurationImpl(RuntimeService runtimeService,
-                                        TaskRuntimeEventListenerDelegate taskRuntimeEventListenerDelegate,
-                                        List<TaskRuntimeEventListener> eventListeners) {
+                                        TaskCreatedEventListenerDelegate taskCreatedEventListenerDelegate,
+                                        List<TaskRuntimeEventListener> eventListeners,
+                                        TaskAssignedEventListenerDelegate taskAssignedEventListenerDelegate) {
         this.runtimeService = runtimeService;
-        this.taskRuntimeEventListenerDelegate = taskRuntimeEventListenerDelegate;
+        this.taskCreatedEventListenerDelegate = taskCreatedEventListenerDelegate;
         this.eventListeners = eventListeners;
+        this.taskAssignedEventListenerDelegate = taskAssignedEventListenerDelegate;
     }
 
     @PostConstruct
     private void registerEventListeners() {
-        runtimeService.addEventListener(taskRuntimeEventListenerDelegate);
+        runtimeService.addEventListener(taskCreatedEventListenerDelegate, ActivitiEventType.TASK_CREATED);
+        runtimeService.addEventListener(taskAssignedEventListenerDelegate, ActivitiEventType.TASK_ASSIGNED);
     }
 
     @Override

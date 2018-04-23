@@ -16,6 +16,14 @@
 
 package org.activiti.runtime.api.events;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.activiti.runtime.api.events.listener.TaskRuntimeEventListener;
+import org.activiti.runtime.api.events.task.TaskAssignedEvent;
+import org.activiti.runtime.api.events.task.TaskCompletedEvent;
+import org.activiti.runtime.api.events.task.TaskCreatedEvent;
+import org.activiti.runtime.api.events.task.TaskSuspendedEvent;
 import org.activiti.runtime.api.model.Task;
 import org.springframework.stereotype.Component;
 
@@ -26,30 +34,40 @@ public class AssignTaskListener implements TaskRuntimeEventListener {
         return "listenerUser";
     }
 
+    private Map<String, String> assignedTasks = new HashMap<>();
+
     @Override
     public boolean shouldIgnoreFailure() {
         return false;
     }
 
     @Override
-    public void onTaskCreated(TaskRuntimeEvent event) {
+    public void onTaskCreated(TaskCreatedEvent event) {
         Task task = event.getEntity();
         task.claim(getUsername());
 
     }
 
     @Override
-    public void onTaskAssigned(TaskRuntimeEvent event) {
+    public void onTaskAssigned(TaskAssignedEvent event) {
+        assignedTasks.put(event.getEntity().getId(), event.getEntity().getAssignee());
+    }
+
+    @Override
+    public void onTaskSuspended(TaskSuspendedEvent event) {
 
     }
 
     @Override
-    public void onTaskSuspended(TaskRuntimeEvent event) {
+    public void onTaskCompleted(TaskCompletedEvent event) {
 
     }
 
-    @Override
-    public void onTaskCompleted(TaskRuntimeEvent event) {
+    public Map<String, String> getAssignedTasks() {
+        return assignedTasks;
+    }
 
+    public void clear() {
+        assignedTasks.clear();
     }
 }
