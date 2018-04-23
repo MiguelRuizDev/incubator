@@ -18,20 +18,6 @@ package org.activiti.runtime.api.events;
 
 import org.activiti.runtime.api.model.ProcessInstance;
 
-public interface ProcessRuntimeEvent extends RuntimeEvent<ProcessRuntimeEvent.ProcessRuntimeEvents, ProcessInstance> {
-
-    enum ProcessRuntimeEvents {
-
-        PROCESS_STARTED,
-
-        PROCESS_SUSPENDED,
-
-        PROCESS_RESUMED,
-
-        PROCESS_COMPLETED,
-
-        PROCESS_CANCELLED
-
-    }
+public interface ProcessRuntimeEvent extends RuntimeEvent<ProcessInstance> {
 
 }

@@ -19,6 +19,7 @@ package org.activiti.runtime.api.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.activiti.runtime.api.ProcessRuntime;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,18 +28,8 @@ public class DummyProcessStartedEventListener implements ProcessRuntimeEventList
     private List<String> startedProcesses = new ArrayList<>();
 
     @Override
-    public void onEvent(ProcessRuntimeEvent event) {
-        startedProcesses.add(event.getEntity().getId());
-    }
-
-    @Override
     public boolean shouldIgnoreFailure() {
         return false;
-    }
-
-    @Override
-    public ProcessRuntimeEvent.ProcessRuntimeEvents getHandledEvent() {
-        return ProcessRuntimeEvent.ProcessRuntimeEvents.PROCESS_STARTED;
     }
 
     public List<String> getStartedProcesses() {
@@ -48,4 +39,30 @@ public class DummyProcessStartedEventListener implements ProcessRuntimeEventList
     public void clear() {
         startedProcesses.clear();
     }
+
+    @Override
+    public void onProcessStarted(ProcessRuntimeEvent event) {
+        startedProcesses.add(event.getEntity().getId());
+    }
+
+    @Override
+    public void onProcessSuspended(ProcessRuntimeEvent event) {
+
+    }
+
+    @Override
+    public void onProcessResumed(ProcessRuntimeEvent event) {
+
+    }
+
+    @Override
+    public void onProcessCompleted(ProcessRuntimeEvent event) {
+
+    }
+
+    @Override
+    public void onProcessCancelled(ProcessRuntime event) {
+
+    }
+
 }

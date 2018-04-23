@@ -19,12 +19,10 @@ package org.activiti.runtime.api.events.impl;
 import org.activiti.runtime.api.events.TaskRuntimeEvent;
 import org.activiti.runtime.api.model.Task;
 
-public class TaskRuntimeEventImpl extends RuntimeEventImpl<TaskRuntimeEvent.TaskEvents, Task>
+public class TaskRuntimeEventImpl extends RuntimeEventImpl<Task>
         implements TaskRuntimeEvent {
 
-    public TaskRuntimeEventImpl(Task entity,
-                                TaskRuntimeEvent.TaskEvents taskEvents) {
-        super(entity,
-              taskEvents);
+    public TaskRuntimeEventImpl(Task entity) {
+        super(entity);
     }
 }

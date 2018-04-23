@@ -16,6 +16,14 @@
 
 package org.activiti.runtime.api.events;
 
-public interface TaskRuntimeEventListener extends RuntimeEventListener<TaskRuntimeEvent.TaskEvents, TaskRuntimeEvent> {
+public interface TaskRuntimeEventListener extends RuntimeEventListener {
+
+    void onTaskCreated(TaskRuntimeEvent event);
+
+    void onTaskAssigned(TaskRuntimeEvent event);
+
+    void onTaskSuspended(TaskRuntimeEvent event);
+
+    void onTaskCompleted(TaskRuntimeEvent event);
 
 }

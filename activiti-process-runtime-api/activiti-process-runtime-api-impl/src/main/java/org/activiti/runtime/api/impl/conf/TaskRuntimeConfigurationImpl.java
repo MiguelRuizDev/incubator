@@ -18,18 +18,32 @@ package org.activiti.runtime.api.impl.conf;
 
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.PostConstruct;
 
+import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
 import org.activiti.runtime.api.events.TaskRuntimeEventListener;
+import org.activiti.runtime.api.events.impl.TaskRuntimeEventListenerDelegate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TaskRuntimeConfigurationImpl implements TaskRuntimeConfiguration {
 
+    private final RuntimeService runtimeService;
+    private final TaskRuntimeEventListenerDelegate taskRuntimeEventListenerDelegate;
     private final List<TaskRuntimeEventListener> eventListeners;
 
-    public TaskRuntimeConfigurationImpl(List<TaskRuntimeEventListener> eventListeners) {
+    public TaskRuntimeConfigurationImpl(RuntimeService runtimeService,
+                                        TaskRuntimeEventListenerDelegate taskRuntimeEventListenerDelegate,
+                                        List<TaskRuntimeEventListener> eventListeners) {
+        this.runtimeService = runtimeService;
+        this.taskRuntimeEventListenerDelegate = taskRuntimeEventListenerDelegate;
         this.eventListeners = eventListeners;
+    }
+
+    @PostConstruct
+    private void registerEventListeners() {
+        runtimeService.addEventListener(taskRuntimeEventListenerDelegate);
     }
 
     @Override

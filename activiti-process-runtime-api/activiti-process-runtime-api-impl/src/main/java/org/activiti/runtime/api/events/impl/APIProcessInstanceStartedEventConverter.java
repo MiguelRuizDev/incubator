@@ -38,8 +38,7 @@ public class APIProcessInstanceStartedEventConverter implements EventConverter<P
         ExecutionEntity entity = (ExecutionEntity)
                 ((ActivitiProcessStartedEvent) activitiEvent).getEntity();
         return new ProcessRuntimeEventImpl(
-                processInstanceConverter.from(entity.getProcessInstance()),
-                ProcessRuntimeEvent.ProcessRuntimeEvents.PROCESS_STARTED);
+                processInstanceConverter.from(entity.getProcessInstance()));
     }
 
     @Override

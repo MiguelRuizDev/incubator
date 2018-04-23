@@ -16,6 +16,18 @@
 
 package org.activiti.runtime.api.events;
 
-public interface ProcessRuntimeEventListener extends RuntimeEventListener<ProcessRuntimeEvent.ProcessRuntimeEvents, ProcessRuntimeEvent> {
+import org.activiti.runtime.api.ProcessRuntime;
+
+public interface ProcessRuntimeEventListener extends RuntimeEventListener {
+
+    void onProcessStarted(ProcessRuntimeEvent event);
+
+    void onProcessSuspended(ProcessRuntimeEvent event);
+
+    void onProcessResumed(ProcessRuntimeEvent event);
+
+    void onProcessCompleted(ProcessRuntimeEvent event);
+
+    void onProcessCancelled(ProcessRuntime event);
 
 }

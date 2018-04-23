@@ -16,9 +16,7 @@
 
 package org.activiti.runtime.api.events;
 
-public interface RuntimeEvent<ENUM_TYPE extends Enum<ENUM_TYPE>, ENTITY_TYPE> {
-
-    ENUM_TYPE getType();
+public interface RuntimeEvent<ENTITY_TYPE> {
 
     ENTITY_TYPE getEntity();
 

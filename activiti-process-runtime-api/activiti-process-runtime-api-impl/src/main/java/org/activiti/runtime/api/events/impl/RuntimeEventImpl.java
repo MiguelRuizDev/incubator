@@ -18,19 +18,12 @@ package org.activiti.runtime.api.events.impl;
 
 import org.activiti.runtime.api.events.RuntimeEvent;
 
-public abstract class RuntimeEventImpl<ENUM_TYPE extends Enum<ENUM_TYPE>, ENTITY_TYPE> implements RuntimeEvent<ENUM_TYPE, ENTITY_TYPE> {
+public abstract class RuntimeEventImpl< ENTITY_TYPE> implements RuntimeEvent<ENTITY_TYPE> {
 
     private final ENTITY_TYPE entity;
-    private final ENUM_TYPE type;
 
-    public RuntimeEventImpl(ENTITY_TYPE entity, ENUM_TYPE type) {
+    public RuntimeEventImpl(ENTITY_TYPE entity) {
         this.entity = entity;
-        this.type = type;
-    }
-
-    @Override
-    public ENUM_TYPE getType() {
-        return type;
     }
 
     @Override

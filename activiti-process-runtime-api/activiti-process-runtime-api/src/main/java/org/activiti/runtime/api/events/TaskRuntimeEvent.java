@@ -18,7 +18,7 @@ package org.activiti.runtime.api.events;
 
 import org.activiti.runtime.api.model.Task;
 
-public interface TaskRuntimeEvent extends RuntimeEvent<TaskRuntimeEvent.TaskEvents, Task> {
+public interface TaskRuntimeEvent extends RuntimeEvent<Task> {
 
     enum TaskEvents {
 

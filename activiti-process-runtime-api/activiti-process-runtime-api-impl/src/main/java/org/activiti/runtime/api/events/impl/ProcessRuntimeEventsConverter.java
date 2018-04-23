@@ -16,14 +16,23 @@
 
 package org.activiti.runtime.api.events.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.runtime.api.events.ProcessRuntimeEvent;
-import org.activiti.runtime.api.model.ProcessInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class ProcessRuntimeEventImpl extends RuntimeEventImpl<ProcessInstance>
-    implements ProcessRuntimeEvent {
+@Component
+public class ProcessRuntimeEventsConverter extends EventsConverter<ProcessRuntimeEvent> {
 
-    public ProcessRuntimeEventImpl(ProcessInstance entity) {
-        super(entity);
+    public ProcessRuntimeEventsConverter(Map<ActivitiEventType, EventConverter<ProcessRuntimeEvent>> convertersMap) {
+        super(convertersMap);
     }
 
+    @Autowired
+    public ProcessRuntimeEventsConverter(List<EventConverter<ProcessRuntimeEvent>> eventConverters) {
+        super(eventConverters);
+    }
 }

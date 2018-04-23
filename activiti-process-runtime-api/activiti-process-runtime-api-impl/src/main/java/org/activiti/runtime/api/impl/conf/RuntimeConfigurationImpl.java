@@ -23,27 +23,27 @@ import javax.annotation.PostConstruct;
 import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.config.ProcessRuntimeConfiguration;
 import org.activiti.runtime.api.events.ProcessRuntimeEventListener;
-import org.activiti.runtime.api.events.impl.EventListenerDelegate;
-import org.springframework.context.annotation.Configuration;
+import org.activiti.runtime.api.events.impl.ProcessRuntimeEventListenerDelegate;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class RuntimeConfigurationImpl implements ProcessRuntimeConfiguration {
 
     private final RuntimeService runtimeService;
-    private final EventListenerDelegate<?, ?> eventListenerDelegate;
+    private final ProcessRuntimeEventListenerDelegate processRuntimeEventListenerDelegate;
     private final List<ProcessRuntimeEventListener> eventListeners;
 
     public RuntimeConfigurationImpl(RuntimeService runtimeService,
-                                    EventListenerDelegate<?, ?> eventListenerDelegate,
+                                    ProcessRuntimeEventListenerDelegate processRuntimeEventListenerDelegate,
                                     List<ProcessRuntimeEventListener> eventListeners) {
         this.runtimeService = runtimeService;
-        this.eventListenerDelegate = eventListenerDelegate;
+        this.processRuntimeEventListenerDelegate = processRuntimeEventListenerDelegate;
         this.eventListeners = eventListeners;
     }
 
     @PostConstruct
     private void registerEventListeners() {
-        runtimeService.addEventListener(eventListenerDelegate);
+        runtimeService.addEventListener(processRuntimeEventListenerDelegate);
     }
 
     @Override

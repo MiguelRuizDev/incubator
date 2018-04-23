@@ -35,8 +35,7 @@ public class APITaskCreatedEventConverter implements EventConverter<TaskRuntimeE
 
     @Override
     public TaskRuntimeEvent from(ActivitiEvent event) {
-        return new TaskRuntimeEventImpl(taskConverter.from((Task) ((ActivitiEntityEventImpl) event).getEntity()),
-                                      TaskRuntimeEvent.TaskEvents.TASK_CREATED);
+        return new TaskRuntimeEventImpl(taskConverter.from((Task) ((ActivitiEntityEventImpl) event).getEntity()));
     }
 
     @Override

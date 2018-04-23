@@ -22,12 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssignTaskListener implements TaskRuntimeEventListener {
 
-    @Override
-    public void onEvent(TaskRuntimeEvent event) {
-        Task task = event.getEntity();
-        task.claim(getUsername());
-    }
-
     public String getUsername() {
         return "listenerUser";
     }
@@ -38,8 +32,24 @@ public class AssignTaskListener implements TaskRuntimeEventListener {
     }
 
     @Override
-    public TaskRuntimeEvent.TaskEvents getHandledEvent() {
-        return TaskRuntimeEvent.TaskEvents.TASK_CREATED;
+    public void onTaskCreated(TaskRuntimeEvent event) {
+        Task task = event.getEntity();
+        task.claim(getUsername());
+
     }
 
+    @Override
+    public void onTaskAssigned(TaskRuntimeEvent event) {
+
+    }
+
+    @Override
+    public void onTaskSuspended(TaskRuntimeEvent event) {
+
+    }
+
+    @Override
+    public void onTaskCompleted(TaskRuntimeEvent event) {
+
+    }
 }

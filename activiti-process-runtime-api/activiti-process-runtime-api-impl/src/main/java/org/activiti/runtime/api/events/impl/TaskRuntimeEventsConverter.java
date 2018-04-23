@@ -16,14 +16,23 @@
 
 package org.activiti.runtime.api.events.impl;
 
-import org.activiti.engine.delegate.event.ActivitiEvent;
+import java.util.List;
+import java.util.Map;
+
 import org.activiti.engine.delegate.event.ActivitiEventType;
-import org.activiti.runtime.api.events.RuntimeEvent;
+import org.activiti.runtime.api.events.TaskRuntimeEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public interface EventConverter<EVENT_TYPE extends RuntimeEvent<?>> {
+@Component
+public class TaskRuntimeEventsConverter extends EventsConverter<TaskRuntimeEvent> {
 
-    EVENT_TYPE from(ActivitiEvent activitiEvent);
+    public TaskRuntimeEventsConverter(Map<ActivitiEventType, EventConverter<TaskRuntimeEvent>> convertersMap) {
+        super(convertersMap);
+    }
 
-    ActivitiEventType getHandledEvent();
-
+    @Autowired
+    public TaskRuntimeEventsConverter(List<EventConverter<TaskRuntimeEvent>> eventConverters) {
+        super(eventConverters);
+    }
 }

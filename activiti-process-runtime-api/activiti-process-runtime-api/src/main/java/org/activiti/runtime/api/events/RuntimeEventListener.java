@@ -16,12 +16,8 @@
 
 package org.activiti.runtime.api.events;
 
-public interface RuntimeEventListener<ENUM_TYPE extends Enum<ENUM_TYPE>, EVENT_TYPE extends RuntimeEvent<ENUM_TYPE, ?>> {
-
-  void onEvent(EVENT_TYPE event);
+public interface RuntimeEventListener {
 
   boolean shouldIgnoreFailure();
-
-  ENUM_TYPE getHandledEvent();
 
 }

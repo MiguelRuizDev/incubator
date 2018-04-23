@@ -25,11 +25,8 @@ import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.runtime.api.events.RuntimeEvent;
 import org.activiti.runtime.api.model.impl.ListConverter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
-public class EventsConverter<EVENT_TYPE extends RuntimeEvent<?,?>> extends ListConverter<ActivitiEvent, EVENT_TYPE> {
+public class EventsConverter<EVENT_TYPE extends RuntimeEvent<?>> extends ListConverter<ActivitiEvent, EVENT_TYPE> {
 
     private Map<ActivitiEventType, EventConverter<EVENT_TYPE>> convertersMap;
 
@@ -37,7 +34,6 @@ public class EventsConverter<EVENT_TYPE extends RuntimeEvent<?,?>> extends ListC
         this.convertersMap = convertersMap;
     }
 
-    @Autowired
     public EventsConverter(List<EventConverter<EVENT_TYPE>> converters) {
         this.convertersMap = converters.stream().collect(Collectors.toMap(EventConverter::getHandledEvent,
                                                                           Function.identity()));
