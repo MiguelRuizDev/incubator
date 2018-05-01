@@ -244,4 +244,24 @@ public class TaskImpl implements Task {
                             parentTaskId,
                             status);
     }
+
+    @Override
+    public String toString() {
+        return "TaskImpl{" +
+                "id='" + id + '\'' +
+                ", owner='" + owner + '\'' +
+                ", assignee='" + assignee + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", createdDate=" + createdDate +
+                ", claimedDate=" + claimedDate +
+                ", dueDate=" + dueDate +
+                ", priority=" + priority +
+                ", processDefinitionId='" + processDefinitionId + '\'' +
+                ", processInstanceId='" + processInstanceId + '\'' +
+                ", parentTaskId='" + parentTaskId + '\'' +
+                ", status=" + status +
+                '}';
+    }
+
 }

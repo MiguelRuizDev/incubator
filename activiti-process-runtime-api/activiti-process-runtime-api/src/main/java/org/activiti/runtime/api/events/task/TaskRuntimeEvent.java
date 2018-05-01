@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.events.task;
 
-import java.util.List;
-
-import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
+import org.activiti.runtime.api.events.RuntimeEvent;
 import org.activiti.runtime.api.model.Task;
 
-public interface TaskRuntime {
-
-    TaskRuntimeConfiguration configuration();
-
-    Task task(String taskId);
-
-    List<Task> tasks(int firstResult, int maxResults);
+public interface TaskRuntimeEvent extends RuntimeEvent<Task> {
 
 }

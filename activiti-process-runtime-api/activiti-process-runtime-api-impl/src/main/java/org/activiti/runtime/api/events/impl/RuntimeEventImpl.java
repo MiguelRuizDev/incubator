@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.events.impl;
 
-import java.util.List;
+import org.activiti.runtime.api.events.RuntimeEvent;
 
-import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.model.Task;
+public abstract class RuntimeEventImpl< ENTITY_TYPE> implements RuntimeEvent<ENTITY_TYPE> {
 
-public interface TaskRuntime {
+    private final ENTITY_TYPE entity;
 
-    TaskRuntimeConfiguration configuration();
+    public RuntimeEventImpl(ENTITY_TYPE entity) {
+        this.entity = entity;
+    }
 
-    Task task(String taskId);
-
-    List<Task> tasks(int firstResult, int maxResults);
-
+    @Override
+    public ENTITY_TYPE getEntity() {
+        return entity;
+    }
 }

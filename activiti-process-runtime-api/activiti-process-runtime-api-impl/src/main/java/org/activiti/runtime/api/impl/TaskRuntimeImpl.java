@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.activiti.engine.TaskService;
 import org.activiti.runtime.api.TaskRuntime;
+import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
 import org.activiti.runtime.api.model.Task;
 import org.activiti.runtime.api.model.impl.APITaskConverter;
 import org.springframework.stereotype.Component;
@@ -31,10 +32,19 @@ public class TaskRuntimeImpl implements TaskRuntime {
 
     private final APITaskConverter taskConverter;
 
+    private final TaskRuntimeConfiguration configuration;
+
     public TaskRuntimeImpl(TaskService taskService,
-                           APITaskConverter taskConverter) {
+                           APITaskConverter taskConverter,
+                           TaskRuntimeConfiguration configuration) {
         this.taskService = taskService;
         this.taskConverter = taskConverter;
+        this.configuration = configuration;
+    }
+
+    @Override
+    public TaskRuntimeConfiguration configuration() {
+        return configuration;
     }
 
     @Override

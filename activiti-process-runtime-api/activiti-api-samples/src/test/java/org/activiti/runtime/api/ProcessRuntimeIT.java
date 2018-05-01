@@ -18,6 +18,8 @@ package org.activiti.runtime.api;
 
 import java.util.List;
 
+import org.activiti.runtime.api.events.DummyProcessStartedEventListener;
+import org.activiti.runtime.api.events.listener.ProcessRuntimeEventListener;
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.VariableInstance;
@@ -31,11 +33,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class ProcessRuntimeIT {
 
     @Autowired
     private ProcessRuntime processRuntime;
+
+    @Test
+    public void shouldReturnRegisteredEventListeners() {
+        //when
+        List<ProcessRuntimeEventListener> eventListeners = processRuntime.configuration().eventListeners();
+
+        //then
+        assertThat(eventListeners).hasSize(1);
+        assertThat(eventListeners.get(0)).isInstanceOf(DummyProcessStartedEventListener.class);
+    }
 
     @Test
     public void shouldStartProcessInstance() {

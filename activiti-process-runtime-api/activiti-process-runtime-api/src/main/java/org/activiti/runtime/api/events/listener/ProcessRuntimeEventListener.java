@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.events.listener;
 
-import java.util.List;
+import org.activiti.runtime.api.events.RuntimeEventListener;
+import org.activiti.runtime.api.events.process.ProcessStartedEvent;
 
-import org.activiti.runtime.api.config.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.model.Task;
+public interface ProcessRuntimeEventListener extends RuntimeEventListener {
 
-public interface TaskRuntime {
+    void onProcessStarted(ProcessStartedEvent event);
 
-    TaskRuntimeConfiguration configuration();
+    void onProcessSuspended(ProcessSuspendedEvent event);
 
-    Task task(String taskId);
+    void onProcessResumed(ProcessResumedEvent event);
 
-    List<Task> tasks(int firstResult, int maxResults);
+    void onProcessCompleted(ProcessCompletedEvent event);
+
+    void onProcessCancelled(ProcessCancelledEvent event);
 
 }
