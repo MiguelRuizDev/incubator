@@ -16,16 +16,14 @@ public class Task {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(nullable = false, updatable = false)
-    private UUID id;
+    private String id;
 
     private String title;
 
     private State state = State.ACTIVE;
 
-    //@Temporal(TemporalType.TIMESTAMP) //make sure this is a DATE+TIME in the database
     private Timestamp creationDate;
 
-    //@Temporal(TemporalType.TIMESTAMP)
     private Timestamp dueDate;
 
     private String assignedUser;
@@ -34,11 +32,11 @@ public class Task {
 
     private Long  parent; //stores parent's id; if there is no parent, id = null
 
-    private String content;
+    private String description;
 
-    public UUID getId() { return id; }
+    public String getId() { return id; }
 
-    public void setId(UUID id) { this.id = id; }
+    public void setId(String id) { this.id = id; }
 
     public String getTitle() { return title; }
 
@@ -68,9 +66,9 @@ public class Task {
 
     public void setParent(Long parent) { this.parent = parent; }
 
-    public String getContent() { return content; }
+    public String getDescription() { return description; }
 
-    public void setContent(String content) { this.content = content; }
+    public void setDescription(String description) { this.description = description; }
 
     @Override
     public String toString() {
@@ -83,7 +81,7 @@ public class Task {
                 ", assignedUser='" + assignedUser + '\'' +
                 ", priority=" + priority +
                 ", parent=" + parent +
-                ", content='" + content + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 

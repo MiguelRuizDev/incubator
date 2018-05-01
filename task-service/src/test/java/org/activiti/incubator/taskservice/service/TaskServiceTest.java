@@ -77,7 +77,7 @@ public class TaskServiceTest {
     @Test
     public void findByIdShouldReturnTaskWithGivenId() {
         //given
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         Task expectedTask = new Task();
         expectedTask.setId(id);
 
@@ -91,30 +91,10 @@ public class TaskServiceTest {
 
     }
 
-//    @Test
-//    public void findByIdShouldThrowAnExceptionIfTaskIdIsNotPresent() {
-//        //given
-//        UUID id = UUID.randomUUID();
-//        TaskNotFoundException expectedException = new TaskNotFoundException("There is no task with id: " + id);
-//        given(taskRepositoryMock.findById(id)).willReturn(Optional.ofNullable(null));
-//
-//        //when
-//        try {
-//            Task task = taskService.findById(id);
-//            failBecauseExceptionWasNotThrown(TaskNotFoundException.class);
-//        }catch (TaskNotFoundException ex){
-//            TaskNotFoundException retrievedException = ex;
-//
-//            //then
-//            assertThat(retrievedException.getMessage()).isEqualTo(expectedException.getMessage());
-//        }
-//
-//    }
-
     @Test
     public void findByIdShouldThrowAnExceptionIfTaskIdIsNotPresent2() {
         //given
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         given(taskRepositoryMock.findById(id)).willReturn(Optional.ofNullable(null));
 
         //then
@@ -131,7 +111,7 @@ public class TaskServiceTest {
     public void saveTaskShouldSaveGivenTask() {
         //given
         Task taskToBeSaved = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeSaved.setId(id);
 
         given(taskRepositoryMock.save(taskToBeSaved)).willReturn(taskToBeSaved);
@@ -149,7 +129,7 @@ public class TaskServiceTest {
 
         //given
         Task taskToBeSuspended = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeSuspended.setId(id);
         taskToBeSuspended.setState(State.ACTIVE);
 
@@ -167,7 +147,7 @@ public class TaskServiceTest {
     public void suspendTaskShouldThrowATaskNotModifiedExceptionWhenStateAlreadySuspended(){
         //given
         Task taskToBeSuspended = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeSuspended.setId(id);
         taskToBeSuspended.setState(State.SUSPENDED);
 
@@ -185,7 +165,7 @@ public class TaskServiceTest {
     public void activateTaskShouldReturnActiveTaskWhenFoundUUID() {
         //given
         Task taskToBeActive = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeActive.setId(id);
         taskToBeActive.setState(State.SUSPENDED);
 
@@ -202,7 +182,7 @@ public class TaskServiceTest {
     public void activateTaskShouldThrowATaskNotModifiedExceptionWhenStateNotSuspended(){
         //given
         Task taskToBeActive = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeActive.setId(id);
         taskToBeActive.setState(State.ACTIVE);
 
@@ -220,7 +200,7 @@ public class TaskServiceTest {
     public void completeTaskShouldReturnActiveTaskWhenFoundUUID() {
         //given
         Task taskToBeComplete = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeComplete.setId(id);
         taskToBeComplete.setState(State.ASSIGNED);
 
@@ -237,7 +217,7 @@ public class TaskServiceTest {
     public void completeTaskShouldThrowATaskNotModifiedExceptionWhenStateNotSuspended(){
         //given
         Task taskToBeActive = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeActive.setId(id);
         taskToBeActive.setState(State.ACTIVE);
 
@@ -255,7 +235,7 @@ public class TaskServiceTest {
     public void assignTaskShouldReturnActiveTaskWhenFoundUUID() {
         //given
         Task taskToBeAssigned = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeAssigned.setId(id);
         taskToBeAssigned.setState(State.ACTIVE);
         String user = "Francesco";
@@ -274,7 +254,7 @@ public class TaskServiceTest {
     public void assignTaskShouldThrowATaskNotModifiedExceptionWhenStateIsAlreadyAssigned(){
         //given
         Task taskToBeActive = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeActive.setId(id);
         taskToBeActive.setState(State.ASSIGNED);
         String user = "Francesco";
@@ -293,7 +273,7 @@ public class TaskServiceTest {
     public void releaseTaskShouldReturnActiveTaskWhenFoundUUID() {
         //given
         Task taskToBeAssigned = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         String user = "Francesco";
         taskToBeAssigned.setId(id);
         taskToBeAssigned.setState(State.ASSIGNED);
@@ -313,7 +293,7 @@ public class TaskServiceTest {
     public void releaseTaskShouldReturnThrowATaskNotModifiedExceptionWhenStateIsNotAssigned() {
         //given
         Task taskToBeReleased = new Task();
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         taskToBeReleased.setId(id);
         taskToBeReleased.setState(State.ACTIVE);
 
@@ -346,7 +326,6 @@ public class TaskServiceTest {
 
     }
 
-
     @Test
     public void showNotAssignedTasksShouldLogUnassignedTasks(){
 
@@ -365,7 +344,6 @@ public class TaskServiceTest {
 
         //then
         verify(taskService).log("There are tasks to be assigned: " + allTasks.toString());
-
 
     }
 
@@ -411,4 +389,5 @@ public class TaskServiceTest {
         verify(taskService).log("There are Due tasks: " + Collections.singletonList(dueTask).toString());
 
     }
+
 }

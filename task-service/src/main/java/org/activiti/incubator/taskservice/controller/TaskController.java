@@ -3,6 +3,7 @@ package org.activiti.incubator.taskservice.controller;
 import org.activiti.incubator.taskservice.exceptions.StateNotFoundException;
 import org.activiti.incubator.taskservice.exceptions.TaskNotFoundException;
 import org.activiti.incubator.taskservice.exceptions.TaskNotModifiedException;
+import org.activiti.incubator.taskservice.resource.MessageResource;
 import org.activiti.incubator.taskservice.resource.TaskResource;
 import org.activiti.incubator.taskservice.resource.TaskResourceAssembler;
 import org.activiti.incubator.taskservice.domain.Task;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.data.domain.Page;
-import java.util.UUID;
 import org.activiti.incubator.taskservice.domain.State;
 
 @RestController
@@ -45,12 +45,12 @@ public class TaskController {
             Page <Task> pages = taskService.findAll(State.valueOf(state.toUpperCase()), page);
             return new ResponseEntity<>(pagedResourcesAssembler.toResource(pages,taskResourceAssembler), HttpStatus.OK );
         }catch (IllegalArgumentException ex){
-            throw new StateNotFoundException("State" + state.toUpperCase() + " does not exist. ");
+            throw new StateNotFoundException("State " + state.toUpperCase() + " does not exist. ");
         }
     }
 
     @GetMapping (path = "/{id}")
-    public ResponseEntity<TaskResource> findById(@PathVariable("id") UUID id){
+    public ResponseEntity<TaskResource> findById(@PathVariable("id") String id){
 
         Task task = taskService.findById(id);
 
@@ -58,7 +58,7 @@ public class TaskController {
     }
 
     @PostMapping(path = "/{id}/suspend")
-    public ResponseEntity<TaskResource> suspendTask(@PathVariable("id") UUID id) {
+    public ResponseEntity<TaskResource> suspendTask(@PathVariable("id") String id) {
 
         Task task = taskService.suspendTask(id);
 
@@ -66,7 +66,7 @@ public class TaskController {
     }
 
     @PostMapping(path = "{id}/activate")
-    public ResponseEntity<TaskResource> activateTask (@PathVariable("id") UUID id){
+    public ResponseEntity<TaskResource> activateTask (@PathVariable("id") String id){
 
         Task task = taskService.activateTask(id);
 
@@ -74,7 +74,7 @@ public class TaskController {
     }
 
     @PostMapping(path = "{id}/complete")
-    public ResponseEntity<TaskResource> completeTask (@PathVariable("id") UUID id){
+    public ResponseEntity<TaskResource> completeTask (@PathVariable("id") String id){
 
         Task task = taskService.completeTask(id);
 
@@ -82,13 +82,13 @@ public class TaskController {
     }
 
     @PostMapping(path = "{id}/assign")
-    public ResponseEntity<TaskResource> assignTask (@PathVariable("id") UUID id, @RequestParam(value="user") String user){
+    public ResponseEntity<TaskResource> assignTask (@PathVariable("id") String id, @RequestParam(value="user") String user){
         Task task = taskService.assignTask(id, user);
         return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
     }
 
     @PostMapping(path = "{id}/release")
-    public ResponseEntity<TaskResource> releaseTask (@PathVariable("id") UUID id){
+    public ResponseEntity<TaskResource> releaseTask (@PathVariable("id") String id){
         Task task = taskService.releaseTask(id);
         return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
     }
@@ -100,27 +100,27 @@ public class TaskController {
     }
 
     @DeleteMapping(path = "{id}/delete")
-    public ResponseEntity<TaskResource> deleteTask (@PathVariable("id") UUID id){
+    public ResponseEntity<TaskResource> deleteTask (@PathVariable("id") String id){
         taskService.deleteTask(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ExceptionHandler(TaskNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handlerTaskNotFoundException(TaskNotFoundException ex) {
-        return ex.getMessage();
+    public MessageResource handlerTaskNotFoundException(TaskNotFoundException ex) {
+        return new MessageResource(ex.getMessage());
     }
 
     @ExceptionHandler(TaskNotModifiedException.class)
     @ResponseStatus(HttpStatus.NOT_MODIFIED)
-    public String handlerTaskNotModifiedException(TaskNotModifiedException ex) {
-        return ex.getMessage();
+    public MessageResource handlerTaskNotModifiedException(TaskNotModifiedException ex) {
+        return new MessageResource(ex.getMessage());
     }
 
     @ExceptionHandler(StateNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handlerStateNotFoundException(StateNotFoundException ex){
-        return ex.getMessage();
+    public MessageResource  handlerStateNotFoundException(StateNotFoundException ex){
+        return new MessageResource(ex.getMessage());
     }
 
 }

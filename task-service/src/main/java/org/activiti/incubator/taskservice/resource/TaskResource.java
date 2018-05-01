@@ -1,7 +1,6 @@
 package org.activiti.incubator.taskservice.resource;
 
 import org.activiti.incubator.taskservice.domain.Task;
-import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 

@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.domain.Page;
 
 @RepositoryRestResource (exported = false)
-public interface TaskRepository extends PagingAndSortingRepository <Task, UUID> {
+public interface TaskRepository extends PagingAndSortingRepository <Task, String> {
 
     Page <Task> findByState(@Param("state") State state, Pageable page);
 

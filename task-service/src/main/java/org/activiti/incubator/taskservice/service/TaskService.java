@@ -11,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import java.sql.Timestamp;
-import java.util.UUID;
 import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
@@ -44,7 +42,7 @@ public class TaskService {
         return pages;
     }
 
-    public Task findById(UUID id){
+    public Task findById(String id){
 
         Optional<Task> task = taskRepository.findById(id);
 
@@ -59,11 +57,11 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public void deleteTask (UUID id){
+    public void deleteTask (String id){
         taskRepository.deleteById(id);
     }
 
-    public Task suspendTask(UUID id){
+    public Task suspendTask(String id){
 
         Task task = this.findById(id);
 
@@ -74,12 +72,12 @@ public class TaskService {
             return task;
 
         }else{
-            throw new TaskNotModifiedException("The task with id: " + task.getId() + " could not be modified.");
+            throw new TaskNotModifiedException("The task with id: " + task.getId() + " is already suspended.");
         }
 
     }
 
-    public Task activateTask(UUID id){
+    public Task activateTask(String id){
 
         Task task = this.findById(id);
 
@@ -94,7 +92,7 @@ public class TaskService {
 
     }
 
-    public Task completeTask(UUID id){
+    public Task completeTask(String id){
 
         Task task = this.findById(id);
 
@@ -108,7 +106,7 @@ public class TaskService {
         }
     }
 
-    public Task assignTask (UUID id, String user){
+    public Task assignTask (String id, String user){
 
         Task task = this.findById(id);
 
@@ -126,7 +124,7 @@ public class TaskService {
 
     }
 
-    public Task releaseTask (UUID id){
+    public Task releaseTask (String id){
 
         Task task = this.findById(id);
 
