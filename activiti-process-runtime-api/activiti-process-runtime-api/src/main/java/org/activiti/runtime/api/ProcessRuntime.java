@@ -18,10 +18,10 @@ package org.activiti.runtime.api;
 
 import java.util.List;
 
-import org.activiti.runtime.api.config.ProcessRuntimeConfiguration;
+import org.activiti.runtime.api.model.builder.SignalPayload;
+import org.activiti.runtime.api.conf.ProcessRuntimeConfiguration;
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.model.builder.SignalPayload;
 
 public interface ProcessRuntime {
 

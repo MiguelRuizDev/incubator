@@ -32,6 +32,18 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.activiti</groupId>
+      <artifactId>activiti-task-runtime-api</artifactId>
+      <!-- TODO move version to dependency management-->
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.activiti</groupId>
+      <artifactId>activiti-task-runtime-api-impl</artifactId>
+      <!-- TODO move version to dependency management-->
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.activiti.cloud</groupId>
       <artifactId>activiti-cloud-starter-runtime-bundle</artifactId>
     </dependency>

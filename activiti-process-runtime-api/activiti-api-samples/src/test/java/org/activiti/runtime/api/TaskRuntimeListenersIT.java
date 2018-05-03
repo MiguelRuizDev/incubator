@@ -16,7 +16,7 @@
 
 package org.activiti.runtime.api;
 
-import org.activiti.runtime.api.events.AssignTaskListener;
+import org.activiti.runtime.api.event.AssignTaskListener;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.Task;
 import org.junit.Before;

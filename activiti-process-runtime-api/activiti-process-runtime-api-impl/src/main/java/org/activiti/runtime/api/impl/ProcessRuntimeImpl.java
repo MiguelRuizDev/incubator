@@ -22,13 +22,13 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.NotFoundException;
 import org.activiti.runtime.api.ProcessRuntime;
-import org.activiti.runtime.api.config.ProcessRuntimeConfiguration;
+import org.activiti.runtime.api.conf.ProcessRuntimeConfiguration;
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.builder.SignalPayload;
 import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
-import org.activiti.runtime.api.model.impl.SignalPayloadImpl;
+import org.activiti.runtime.api.model.builder.impl.SignalPayloadImpl;
 import org.springframework.stereotype.Component;
 
 @Component

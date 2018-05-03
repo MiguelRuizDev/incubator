@@ -18,6 +18,7 @@ package org.activiti.runtime.api.model.impl;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.model.ProcessDefinition;
+import org.activiti.runtime.api.model.builder.impl.ProcessStarterFactory;
 import org.springframework.stereotype.Component;
 
 @Component

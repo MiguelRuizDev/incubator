@@ -18,9 +18,9 @@ package org.activiti.runtime.api;
 
 import java.util.List;
 
-import org.activiti.runtime.api.config.ProcessRuntimeConfiguration;
-import org.activiti.runtime.api.events.DummyProcessStartedEventListener;
-import org.activiti.runtime.api.events.listener.ProcessRuntimeEventListener;
+import org.activiti.runtime.api.conf.ProcessRuntimeConfiguration;
+import org.activiti.runtime.api.event.DummyProcessStartedEventListener;
+import org.activiti.runtime.api.event.listener.ProcessRuntimeEventListener;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

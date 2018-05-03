@@ -22,6 +22,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.builder.ProcessStarter;
+import org.activiti.runtime.api.model.builder.impl.ProcessStarterFactory;
 
 public class ProcessDefinitionImpl implements ProcessDefinition {
 

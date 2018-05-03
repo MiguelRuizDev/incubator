@@ -16,7 +16,7 @@
 
 package org.activiti.runtime.api;
 
-import org.activiti.runtime.api.events.DummyProcessStartedEventListener;
+import org.activiti.runtime.api.event.DummyProcessStartedEventListener;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.junit.Before;
 import org.junit.Test;

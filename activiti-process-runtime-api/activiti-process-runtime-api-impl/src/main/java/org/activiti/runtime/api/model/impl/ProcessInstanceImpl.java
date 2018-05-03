@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Objects;
 
 import org.activiti.engine.RuntimeService;
-import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.VariableInstance;
+import org.activiti.runtime.api.model.ProcessInstance;
 
 public class ProcessInstanceImpl implements ProcessInstance {
 

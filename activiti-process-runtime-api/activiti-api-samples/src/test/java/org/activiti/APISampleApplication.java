@@ -16,7 +16,7 @@
 
 package org.activiti;
 
-import org.activiti.cloud.starter.configuration.ActivitiRuntimeBundle;
+import org.activiti.cloud.starter.rb.configuration.ActivitiRuntimeBundle;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
