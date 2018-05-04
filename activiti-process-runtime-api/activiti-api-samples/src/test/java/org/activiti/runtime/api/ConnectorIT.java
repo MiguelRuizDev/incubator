@@ -18,7 +18,6 @@ package org.activiti.runtime.api;
 
 import java.util.List;
 
-import org.activiti.runtime.api.connector.DefaultServiceTaskBehavior;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.Task;
 import org.activiti.runtime.api.model.VariableInstance;
@@ -41,12 +40,8 @@ public class ConnectorIT {
     @Autowired
     private TaskRuntime taskRuntime;
 
-    @Autowired
-    private DefaultServiceTaskBehavior behavior;
-
     @Test
     public void serviceTaskShouldCallConnector() {
-        assertThat(behavior).isNotNull();
         //when
         ProcessInstance processInstance = processRuntime
                 .processDefinitionByKey("DefaultServiceTaskProcess")

@@ -20,9 +20,7 @@ import org.activiti.bpmn.model.ServiceTask;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.impl.bpmn.behavior.AbstractBpmnActivityBehavior;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
-@Component
 public class DefaultServiceTaskBehavior extends AbstractBpmnActivityBehavior {
 
     private final ApplicationContext applicationContext;
@@ -33,14 +31,21 @@ public class DefaultServiceTaskBehavior extends AbstractBpmnActivityBehavior {
 
     @Override
     public void execute(DelegateExecution execution) {
-        String implementation = ((ServiceTask) execution.getCurrentFlowElement()).getImplementation();
-        Connector connector = applicationContext.getBean(implementation,
-                                                    Connector.class);
+        Connector connector = applicationContext.getBean(getServiceTaskImplementation(execution),
+                                                         Connector.class);
         ExecutionContextImpl context = new ExecutionContextImpl(execution);
         connector.execute(context);
         execution.setVariables(context.getOutBoundVariables());
 
         leave(execution);
+    }
+
+    private String getServiceTaskImplementation(DelegateExecution execution) {
+        return ((ServiceTask) execution.getCurrentFlowElement()).getImplementation();
+    }
+
+    protected boolean hasConnectorBean(DelegateExecution execution) {
+        return applicationContext.containsBean(getServiceTaskImplementation(execution));
     }
 
 }
