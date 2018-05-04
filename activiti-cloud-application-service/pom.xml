@@ -20,8 +20,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.activiti.cloud</groupId>
-    <artifactId>activiti-cloud-uservices-parent</artifactId>
+    <artifactId>activiti-cloud-parent</artifactId>
     <version>7-201803-EA-SNAPSHOT</version>
+    <relativePath/>
   </parent>
   <artifactId>activiti-cloud-application-service</artifactId>
   <name>Activiti Cloud :: Application Service</name>
@@ -40,12 +41,28 @@
       <artifactId>jackson-annotations</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-commons</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.activiti.cloud</groupId>
+      <artifactId>activiti-cloud-services-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
     </dependency>
 
   </dependencies>

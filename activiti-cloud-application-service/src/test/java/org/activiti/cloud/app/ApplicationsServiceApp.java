@@ -14,14 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-@EnableDiscoveryClient
-@EnableScheduling
 public class ApplicationsServiceApp implements CommandLineRunner {
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 
 
     public static void main(String[] args) {

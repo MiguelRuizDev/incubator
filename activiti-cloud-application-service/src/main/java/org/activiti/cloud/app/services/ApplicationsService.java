@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.activiti.cloud.app.model.AcitivitiMetadataAttrs;
 import org.activiti.cloud.app.model.Application;
 import org.activiti.cloud.app.model.Service;
 import org.activiti.cloud.app.model.ServiceType;
@@ -79,9 +80,9 @@ public class ApplicationsService {
             for (ServiceInstance serviceInstance : instances) {
 
                 Map<String, String> metadata = serviceInstance.getMetadata();
-                final String applicationName = metadata.get("activiti-cloud-application-name");
+                final String applicationName = metadata.get(AcitivitiMetadataAttrs.appName);
                 if (applicationName != null) {
-                    final String serviceType = metadata.get("activiti-cloud-service-type");
+                    final String serviceType = metadata.get(AcitivitiMetadataAttrs.serviceType);
                     LOGGER.debug("Application Name: " + applicationName);
                     LOGGER.debug("Service Type: " + serviceType);
 
@@ -142,7 +143,7 @@ public class ApplicationsService {
     private void updateServiceStatusAndURL(Application activitiApplication,
                                            ServiceInstance i,
                                            String serviceType) {
-        if ("audit".equals(serviceType)) {
+        if (ServiceType.AUDIT.name().equals(serviceType)) {
             Service activitiAuditService = findServiceByName(activitiApplication,
                                                              i.getServiceId());
             if (activitiAuditService != null) {
@@ -151,7 +152,7 @@ public class ApplicationsService {
                     activitiAuditService.setStatus(Status.UP);
                 }
             }
-        } else if ("runtime-bundle".equals(serviceType)) {
+        } else if (ServiceType.RUNTIME_BUNDLE.name().equals(serviceType)) {
             Service activitiRuntimeBundleService = findServiceByName(activitiApplication,
                                                                      i.getServiceId());
             if (activitiRuntimeBundleService != null) {
@@ -160,7 +161,7 @@ public class ApplicationsService {
                     activitiRuntimeBundleService.setStatus(Status.UP);
                 }
             }
-        } else if ("query".equals(serviceType)) {
+        } else if (ServiceType.QUERY.name().equals(serviceType)) {
             Service activitiQueryService = findServiceByName(activitiApplication,
                                                              i.getServiceId());
 
@@ -170,7 +171,7 @@ public class ApplicationsService {
                     activitiQueryService.setStatus(Status.UP);
                 }
             }
-        } else if ("connector".equals(serviceType)) {
+        } else if (ServiceType.CONNECTOR.name().equals(serviceType)) {
             Service activitiConnectorService = findServiceByName(activitiApplication,
                                                                  i.getServiceId());
             if (activitiConnectorService != null) {

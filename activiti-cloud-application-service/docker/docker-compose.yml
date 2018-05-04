@@ -7,6 +7,7 @@ services:
     environment:
       - JAVA_OPTS=-Xmx64m -Xms64m
       - ACT_CLOUD_CONFIG_SERVER_ENABLED=false
+      - SPRING_PROFILES_ACTIVE=git
     volumes:
       - "/tmp/config-repo:/tmp/config-repo"
   activiti-cloud-gateway:
