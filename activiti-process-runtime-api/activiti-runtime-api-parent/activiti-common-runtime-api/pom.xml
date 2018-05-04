@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.activiti</groupId>
-    <artifactId>activiti-parent</artifactId>
+    <artifactId>activiti-runtime-api-parent</artifactId>
     <version>7-201803-EA-SNAPSHOT</version>
   </parent>
   <artifactId>activiti-common-runtime-api</artifactId>
