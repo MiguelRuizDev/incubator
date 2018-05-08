@@ -36,6 +36,9 @@ import static org.assertj.core.api.Assertions.tuple;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class ProcessRuntimeIT {
 
+    private static final int MAX_RESULTS = 500;
+    private static final String SIMPLE_PROCESS = "SimpleProcess";
+    private static final String PROCESS_WITH_VARIABLES = "ProcessWithVariables";
     @Autowired
     private ProcessRuntime processRuntime;
 
@@ -53,7 +56,7 @@ public class ProcessRuntimeIT {
     public void shouldStartProcessInstance() {
         //when
         ProcessInstance processInstance = processRuntime
-                .processDefinitionByKey("SimpleProcess")
+                .processDefinitionByKey(SIMPLE_PROCESS)
                 .start();
 
         //then
@@ -61,14 +64,14 @@ public class ProcessRuntimeIT {
         assertThat(processInstance.getId()).isNotEmpty();
         assertThat(processInstance.getBusinessKey()).isNull();
         assertThat(processInstance.getProcessDefinitionId()).isNotEmpty();
-        assertThat(processInstance.getProcessDefinitionKey()).isEqualTo("SimpleProcess");
+        assertThat(processInstance.getProcessDefinitionKey()).isEqualTo(SIMPLE_PROCESS);
     }
 
     @Test
     public void shouldStartProcessInstanceWithExtraInformation() {
         //when
         ProcessInstance processInstance = processRuntime
-                .processDefinitionByKey("SimpleProcess")
+                .processDefinitionByKey(SIMPLE_PROCESS)
                 .startProcessWith()
                 .businessKey("myBusinessKey")
                 .variable("firstName",
@@ -84,7 +87,7 @@ public class ProcessRuntimeIT {
         assertThat(processInstance.getId()).isNotEmpty();
         assertThat(processInstance.getBusinessKey()).isEqualTo("myBusinessKey");
         assertThat(processInstance.getProcessDefinitionId()).isNotEmpty();
-        assertThat(processInstance.getProcessDefinitionKey()).isEqualTo("SimpleProcess");
+        assertThat(processInstance.getProcessDefinitionKey()).isEqualTo(SIMPLE_PROCESS);
 
         //when
         List<VariableInstance> variables = processInstance.variables();
@@ -124,7 +127,7 @@ public class ProcessRuntimeIT {
 
     private ProcessInstance aProcessInstance() {
         return processRuntime
-                .processDefinitionByKey("SimpleProcess")
+                .processDefinitionByKey(SIMPLE_PROCESS)
                 .start();
     }
 
@@ -164,27 +167,27 @@ public class ProcessRuntimeIT {
 
         //then
         assertThat(processDefinitions).isNotNull();
-        assertThat(processDefinitions).extracting(ProcessDefinition::getName).contains("SimpleProcess");
+        assertThat(processDefinitions).extracting(ProcessDefinition::getName).contains(SIMPLE_PROCESS);
     }
 
     @Test
     public void shouldGetProcessInstancesFromProcessDefinition() {
         //given
         ProcessInstance firstSimpleProcess = processRuntime
-                .processDefinitionByKey("SimpleProcess")
+                .processDefinitionByKey(SIMPLE_PROCESS)
                 .start();
         ProcessInstance processWithVariables = processRuntime
-                .processDefinitionByKey("ProcessWithVariables")
+                .processDefinitionByKey(PROCESS_WITH_VARIABLES)
                 .start();
         ProcessInstance secondSimpleProcess = processRuntime
-                .processDefinitionByKey("SimpleProcess")
+                .processDefinitionByKey(SIMPLE_PROCESS)
                 .start();
 
         //when
         List<ProcessInstance> processInstances = processRuntime
-                .processDefinitionByKey("SimpleProcess")
+                .processDefinitionByKey(SIMPLE_PROCESS)
                 .processInstances(0,
-                                  500);
+                                  MAX_RESULTS);
         //then
         assertThat(processInstances)
                 .contains(firstSimpleProcess,
@@ -193,14 +196,61 @@ public class ProcessRuntimeIT {
 
         //when
         processInstances = processRuntime
-                .processDefinitionByKey("ProcessWithVariables")
+                .processDefinitionByKey(PROCESS_WITH_VARIABLES)
                 .processInstances(0,
-                                  500);
+                                  MAX_RESULTS);
 
         //then
         assertThat(processInstances)
                 .contains(processWithVariables)
                 .doesNotContain(firstSimpleProcess,
                                 secondSimpleProcess);
+    }
+
+    @Test
+    public void queryProcessInstancesShouldRetrieveAllProcessInstances() {
+        //given
+        ProcessInstance simpleProcess = processRuntime
+                .processDefinitionByKey(SIMPLE_PROCESS)
+                .start();
+        ProcessInstance processWithVariables = processRuntime
+                .processDefinitionByKey(PROCESS_WITH_VARIABLES)
+                .start();
+
+        //when
+        List<ProcessInstance> processInstances = processRuntime.processInstanceQuery().processInstances(0,
+                                                                                                        MAX_RESULTS);
+
+        //then
+        assertThat(processInstances)
+                .extracting(ProcessInstance::getId)
+                .contains(simpleProcess.getId(),
+                          processWithVariables.getId());
+    }
+
+    @Test
+    public void queryProcessInstancesShouldFilterOnProcessDefinitionKey() {
+        //given
+        ProcessInstance simpleProcess = processRuntime
+                .processDefinitionByKey(SIMPLE_PROCESS)
+                .start();
+        ProcessInstance processWithVariables = processRuntime
+                .processDefinitionByKey(PROCESS_WITH_VARIABLES)
+                .start();
+
+        //when
+        List<ProcessInstance> processInstances = processRuntime
+                .processInstanceQuery()
+                .filterOnKey(SIMPLE_PROCESS)
+                .processInstances(
+                        0,
+                        MAX_RESULTS
+                );
+
+        //then
+        assertThat(processInstances)
+                .extracting(ProcessInstance::getId)
+                .contains(simpleProcess.getId())
+                .doesNotContain(processWithVariables.getId());
     }
 }

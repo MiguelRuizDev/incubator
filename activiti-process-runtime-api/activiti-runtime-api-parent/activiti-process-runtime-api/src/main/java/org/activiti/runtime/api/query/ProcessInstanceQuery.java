@@ -14,30 +14,18 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api;
+package org.activiti.runtime.api.query;
 
 import java.util.List;
 
-import org.activiti.runtime.api.model.builder.SignalPayload;
-import org.activiti.runtime.api.conf.ProcessRuntimeConfiguration;
-import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.query.ProcessInstanceQuery;
 
-public interface ProcessRuntime {
+public interface ProcessInstanceQuery {
 
-    ProcessRuntimeConfiguration configuration();
+    ProcessInstanceQuery filterOnKeys(List<String> processDefinitionKeys);
 
-    List<ProcessDefinition> processDefinitions();
+    ProcessInstanceQuery filterOnKey(String processDefinitionKey);
 
-    ProcessDefinition processDefinitionByKey(String processDefinitionKey);
-
-    ProcessInstance processInstance(String processInstanceId);
-
-    ProcessInstanceQuery processInstanceQuery();
-
-    SignalPayload sendSignalWith();
-
-    void sendSignal(String name);
+    List<ProcessInstance> processInstances(int startIndex, int maxResults);
 
 }

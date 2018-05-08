@@ -29,6 +29,8 @@ import org.activiti.runtime.api.model.builder.SignalPayload;
 import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
 import org.activiti.runtime.api.model.builder.impl.SignalPayloadImpl;
+import org.activiti.runtime.api.query.ProcessInstanceQuery;
+import org.activiti.runtime.api.query.impl.ProcessInstanceQueryImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -93,5 +95,10 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
     @Override
     public ProcessRuntimeConfiguration configuration() {
         return configuration;
+    }
+
+    @Override
+    public ProcessInstanceQuery processInstanceQuery() {
+        return new ProcessInstanceQueryImpl(runtimeService, processInstanceConverter);
     }
 }
