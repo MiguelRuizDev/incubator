@@ -26,25 +26,24 @@ import org.activiti.runtime.api.conf.TaskRuntimeConfiguration;
 import org.activiti.runtime.api.event.internal.TaskAssignedEventListenerDelegate;
 import org.activiti.runtime.api.event.internal.TaskCreatedEventListenerDelegate;
 import org.activiti.runtime.api.event.listener.TaskRuntimeEventListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TaskRuntimeConfigurationImpl implements TaskRuntimeConfiguration {
 
-    private final RuntimeService runtimeService;
-    private final List<TaskRuntimeEventListener> eventListeners;
-    private final TaskCreatedEventListenerDelegate taskCreatedEventListenerDelegate;
-    private final TaskAssignedEventListenerDelegate taskAssignedEventListenerDelegate;
 
-    public TaskRuntimeConfigurationImpl(RuntimeService runtimeService,
-                                        TaskCreatedEventListenerDelegate taskCreatedEventListenerDelegate,
-                                        List<TaskRuntimeEventListener> eventListeners,
-                                        TaskAssignedEventListenerDelegate taskAssignedEventListenerDelegate) {
-        this.runtimeService = runtimeService;
-        this.taskCreatedEventListenerDelegate = taskCreatedEventListenerDelegate;
-        this.eventListeners = eventListeners;
-        this.taskAssignedEventListenerDelegate = taskAssignedEventListenerDelegate;
-    }
+    @Autowired
+    private RuntimeService runtimeService;
+
+    @Autowired(required = false)
+    private List<TaskRuntimeEventListener> eventListeners;
+
+    @Autowired
+    private TaskCreatedEventListenerDelegate taskCreatedEventListenerDelegate;
+
+    @Autowired
+    private TaskAssignedEventListenerDelegate taskAssignedEventListenerDelegate;
 
     @PostConstruct
     private void registerEventListeners() {

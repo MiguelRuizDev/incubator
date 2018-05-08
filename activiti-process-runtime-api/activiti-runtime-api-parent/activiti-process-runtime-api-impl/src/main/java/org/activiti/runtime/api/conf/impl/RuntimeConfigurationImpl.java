@@ -16,6 +16,7 @@
 
 package org.activiti.runtime.api.conf.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -25,22 +26,20 @@ import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.runtime.api.conf.ProcessRuntimeConfiguration;
 import org.activiti.runtime.api.event.internal.ProcessStartedEventListenerDelegate;
 import org.activiti.runtime.api.event.listener.ProcessRuntimeEventListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RuntimeConfigurationImpl implements ProcessRuntimeConfiguration {
 
-    private final RuntimeService runtimeService;
-    private final ProcessStartedEventListenerDelegate processStartedEventListenerDelegate;
-    private final List<ProcessRuntimeEventListener> eventListeners;
+    @Autowired
+    private RuntimeService runtimeService;
 
-    public RuntimeConfigurationImpl(RuntimeService runtimeService,
-                                    ProcessStartedEventListenerDelegate processStartedEventListenerDelegate,
-                                    List<ProcessRuntimeEventListener> eventListeners) {
-        this.runtimeService = runtimeService;
-        this.processStartedEventListenerDelegate = processStartedEventListenerDelegate;
-        this.eventListeners = eventListeners;
-    }
+    @Autowired
+    private ProcessStartedEventListenerDelegate processStartedEventListenerDelegate;
+
+    @Autowired(required = false)
+    private List<ProcessRuntimeEventListener> eventListeners = new ArrayList<>();
 
     @PostConstruct
     private void registerEventListeners() {
