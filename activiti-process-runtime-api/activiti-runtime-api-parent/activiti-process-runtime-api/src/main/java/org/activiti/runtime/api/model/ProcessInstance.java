@@ -17,7 +17,6 @@
 package org.activiti.runtime.api.model;
 
 import java.util.Date;
-import java.util.List;
 
 public interface ProcessInstance {
 
@@ -44,11 +43,4 @@ public interface ProcessInstance {
     String getProcessDefinitionId();
 
     String getProcessDefinitionKey();
-
-    void suspend();
-
-    void resume();
-
-    List<VariableInstance> variables();
-
 }

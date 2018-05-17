@@ -18,10 +18,10 @@ package org.activiti.runtime.api.model.builder;
 
 import java.util.Map;
 
-import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.FluentProcessInstance;
 
 public interface ProcessStarter extends VariableContainer<ProcessStarter>,
-                                        ActionExecutor<ProcessInstance> {
+                                        ActionExecutor<FluentProcessInstance> {
 
     ProcessStarter variables(Map<String, Object> variables);
 

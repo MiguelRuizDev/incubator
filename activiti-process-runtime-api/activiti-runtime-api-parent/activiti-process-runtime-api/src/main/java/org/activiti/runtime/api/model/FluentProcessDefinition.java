@@ -16,16 +16,18 @@
 
 package org.activiti.runtime.api.model;
 
-public interface ProcessDefinition {
+import java.util.List;
 
-    String getId();
+import org.activiti.runtime.api.model.builder.ProcessStarter;
 
-    String getName();
+public interface FluentProcessDefinition extends ProcessDefinition {
 
-    String getKey();
+    FluentProcessInstance start();
 
-    String getDescription();
+    ProcessStarter startProcessWith();
 
-    int getVersion();
+    //TODO move to page
+    List<FluentProcessInstance> processInstances(int startIndex,
+                                           int maxResults);
 
 }

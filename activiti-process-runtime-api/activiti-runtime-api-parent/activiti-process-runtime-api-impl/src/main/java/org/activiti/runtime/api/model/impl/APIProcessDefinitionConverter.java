@@ -17,13 +17,13 @@
 package org.activiti.runtime.api.model.impl;
 
 import org.activiti.engine.RuntimeService;
-import org.activiti.runtime.api.model.ProcessDefinition;
+import org.activiti.runtime.api.model.FluentProcessDefinition;
 import org.activiti.runtime.api.model.builder.impl.ProcessStarterFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class APIProcessDefinitionConverter extends ListConverter<org.activiti.engine.repository.ProcessDefinition, ProcessDefinition>
-        implements ModelConverter<org.activiti.engine.repository.ProcessDefinition, ProcessDefinition> {
+public class APIProcessDefinitionConverter extends ListConverter<org.activiti.engine.repository.ProcessDefinition, FluentProcessDefinition>
+        implements ModelConverter<org.activiti.engine.repository.ProcessDefinition, FluentProcessDefinition> {
 
     private final ProcessStarterFactory processStarterFactory;
     private final RuntimeService runtimeService;
@@ -37,16 +37,16 @@ public class APIProcessDefinitionConverter extends ListConverter<org.activiti.en
         this.processInstanceConverter = processInstanceConverter;
     }
 
-    public ProcessDefinition from(org.activiti.engine.repository.ProcessDefinition internalProcessDefinition) {
-        ProcessDefinitionImpl processDefinition = new ProcessDefinitionImpl(processStarterFactory,
-                                                                            runtimeService,
-                                                                            processInstanceConverter,
-                                                                            internalProcessDefinition.getId(),
-                                                                            internalProcessDefinition.getName(),
-                                                                            internalProcessDefinition.getDescription(),
-                                                                            internalProcessDefinition.getVersion());
+    public FluentProcessDefinition from(org.activiti.engine.repository.ProcessDefinition internalProcessDefinition) {
+        FluentProcessDefinitionImpl processDefinition = new FluentProcessDefinitionImpl(processStarterFactory,
+                                                                                        runtimeService,
+                                                                                        processInstanceConverter);
+
+        processDefinition.setId(internalProcessDefinition.getId());
+        processDefinition.setName(internalProcessDefinition.getName());
+        processDefinition.setDescription(internalProcessDefinition.getDescription());
+        processDefinition.setVersion(internalProcessDefinition.getVersion());
         processDefinition.setKey(internalProcessDefinition.getKey());
         return processDefinition;
     }
-
 }

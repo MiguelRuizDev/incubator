@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.model;
+package org.activiti.runtime.api.query.impl;
 
-public interface ProcessDefinition {
+import java.util.List;
 
-    String getId();
+import org.activiti.runtime.api.query.Page;
 
-    String getName();
+public class PageImpl<T> implements Page<T> {
 
-    String getKey();
+    private List<T> content;
+    private int totalItems;
 
-    String getDescription();
+    public PageImpl(List<T> content,
+                    int totalItems) {
+        this.content = content;
+        this.totalItems = totalItems;
+    }
 
-    int getVersion();
+    @Override
+    public List<T> getContent() {
+        return content;
+    }
 
+    @Override
+    public int getTotalItems() {
+        return totalItems;
+    }
 }

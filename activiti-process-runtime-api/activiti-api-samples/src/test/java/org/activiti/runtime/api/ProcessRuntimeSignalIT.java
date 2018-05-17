@@ -18,7 +18,7 @@ package org.activiti.runtime.api;
 
 import java.util.List;
 
-import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.FluentProcessInstance;
 import org.activiti.runtime.api.model.Task;
 import org.activiti.runtime.api.model.VariableInstance;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class ProcessRuntimeSignalIT {
     @Test
     public void processShouldTakeExceptionPathWhenSignalIsSent() {
         //given
-        ProcessInstance processInstance = processRuntime
+        FluentProcessInstance processInstance = processRuntime
                 .processDefinitionByKey("ProcessWithBoundarySignal")
                 .start();
 

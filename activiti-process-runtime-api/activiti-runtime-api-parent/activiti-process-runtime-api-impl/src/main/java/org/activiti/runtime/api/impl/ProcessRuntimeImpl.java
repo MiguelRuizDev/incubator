@@ -20,17 +20,21 @@ import java.util.List;
 
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.runtime.api.NotFoundException;
 import org.activiti.runtime.api.ProcessRuntime;
 import org.activiti.runtime.api.conf.ProcessRuntimeConfiguration;
-import org.activiti.runtime.api.model.ProcessDefinition;
-import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.FluentProcessDefinition;
+import org.activiti.runtime.api.model.FluentProcessInstance;
 import org.activiti.runtime.api.model.builder.SignalPayload;
+import org.activiti.runtime.api.model.builder.impl.SignalPayloadImpl;
 import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
-import org.activiti.runtime.api.model.builder.impl.SignalPayloadImpl;
-import org.activiti.runtime.api.query.ProcessInstanceQuery;
-import org.activiti.runtime.api.query.impl.ProcessInstanceQueryImpl;
+import org.activiti.runtime.api.query.Page;
+import org.activiti.runtime.api.query.Pageable;
+import org.activiti.runtime.api.query.ProcessDefinitionFilter;
+import org.activiti.runtime.api.query.ProcessInstanceFilter;
+import org.activiti.runtime.api.query.impl.PageImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -59,27 +63,67 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
     }
 
     @Override
-    public List<ProcessDefinition> processDefinitions() {
-        return processDefinitionConverter.from(repositoryService.createProcessDefinitionQuery().list());
+    public Page<FluentProcessDefinition> processDefinitions(Pageable pageable) {
+        return processDefinitions(pageable, null);
     }
 
     @Override
-    public ProcessDefinition processDefinitionByKey(String processDefinitionKey) {
+    public Page<FluentProcessDefinition> processDefinitions(Pageable pageable,
+                                                      ProcessDefinitionFilter filter) {
+        ProcessDefinitionQuery processDefinitionQuery = repositoryService
+                .createProcessDefinitionQuery();
+        if (filter != null && filter.hasProcessDefinitionKeys()) {
+            processDefinitionQuery.processDefinitionKeys(filter.getProcessDefinitionKeys());
+        }
+        return new PageImpl<>(processDefinitionConverter.from(processDefinitionQuery.list()),
+                                                              Math.toIntExact(processDefinitionQuery.count()));
+    }
+
+    @Override
+    public FluentProcessDefinition processDefinitionByKey(String processDefinitionKey) {
         List<org.activiti.engine.repository.ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).list();
 
         if (processDefinitions == null || processDefinitions.isEmpty()) {
-            throw new NotFoundException("No process definition found for key `" + processDefinitionKey + "`");
+            throw new NotFoundException("Unable to find process definition for the given key:'" + processDefinitionKey + "'");
         }
         return processDefinitionConverter.from(processDefinitions.get(0));
     }
 
+   @Override
+   public FluentProcessDefinition processDefinitionById(String processDefinitionId) {
+        org.activiti.engine.repository.ProcessDefinition definition = repositoryService.getProcessDefinition(processDefinitionId);
+       if (definition == null) {
+           throw new NotFoundException("Unable to find process definition for the given id:'" + processDefinitionId + "'");
+       }
+       return processDefinitionConverter.from(definition);
+   }
+
+
     @Override
-    public ProcessInstance processInstance(String processInstanceId) {
+    public FluentProcessInstance processInstance(String processInstanceId) {
         return processInstanceConverter.from(
                 runtimeService
                         .createProcessInstanceQuery()
                         .processInstanceId(processInstanceId)
                         .singleResult());
+    }
+
+    @Override
+    public Page<FluentProcessInstance> processInstances(Pageable pageable) {
+        return processInstances(pageable,
+                                null);
+    }
+
+    @Override
+    public Page<FluentProcessInstance> processInstances(Pageable pageable,
+                                                  ProcessInstanceFilter filter) {
+        org.activiti.engine.runtime.ProcessInstanceQuery internalQuery = runtimeService.createProcessInstanceQuery();
+        if (filter != null && filter.hasProcessDefinitionKeys()) {
+            internalQuery.processDefinitionKeys(filter.getProcessDefinitionKeys());
+        }
+        return new PageImpl<>(processInstanceConverter.from(internalQuery.listPage(pageable.getStartIndex(),
+                                                                                   pageable.getMaxItems())),
+                              Math.toIntExact(internalQuery.count()));
     }
 
     @Override
@@ -95,10 +139,5 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
     @Override
     public ProcessRuntimeConfiguration configuration() {
         return configuration;
-    }
-
-    @Override
-    public ProcessInstanceQuery processInstanceQuery() {
-        return new ProcessInstanceQueryImpl(runtimeService, processInstanceConverter);
     }
 }

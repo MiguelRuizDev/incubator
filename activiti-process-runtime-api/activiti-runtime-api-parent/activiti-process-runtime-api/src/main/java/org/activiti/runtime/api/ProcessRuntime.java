@@ -16,25 +16,33 @@
 
 package org.activiti.runtime.api;
 
-import java.util.List;
-
-import org.activiti.runtime.api.model.builder.SignalPayload;
 import org.activiti.runtime.api.conf.ProcessRuntimeConfiguration;
-import org.activiti.runtime.api.model.ProcessDefinition;
-import org.activiti.runtime.api.model.ProcessInstance;
-import org.activiti.runtime.api.query.ProcessInstanceQuery;
+import org.activiti.runtime.api.model.FluentProcessDefinition;
+import org.activiti.runtime.api.model.FluentProcessInstance;
+import org.activiti.runtime.api.model.builder.SignalPayload;
+import org.activiti.runtime.api.query.Page;
+import org.activiti.runtime.api.query.Pageable;
+import org.activiti.runtime.api.query.ProcessDefinitionFilter;
+import org.activiti.runtime.api.query.ProcessInstanceFilter;
 
 public interface ProcessRuntime {
 
     ProcessRuntimeConfiguration configuration();
 
-    List<ProcessDefinition> processDefinitions();
+    Page<FluentProcessDefinition>  processDefinitions(Pageable pageable);
 
-    ProcessDefinition processDefinitionByKey(String processDefinitionKey);
+    Page<FluentProcessDefinition>  processDefinitions(Pageable pageable,
+                                              ProcessDefinitionFilter filter);
 
-    ProcessInstance processInstance(String processInstanceId);
+    FluentProcessDefinition processDefinitionByKey(String processDefinitionKey);
 
-    ProcessInstanceQuery processInstanceQuery();
+    FluentProcessDefinition processDefinitionById(String processDefinitionId);
+
+    FluentProcessInstance processInstance(String processInstanceId);
+
+    Page<FluentProcessInstance> processInstances(Pageable pageable);
+
+    Page<FluentProcessInstance> processInstances(Pageable pageable, ProcessInstanceFilter filter);
 
     SignalPayload sendSignalWith();
 

@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.model;
+package org.activiti.runtime.api.query;
 
-public interface ProcessDefinition {
+import java.util.List;
 
-    String getId();
+public interface Page<T> {
 
-    String getName();
+    List<T> getContent();
 
-    String getKey();
-
-    String getDescription();
-
-    int getVersion();
+    int getTotalItems();
 
 }

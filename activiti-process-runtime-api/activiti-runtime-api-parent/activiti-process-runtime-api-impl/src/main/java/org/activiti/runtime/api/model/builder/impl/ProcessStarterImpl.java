@@ -19,7 +19,7 @@ package org.activiti.runtime.api.model.builder.impl;
 import java.util.Map;
 
 import org.activiti.engine.RuntimeService;
-import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.FluentProcessInstance;
 import org.activiti.runtime.api.model.builder.ProcessStarter;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
 
@@ -62,7 +62,7 @@ public class ProcessStarterImpl implements ProcessStarter {
     }
 
     @Override
-    public ProcessInstance doIt() {
+    public FluentProcessInstance doIt() {
         return processInstanceConverter.from(runtimeService
                 .createProcessInstanceBuilder()
                 .processDefinitionId(payload.getProcessDefinitionId())

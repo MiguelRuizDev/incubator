@@ -17,17 +17,11 @@
 package org.activiti.runtime.api.model.impl;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
-import org.activiti.engine.RuntimeService;
-import org.activiti.runtime.api.model.VariableInstance;
 import org.activiti.runtime.api.model.ProcessInstance;
 
 public class ProcessInstanceImpl implements ProcessInstance {
-
-    private final RuntimeService runtimeService;
-    private final APIVariableInstanceConverter variableInstanceConverter;
 
     private String id;
     private String name;
@@ -38,13 +32,6 @@ public class ProcessInstanceImpl implements ProcessInstance {
     private Date startDate;
     private String businessKey;
     private ProcessInstanceStatus status;
-
-    public ProcessInstanceImpl(RuntimeService runtimeService,
-                               APIVariableInstanceConverter variableInstanceConverter) {
-
-        this.runtimeService = runtimeService;
-        this.variableInstanceConverter = variableInstanceConverter;
-    }
 
     @Override
     public String getId() {
@@ -123,21 +110,6 @@ public class ProcessInstanceImpl implements ProcessInstance {
 
     public void setStatus(ProcessInstanceStatus status) {
         this.status = status;
-    }
-
-    @Override
-    public List<VariableInstance> variables() {
-        return variableInstanceConverter.from(runtimeService.getVariableInstances(getId()).values());
-    }
-
-    @Override
-    public void suspend() {
-        runtimeService.suspendProcessInstanceById(getId());
-    }
-
-    @Override
-    public void resume() {
-        runtimeService.activateProcessInstanceById(getId());
     }
 
     @Override

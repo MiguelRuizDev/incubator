@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.query;
+package org.activiti.runtime.api.model;
 
 import java.util.List;
 
-import org.activiti.runtime.api.model.ProcessInstance;
+public interface FluentProcessInstance extends ProcessInstance {
 
-public interface ProcessInstanceQuery {
+    void suspend();
 
-    ProcessInstanceQuery filterOnKeys(List<String> processDefinitionKeys);
+    void resume();
 
-    ProcessInstanceQuery filterOnKey(String processDefinitionKey);
-
-    List<ProcessInstance> processInstances(int startIndex, int maxResults);
+    List<VariableInstance> variables();
 
 }

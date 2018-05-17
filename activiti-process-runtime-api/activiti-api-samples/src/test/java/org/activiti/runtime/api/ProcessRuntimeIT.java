@@ -20,9 +20,15 @@ import java.util.List;
 
 import org.activiti.runtime.api.event.DummyProcessStartedEventListener;
 import org.activiti.runtime.api.event.listener.ProcessRuntimeEventListener;
+import org.activiti.runtime.api.model.FluentProcessDefinition;
+import org.activiti.runtime.api.model.FluentProcessInstance;
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.VariableInstance;
+import org.activiti.runtime.api.query.Order;
+import org.activiti.runtime.api.query.Page;
+import org.activiti.runtime.api.query.Pageable;
+import org.activiti.runtime.api.query.ProcessInstanceFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +76,7 @@ public class ProcessRuntimeIT {
     @Test
     public void shouldStartProcessInstanceWithExtraInformation() {
         //when
-        ProcessInstance processInstance = processRuntime
+        FluentProcessInstance processInstance = processRuntime
                 .processDefinitionByKey(SIMPLE_PROCESS)
                 .startProcessWith()
                 .businessKey("myBusinessKey")
@@ -125,7 +131,7 @@ public class ProcessRuntimeIT {
         assertThat(retrievedProcessInstance).isEqualTo(processInstance);
     }
 
-    private ProcessInstance aProcessInstance() {
+    private FluentProcessInstance aProcessInstance() {
         return processRuntime
                 .processDefinitionByKey(SIMPLE_PROCESS)
                 .start();
@@ -134,7 +140,7 @@ public class ProcessRuntimeIT {
     @Test
     public void shouldSuspendRunningProcessInstance() {
         //given
-        ProcessInstance processInstance = aProcessInstance();
+        FluentProcessInstance processInstance = aProcessInstance();
 
         //when
         processInstance.suspend();
@@ -148,7 +154,7 @@ public class ProcessRuntimeIT {
     @Test
     public void shouldResumeSuspendedProcessInstance() {
         //given
-        ProcessInstance processInstance = aProcessInstance();
+        FluentProcessInstance processInstance = aProcessInstance();
         processInstance.suspend();
 
         //when
@@ -163,28 +169,28 @@ public class ProcessRuntimeIT {
     @Test
     public void shouldGetDeployedProcessDefinitions() {
         //when
-        List<ProcessDefinition> processDefinitions = processRuntime.processDefinitions();
+        Page<FluentProcessDefinition> processDefinitions = processRuntime.processDefinitions(Pageable.of(0, MAX_RESULTS));
 
         //then
         assertThat(processDefinitions).isNotNull();
-        assertThat(processDefinitions).extracting(ProcessDefinition::getName).contains(SIMPLE_PROCESS);
+        assertThat(processDefinitions.getContent()).extracting(ProcessDefinition::getName).contains(SIMPLE_PROCESS);
     }
 
     @Test
     public void shouldGetProcessInstancesFromProcessDefinition() {
         //given
-        ProcessInstance firstSimpleProcess = processRuntime
+        FluentProcessInstance firstSimpleProcess = processRuntime
                 .processDefinitionByKey(SIMPLE_PROCESS)
                 .start();
-        ProcessInstance processWithVariables = processRuntime
+        FluentProcessInstance processWithVariables = processRuntime
                 .processDefinitionByKey(PROCESS_WITH_VARIABLES)
                 .start();
-        ProcessInstance secondSimpleProcess = processRuntime
+        FluentProcessInstance secondSimpleProcess = processRuntime
                 .processDefinitionByKey(SIMPLE_PROCESS)
                 .start();
 
         //when
-        List<ProcessInstance> processInstances = processRuntime
+        List<FluentProcessInstance> processInstances = processRuntime
                 .processDefinitionByKey(SIMPLE_PROCESS)
                 .processInstances(0,
                                   MAX_RESULTS);
@@ -218,14 +224,15 @@ public class ProcessRuntimeIT {
                 .start();
 
         //when
-        List<ProcessInstance> processInstances = processRuntime.processInstanceQuery().processInstances(0,
-                                                                                                        MAX_RESULTS);
+        Page<FluentProcessInstance> processInstances = processRuntime.processInstances(Pageable.of(0,
+                                                                                             MAX_RESULTS));
 
         //then
-        assertThat(processInstances)
+        assertThat(processInstances.getContent())
                 .extracting(ProcessInstance::getId)
                 .contains(simpleProcess.getId(),
                           processWithVariables.getId());
+        assertThat(processInstances.getTotalItems()).isGreaterThanOrEqualTo(processInstances.getContent().size());
     }
 
     @Test
@@ -239,18 +246,19 @@ public class ProcessRuntimeIT {
                 .start();
 
         //when
-        List<ProcessInstance> processInstances = processRuntime
-                .processInstanceQuery()
-                .filterOnKey(SIMPLE_PROCESS)
-                .processInstances(
-                        0,
-                        MAX_RESULTS
+        Page<FluentProcessInstance> processInstances = processRuntime
+                .processInstances(Pageable.of(0,
+                                              MAX_RESULTS,
+                                              Order.by(ProcessInstanceFilter.ID,
+                                                       Order.Direction.ASC)),
+                                              ProcessInstanceFilter.filteredOnKey(SIMPLE_PROCESS)
                 );
 
         //then
-        assertThat(processInstances)
+        assertThat(processInstances.getContent())
                 .extracting(ProcessInstance::getId)
                 .contains(simpleProcess.getId())
                 .doesNotContain(processWithVariables.getId());
+        assertThat(processInstances.getTotalItems()).isGreaterThanOrEqualTo(processInstances.getContent().size());
     }
 }
