@@ -39,7 +39,11 @@ public class APIProcessInstanceConverter extends ListConverter<org.activiti.engi
         FluentProcessInstanceImpl processInstance = new FluentProcessInstanceImpl(runtimeService,
                                                                              variableInstanceConverter);
         processInstance.setId(internalProcessInstance.getId());
+        processInstance.setName(internalProcessInstance.getName());
+        processInstance.setDescription(internalProcessInstance.getDescription());
         processInstance.setProcessDefinitionId(internalProcessInstance.getProcessDefinitionId());
+        processInstance.setInitiator(internalProcessInstance.getStartUserId());
+        processInstance.setStartDate(internalProcessInstance.getStartTime());
         processInstance.setProcessDefinitionKey(internalProcessInstance.getProcessDefinitionKey());
         processInstance.setBusinessKey(internalProcessInstance.getBusinessKey());
         processInstance.setStatus(calculateStatus(internalProcessInstance));
