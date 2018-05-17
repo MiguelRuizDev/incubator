@@ -21,6 +21,7 @@ import java.util.List;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.runtime.api.NotFoundException;
 import org.activiti.runtime.api.ProcessRuntime;
 import org.activiti.runtime.api.conf.ProcessRuntimeConfiguration;
@@ -101,11 +102,15 @@ public class ProcessRuntimeImpl implements ProcessRuntime {
 
     @Override
     public FluentProcessInstance processInstance(String processInstanceId) {
+        ProcessInstance internalProcessInstance = runtimeService
+                .createProcessInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .singleResult();
+        if (internalProcessInstance == null) {
+            throw new NotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
+        }
         return processInstanceConverter.from(
-                runtimeService
-                        .createProcessInstanceQuery()
-                        .processInstanceId(processInstanceId)
-                        .singleResult());
+                internalProcessInstance);
     }
 
     @Override
