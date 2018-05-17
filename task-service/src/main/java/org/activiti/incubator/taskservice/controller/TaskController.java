@@ -3,9 +3,7 @@ package org.activiti.incubator.taskservice.controller;
 import org.activiti.incubator.taskservice.exceptions.StateNotFoundException;
 import org.activiti.incubator.taskservice.exceptions.TaskNotFoundException;
 import org.activiti.incubator.taskservice.exceptions.TaskNotModifiedException;
-import org.activiti.incubator.taskservice.resource.MessageResource;
-import org.activiti.incubator.taskservice.resource.TaskResource;
-import org.activiti.incubator.taskservice.resource.TaskResourceAssembler;
+import org.activiti.incubator.taskservice.resource.*;
 import org.activiti.incubator.taskservice.domain.Task;
 import org.activiti.incubator.taskservice.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.data.domain.Page;
 import org.activiti.incubator.taskservice.domain.State;
+import java.util.Collection;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/tasks")
 public class TaskController {
@@ -31,19 +31,26 @@ public class TaskController {
     @Autowired
     public TaskController(TaskService taskService,
                           TaskResourceAssembler taskResourceAssembler,
-                          PagedResourcesAssembler pagedResourcesAssembler ) {
+                          PagedResourcesAssembler pagedResourcesAssembler){
 
         this.taskService = taskService;
         this.taskResourceAssembler = taskResourceAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<TaskResource> createTask (@RequestBody Task task) {
+        return new ResponseEntity<>(taskResourceAssembler.toResource(taskService.saveTask(task)), HttpStatus.CREATED);
+    }
+
     @GetMapping
-    public ResponseEntity <PagedResources<TaskResource>> findAll(@RequestParam(value="state", defaultValue= "any") String state,
-                                                                                                                    Pageable page){
+    public ResponseEntity <Collection<TaskResource>> findAll(@RequestParam(value="state", defaultValue= "any") String state,
+                                                            Pageable page){
         try{
             Page <Task> pages = taskService.findAll(State.valueOf(state.toUpperCase()), page);
-            return new ResponseEntity<>(pagedResourcesAssembler.toResource(pages,taskResourceAssembler), HttpStatus.OK );
+
+            return new ResponseEntity<>(pagedResourcesAssembler.toResource(pages,taskResourceAssembler).getContent(), HttpStatus.OK );
+
         }catch (IllegalArgumentException ex){
             throw new StateNotFoundException("State " + state.toUpperCase() + " does not exist. ");
         }
@@ -55,6 +62,11 @@ public class TaskController {
         Task task = taskService.findById(id);
 
         return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
+    }
+    
+    @PostMapping(path = "/{id}")
+    public ResponseEntity<TaskResource> updateTask (@RequestBody Task task) {
+        return new ResponseEntity<>(taskResourceAssembler.toResource(taskService.saveTask(task)), HttpStatus.OK);
     }
 
     @PostMapping(path = "/{id}/suspend")
@@ -93,12 +105,6 @@ public class TaskController {
         return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
     }
 
-
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity<TaskResource> createTask (@RequestBody Task task) {
-        return new ResponseEntity<>(taskResourceAssembler.toResource(taskService.saveTask(task)), HttpStatus.CREATED);
-    }
-
     @DeleteMapping(path = "{id}/delete")
     public ResponseEntity<TaskResource> deleteTask (@PathVariable("id") String id){
         taskService.deleteTask(id);
@@ -122,5 +128,4 @@ public class TaskController {
     public MessageResource  handlerStateNotFoundException(StateNotFoundException ex){
         return new MessageResource(ex.getMessage());
     }
-
 }

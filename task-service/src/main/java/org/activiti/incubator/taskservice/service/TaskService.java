@@ -10,16 +10,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import java.util.Optional;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-@Component
+@Service
 public class TaskService {
 
     private TaskRepository taskRepository;
@@ -144,18 +144,14 @@ public class TaskService {
     @Scheduled(fixedRate = 10000)
     public void showNotAssignedTasks() {
         Pageable page = PageRequest.of(0, 10);
-        List <Task> list = taskRepository.findByState(State.ACTIVE, page).getContent();
+        //List <Task> list = taskRepository.findByState(State.ACTIVE, page).getContent();
+        List <Task> list = taskRepository.findByState(State.ACTIVE,page).getContent();
         if(list.isEmpty()){
             log("There are no tasks to be assigned.");
         }else{
             log("There are tasks to be assigned: " + list.toString());
         }
     }
-
-    protected void log(String message) {
-        log.info(message);
-    }
-
 
     @Scheduled(fixedRate = 5000)
     public void showDueTasks(){
@@ -166,8 +162,14 @@ public class TaskService {
 
         while (all.hasNext()){
             Task currentTask = all.next();
-            if (currentTask.getDueDate().getTime() < System.currentTimeMillis()){
-                dueTasks.add(currentTask);
+
+            try{
+                Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(currentTask.getDueDate());
+                if (dueDate.getTime() < System.currentTimeMillis()){
+                    dueTasks.add(currentTask);
+                }
+            }catch (ParseException ex){
+                ex.printStackTrace();
             }
         }
 
@@ -177,9 +179,9 @@ public class TaskService {
             log("There are Due tasks: " + dueTasks.toString());
         }
 
-
     }
 
-
-
+    protected void log(String message) {
+    log.info(message);
+}
 }

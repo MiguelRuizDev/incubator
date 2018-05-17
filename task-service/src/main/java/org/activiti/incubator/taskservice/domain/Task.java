@@ -1,9 +1,11 @@
 package org.activiti.incubator.taskservice.domain;
 
 import org.hibernate.annotations.GenericGenerator;
-import java.sql.Timestamp;
 import javax.persistence.*;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 @Entity
@@ -22,17 +24,20 @@ public class Task {
 
     private State state = State.ACTIVE;
 
-    private Timestamp creationDate;
+    private Long creationDate = System.currentTimeMillis();
 
-    private Timestamp dueDate;
+    private Long dueDate = System.currentTimeMillis() + addAWeek();
 
-    private String assignedUser;
+    private String assignedUser = "";
 
-    private int priority; //from 1 down to 3 (DESC)
+    private Priority priority = Priority.NORMAL;
 
-    private Long  parent; //stores parent's id; if there is no parent, id = null
+    private String  parent = null; //stores parent's id; if there is no parent, id = null
 
     private String description;
+
+
+
 
     public String getId() { return id; }
 
@@ -46,25 +51,45 @@ public class Task {
 
     public void setState(State state) { this.state = state; }
 
-    public Timestamp getCreationDate() { return creationDate; }
+    public String getCreationDate() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(new Date(this.creationDate));
+    }
 
-    public void setCreationDate(Timestamp creationDate) { this.creationDate = creationDate; }
+    public void setCreationDate(String stringCreationDate) {
+        try{
+            Date creationDate = new SimpleDateFormat("yyyy-MM-dd").parse(stringCreationDate);
+            this.creationDate = creationDate.getTime();
+        }catch (ParseException ex){
+            ex.printStackTrace();
+        }
+    }
 
-    public Timestamp getDueDate() {return dueDate; }
+    public String getDueDate() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(new Date(this.dueDate));
+    }
 
-    public void setDueDate(Timestamp dueDate) { this.dueDate = dueDate; }
+    public void setDueDate(String stringDueDate) {
+        try {
+            Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(stringDueDate);
+            this.dueDate = dueDate.getTime();
+        }catch (ParseException ex){
+            ex.printStackTrace();
+        }
+    }
 
     public String getAssignedUser() { return assignedUser; }
 
     public void setAssignedUser(String assignedUser) { this.assignedUser = assignedUser; }
 
-    public int getPriority() { return priority; }
+    public Priority getPriority() { return priority; }
 
-    public void setPriority(int priority) { this.priority = priority; }
+    public void setPriority(Priority priority) { this.priority = priority; }
 
-    public Long getParent() { return parent; }
+    public String getParent() { return parent; }
 
-    public void setParent(Long parent) { this.parent = parent; }
+    public void setParent(String parent) { this.parent = parent; }
 
     public String getDescription() { return description; }
 
@@ -72,7 +97,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return  "Task{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", state=" + state +
@@ -83,6 +108,12 @@ public class Task {
                 ", parent=" + parent +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    private long addAWeek(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 7);
+        return calendar.getTimeInMillis() - System.currentTimeMillis();
     }
 
 }
