@@ -4,8 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 
 @Entity
@@ -36,8 +35,12 @@ public class Task {
 
     private String description;
 
-
-
+//    private Map<String, String> information = new HashMap<String, String>() {
+//        {
+//            put("email", "asdf@gmail.com");
+//            put("phone", "07761875369");
+//            put("address", "Saint's Faiths Road, SE21 832");
+//        }};
 
     public String getId() { return id; }
 
@@ -95,18 +98,28 @@ public class Task {
 
     public void setDescription(String description) { this.description = description; }
 
+//    public TreeMap<String, String> getInformation() {
+//        return information;
+//    }
+//
+//    public void setInformation(TreeMap<String, String> information) {
+//        this.information = information;
+//    }
+
+
     @Override
     public String toString() {
-        return  "Task{" +
-                "id=" + id +
+        return "Task{" +
+                "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", state=" + state +
                 ", creationDate=" + creationDate +
                 ", dueDate=" + dueDate +
                 ", assignedUser='" + assignedUser + '\'' +
                 ", priority=" + priority +
-                ", parent=" + parent +
+                ", parent='" + parent + '\'' +
                 ", description='" + description + '\'' +
+//                ", information=" + information +
                 '}';
     }
 

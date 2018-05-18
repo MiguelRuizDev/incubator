@@ -83,7 +83,12 @@ public class TaskService {
 
         if(task.getState() == State.SUSPENDED){
 
-            task.setState(State.ACTIVE);
+            if (task.getAssignedUser() != ""){
+                task.setState(State.ASSIGNED);
+            }else{
+                task.setState(State.ACTIVE);
+            }
+
             taskRepository.save(task);
             return task;
         }else{
@@ -96,11 +101,10 @@ public class TaskService {
 
         Task task = this.findById(id);
 
-        if(task.getState() == State.ASSIGNED ){
+        if(task.getState() == State.ACTIVE ){
 
             task.setState(State.COMPLETED);
-            taskRepository.save(task);
-            return task;
+            return saveTask(task);
         }else{
             throw new TaskNotModifiedException("The task with id: " + task.getId() + " could not be modified.");
         }
@@ -110,12 +114,11 @@ public class TaskService {
 
         Task task = this.findById(id);
 
-        if(task.getState() != State.ASSIGNED ){
+        if(task.getState() != State.SUSPENDED){
 
             task.setAssignedUser(user);
             task.setState(State.ASSIGNED);
-            taskRepository.save(task);
-            return task;
+            return saveTask(task);
 
         }else{
 
@@ -158,7 +161,7 @@ public class TaskService {
 
         Iterator<Task> all = taskRepository.findAll().iterator();
 
-        List <Task> dueTasks = new ArrayList();
+        List <Task> dueTasks = new ArrayList<>();
 
         while (all.hasNext()){
             Task currentTask = all.next();

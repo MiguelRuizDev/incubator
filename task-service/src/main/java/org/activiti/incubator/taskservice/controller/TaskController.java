@@ -63,7 +63,7 @@ public class TaskController {
 
         return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
     }
-    
+
     @PostMapping(path = "/{id}")
     public ResponseEntity<TaskResource> updateTask (@RequestBody Task task) {
         return new ResponseEntity<>(taskResourceAssembler.toResource(taskService.saveTask(task)), HttpStatus.OK);
