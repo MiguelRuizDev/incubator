@@ -16,14 +16,32 @@
 
 package org.conf.activiti.runtime.api;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.runtime.api.ProcessRuntime;
+import org.activiti.runtime.api.conf.ProcessRuntimeConfiguration;
+import org.activiti.runtime.api.conf.impl.ProcessRuntimeConfigurationImpl;
+import org.activiti.runtime.api.event.impl.APIProcessStartedEventConverter;
+import org.activiti.runtime.api.event.internal.ProcessStartedEventListenerDelegate;
+import org.activiti.runtime.api.event.listener.ProcessRuntimeEventListener;
+import org.activiti.runtime.api.impl.ProcessRuntimeImpl;
 import org.activiti.runtime.api.model.ProcessDefinition;
 import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.builder.impl.ProcessStarterFactory;
+import org.activiti.runtime.api.model.impl.APIProcessDefinitionConverter;
+import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
+import org.activiti.runtime.api.model.impl.APIVariableInstanceConverter;
 import org.activiti.runtime.api.model.impl.ProcessDefinitionImpl;
 import org.activiti.runtime.api.model.impl.ProcessInstanceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,13 +52,78 @@ public class ProcessRuntimeAutoConfiguration {
     @Bean
     public Module customizeProcessRuntimeObjectMapper() {
         SimpleModule module = new SimpleModule("mapProcessRuntimeInterfaces",
-                                                             Version.unknownVersion());
+                                               Version.unknownVersion());
         SimpleAbstractTypeResolver resolver = new SimpleAbstractTypeResolver();
-        resolver.addMapping(ProcessInstance.class, ProcessInstanceImpl.class);
-        resolver.addMapping(ProcessDefinition.class, ProcessDefinitionImpl.class);
+        resolver.addMapping(ProcessInstance.class,
+                            ProcessInstanceImpl.class);
+        resolver.addMapping(ProcessDefinition.class,
+                            ProcessDefinitionImpl.class);
 
         module.setAbstractTypes(resolver);
         return module;
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public ProcessRuntime processRuntime(RepositoryService repositoryService,
+                                         APIProcessDefinitionConverter processDefinitionConverter,
+                                         RuntimeService runtimeService,
+                                         APIProcessInstanceConverter processInstanceConverter,
+                                         ProcessRuntimeConfiguration processRuntimeConfiguration) {
+        return new ProcessRuntimeImpl(repositoryService,
+                                      processDefinitionConverter,
+                                      runtimeService,
+                                      processInstanceConverter,
+                                      processRuntimeConfiguration);
+    }
+
+    @Bean
+    public APIProcessDefinitionConverter apiProcessDefinitionConverter(ProcessStarterFactory processStarterFactory,
+                                                                       RuntimeService runtimeService,
+                                                                       APIProcessInstanceConverter processInstanceConverter) {
+        return new APIProcessDefinitionConverter(processStarterFactory,
+                                                 runtimeService,
+                                                 processInstanceConverter);
+    }
+
+    @Bean
+    public ProcessStarterFactory processStarterFactory(RuntimeService runtimeService,
+                                                       APIProcessInstanceConverter processInstanceConverter) {
+        return new ProcessStarterFactory(runtimeService,
+                                         processInstanceConverter);
+    }
+
+    @Bean
+    public APIProcessInstanceConverter apiProcessInstanceConverter(RuntimeService runtimeService,
+                                                                   APIVariableInstanceConverter variableInstanceConverter) {
+        return new APIProcessInstanceConverter(runtimeService,
+                                               variableInstanceConverter);
+    }
+
+    @Bean
+    public ProcessRuntimeConfiguration processRuntimeConfiguration(RuntimeService runtimeService,
+                                                                   ProcessStartedEventListenerDelegate processStartedEventListenerDelegate,
+                                                                   @Autowired(required = false) List<ProcessRuntimeEventListener> eventListeners) {
+        return new ProcessRuntimeConfigurationImpl(runtimeService,
+                                                   processStartedEventListenerDelegate,
+                                                   eventListeners != null? eventListeners : Collections.emptyList());
+    }
+
+    @Bean
+    public APIVariableInstanceConverter apiVariableInstanceConverter() {
+        return new APIVariableInstanceConverter();
+    }
+
+    @Bean
+    public ProcessStartedEventListenerDelegate processStartedEventListenerDelegate(
+            @Autowired(required = false) List<ProcessRuntimeEventListener> listeners,
+            APIProcessStartedEventConverter processStartedEventConverter) {
+        return new ProcessStartedEventListenerDelegate(listeners != null ? listeners : Collections.emptyList(),
+                                                       processStartedEventConverter);
+    }
+
+    @Bean
+    public APIProcessStartedEventConverter apiProcessStartedEventConverter(APIProcessInstanceConverter processInstanceConverter) {
+        return new APIProcessStartedEventConverter(processInstanceConverter);
+    }
 }

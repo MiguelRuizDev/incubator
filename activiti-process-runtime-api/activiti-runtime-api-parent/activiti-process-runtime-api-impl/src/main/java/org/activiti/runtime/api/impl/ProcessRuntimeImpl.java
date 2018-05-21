@@ -36,10 +36,8 @@ import org.activiti.runtime.api.query.Pageable;
 import org.activiti.runtime.api.query.ProcessDefinitionFilter;
 import org.activiti.runtime.api.query.ProcessInstanceFilter;
 import org.activiti.runtime.api.query.impl.PageImpl;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ProcessRuntimeImpl implements ProcessRuntime {
+public class  ProcessRuntimeImpl implements ProcessRuntime {
 
     private final RepositoryService repositoryService;
 

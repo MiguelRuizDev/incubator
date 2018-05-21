@@ -22,9 +22,7 @@ import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.runtime.api.event.ProcessRuntimeEvent;
 import org.activiti.runtime.api.event.ProcessStartedEvent;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
-import org.springframework.stereotype.Component;
 
-@Component
 public class APIProcessStartedEventConverter implements EventConverter<ProcessRuntimeEvent> {
 
     private final APIProcessInstanceConverter processInstanceConverter;

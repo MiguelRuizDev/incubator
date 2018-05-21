@@ -16,7 +16,6 @@
 
 package org.activiti.runtime.api.event.internal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
@@ -24,18 +23,19 @@ import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.activiti.runtime.api.event.ProcessStartedEvent;
 import org.activiti.runtime.api.event.impl.APIProcessStartedEventConverter;
 import org.activiti.runtime.api.event.listener.ProcessRuntimeEventListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ProcessStartedEventListenerDelegate implements ActivitiEventListener {
 
 
-    @Autowired(required = false)
-    private List<ProcessRuntimeEventListener> processRuntimeEventListeners = new ArrayList<>();
+    private List<ProcessRuntimeEventListener> processRuntimeEventListeners;
 
-    @Autowired
     private APIProcessStartedEventConverter processInstanceStartedEventConverter;
+
+    public ProcessStartedEventListenerDelegate(List<ProcessRuntimeEventListener> processRuntimeEventListeners,
+                                               APIProcessStartedEventConverter processInstanceStartedEventConverter) {
+        this.processRuntimeEventListeners = processRuntimeEventListeners;
+        this.processInstanceStartedEventConverter = processInstanceStartedEventConverter;
+    }
 
     @Override
     public void onEvent(ActivitiEvent event) {

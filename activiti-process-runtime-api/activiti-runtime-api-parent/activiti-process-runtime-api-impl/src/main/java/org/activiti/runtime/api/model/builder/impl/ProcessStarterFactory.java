@@ -19,9 +19,7 @@ package org.activiti.runtime.api.model.builder.impl;
 import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.model.builder.ProcessStarter;
 import org.activiti.runtime.api.model.impl.APIProcessInstanceConverter;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ProcessStarterFactory {
 
     private final RuntimeService runtimeService;

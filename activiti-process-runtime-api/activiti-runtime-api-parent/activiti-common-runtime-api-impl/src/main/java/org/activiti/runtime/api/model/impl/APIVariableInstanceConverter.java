@@ -17,9 +17,7 @@
 package org.activiti.runtime.api.model.impl;
 
 import org.activiti.runtime.api.model.VariableInstance;
-import org.springframework.stereotype.Component;
 
-@Component
 public class APIVariableInstanceConverter
         extends ListConverter<org.activiti.engine.impl.persistence.entity.VariableInstance, VariableInstance>
         implements ModelConverter <org.activiti.engine.impl.persistence.entity.VariableInstance, VariableInstance> {

@@ -19,9 +19,7 @@ package org.activiti.runtime.api.model.impl;
 import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.model.FluentProcessDefinition;
 import org.activiti.runtime.api.model.builder.impl.ProcessStarterFactory;
-import org.springframework.stereotype.Component;
 
-@Component
 public class APIProcessDefinitionConverter extends ListConverter<org.activiti.engine.repository.ProcessDefinition, FluentProcessDefinition>
         implements ModelConverter<org.activiti.engine.repository.ProcessDefinition, FluentProcessDefinition> {
 
