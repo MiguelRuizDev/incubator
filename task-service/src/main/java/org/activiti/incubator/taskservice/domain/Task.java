@@ -35,12 +35,12 @@ public class Task {
 
     private String description;
 
-//    private Map<String, String> information = new HashMap<String, String>() {
-//        {
-//            put("email", "asdf@gmail.com");
-//            put("phone", "07761875369");
-//            put("address", "Saint's Faiths Road, SE21 832");
-//        }};
+    @ElementCollection
+    private Map<String, String> data = new HashMap<String, String>() {{
+            put("email", "asdf@gmail.com");
+            put("phone", "07761875369");
+            put("address", "Saint's Faiths Road, SE21 832");
+    }};
 
     public String getId() { return id; }
 
@@ -98,13 +98,13 @@ public class Task {
 
     public void setDescription(String description) { this.description = description; }
 
-//    public TreeMap<String, String> getInformation() {
-//        return information;
-//    }
-//
-//    public void setInformation(TreeMap<String, String> information) {
-//        this.information = information;
-//    }
+    public Map<String, String> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, String> information) {
+        this.data = information;
+    }
 
 
     @Override
@@ -119,7 +119,7 @@ public class Task {
                 ", priority=" + priority +
                 ", parent='" + parent + '\'' +
                 ", description='" + description + '\'' +
-//                ", information=" + information +
+                ", information=" + data +
                 '}';
     }
 

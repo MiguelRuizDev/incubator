@@ -57,11 +57,11 @@ public class TaskController {
     }
 
     @GetMapping (path = "/{id}")
-    public ResponseEntity<TaskResource> findById(@PathVariable("id") String id){
+    public TaskResource findById(@PathVariable("id") String id){
 
         Task task = taskService.findById(id);
 
-        return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
+        return taskResourceAssembler.toResource(task);
     }
 
     @PostMapping(path = "/{id}")

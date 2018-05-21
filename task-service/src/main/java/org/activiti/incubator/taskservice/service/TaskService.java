@@ -101,7 +101,7 @@ public class TaskService {
 
         Task task = this.findById(id);
 
-        if(task.getState() == State.ACTIVE ){
+        if(task.getState() != State.SUSPENDED ){
 
             task.setState(State.COMPLETED);
             return saveTask(task);
