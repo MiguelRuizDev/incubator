@@ -42,6 +42,12 @@ public class CompleteTaskPayloadImpl implements CompleteTaskPayload {
     }
 
     @Override
+    public CompleteTaskPayload variables(Map<String, Object> variables) {
+        this.variables.putAll(variables);
+        return this;
+    }
+
+    @Override
     public Void doIt() {
         taskService.complete(taskId, variables);
         return null;

@@ -17,6 +17,7 @@
 package org.activiti.runtime.api.model.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.runtime.api.model.FluentProcessInstance;
@@ -40,6 +41,11 @@ public class FluentProcessInstanceImpl extends ProcessInstanceImpl implements Fl
     }
 
     @Override
+    public void variables(Map<String, Object> variables) {
+        runtimeService.setVariables(getId(), variables);
+    }
+
+    @Override
     public void suspend() {
         runtimeService.suspendProcessInstanceById(getId());
     }
@@ -47,5 +53,15 @@ public class FluentProcessInstanceImpl extends ProcessInstanceImpl implements Fl
     @Override
     public void resume() {
         runtimeService.activateProcessInstanceById(getId());
+    }
+
+    @Override
+    public void delete(String reason) {
+        runtimeService.deleteProcessInstance(getId(), reason);
+    }
+
+    @Override
+    public List<String> activeActivityIds() {
+        return runtimeService.getActiveActivityIds(getId());
     }
 }

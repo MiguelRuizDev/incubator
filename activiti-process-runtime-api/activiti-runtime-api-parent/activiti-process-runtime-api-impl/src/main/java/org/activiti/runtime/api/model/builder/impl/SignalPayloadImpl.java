@@ -47,6 +47,12 @@ public class SignalPayloadImpl implements SignalPayload {
     }
 
     @Override
+    public SignalPayload variables(Map<String, Object> variables) {
+        this.variables.putAll(variables);
+        return this;
+    }
+
+    @Override
     public Void doIt() {
         runtimeService.signalEventReceived(name, variables);
         return null;

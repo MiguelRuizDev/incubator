@@ -16,9 +16,14 @@
 
 package org.activiti.runtime.api.model.builder;
 
+import java.util.Map;
+
 public interface VariableContainer<C extends VariableContainer<C>> {
 
     C variable(String key,
                    Object value);
+
+
+    C variables(Map<String, Object> variables);
 
 }

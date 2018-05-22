@@ -17,6 +17,7 @@
 package org.activiti.runtime.api.model;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FluentProcessInstance extends ProcessInstance {
 
@@ -24,6 +25,12 @@ public interface FluentProcessInstance extends ProcessInstance {
 
     void resume();
 
+    void delete(String reason);
+
     List<VariableInstance> variables();
+
+    void variables(Map<String, Object> variables);
+
+    List<String> activeActivityIds();
 
 }
