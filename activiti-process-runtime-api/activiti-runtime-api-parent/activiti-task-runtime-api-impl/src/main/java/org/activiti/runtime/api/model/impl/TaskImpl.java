@@ -17,23 +17,18 @@
 package org.activiti.runtime.api.model.impl;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
-import org.activiti.engine.TaskService;
-import org.activiti.runtime.api.model.VariableInstance;
+import org.activiti.runtime.api.model.FluentTask;
 import org.activiti.runtime.api.model.Task;
-import org.activiti.runtime.api.model.builder.CompleteTaskPayload;
 
 public class TaskImpl implements Task {
 
-    private final TaskService taskService;
-    private final APIVariableInstanceConverter variableInstanceConverter;
-
     private String id;
+    private String name;
+    private Task.TaskStatus status;
     private String owner;
     private String assignee;
-    private String name;
     private String description;
     private Date createdDate;
     private Date claimedDate;
@@ -42,18 +37,13 @@ public class TaskImpl implements Task {
     private String processDefinitionId;
     private String processInstanceId;
     private String parentTaskId;
-    private TaskStatus status;
 
-    public TaskImpl(TaskService taskService,
-                    APIVariableInstanceConverter variableInstanceConverter,
-                    String id,
+    public TaskImpl(Task.TaskStatus status,
                     String name,
-                    TaskStatus status) {
-        this.taskService = taskService;
-        this.variableInstanceConverter = variableInstanceConverter;
-        this.id = id;
-        this.name = name;
+                    String id) {
         this.status = status;
+        this.name = name;
+        this.id = id;
     }
 
     public String getId() {
@@ -78,6 +68,10 @@ public class TaskImpl implements Task {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -136,7 +130,7 @@ public class TaskImpl implements Task {
         this.processInstanceId = processInstanceId;
     }
 
-    public Task.TaskStatus getStatus() {
+    public FluentTask.TaskStatus getStatus() {
         return status;
     }
 
@@ -146,50 +140,6 @@ public class TaskImpl implements Task {
 
     public void setParentTaskId(String parentTaskId) {
         this.parentTaskId = parentTaskId;
-    }
-
-    @Override
-    public <T> void variable(String name,
-                                               T value) {
-        taskService.setVariable(getId(), name, value);
-    }
-
-    @Override
-    public <T> void localVariable(String name,
-                                  T value) {
-        taskService.setVariableLocal(getId(), name, value);
-    }
-
-    @Override
-    public List<VariableInstance> variables() {
-        return variableInstanceConverter.from(taskService.getVariableInstances(getId()).values());
-    }
-
-    @Override
-    public List<VariableInstance> localVariables() {
-        return variableInstanceConverter.from(taskService.getVariableInstancesLocal(getId()).values());
-    }
-
-    @Override
-    public void complete() {
-        taskService.complete(getId());
-    }
-
-    @Override
-    public CompleteTaskPayload completeWith() {
-        return new CompleteTaskPayloadImpl(taskService,
-                                           getId());
-    }
-
-    @Override
-    public void claim(String username) {
-        taskService.setAssignee(getId(),
-                                username);
-    }
-
-    @Override
-    public void release() {
-        taskService.unclaim(getId());
     }
 
     @Override
@@ -263,5 +213,4 @@ public class TaskImpl implements Task {
                 ", status=" + status +
                 '}';
     }
-
 }

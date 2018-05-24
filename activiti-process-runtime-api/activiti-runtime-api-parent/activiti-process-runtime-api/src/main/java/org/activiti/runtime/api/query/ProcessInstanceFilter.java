@@ -21,9 +21,7 @@ import java.util.Set;
 
 public class ProcessInstanceFilter {
 
-    public static String ID = "id";
-
-    public static String PROCESS_DEFINITION_ID = "processDefinitionId";
+    public static final String ID = "id";
 
     private Set<String> processDefinitionKeys;
 

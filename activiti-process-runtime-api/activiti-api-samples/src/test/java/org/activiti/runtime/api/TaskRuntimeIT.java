@@ -20,9 +20,12 @@ import java.util.List;
 
 import org.activiti.runtime.api.event.AssignTaskListener;
 import org.activiti.runtime.api.event.listener.TaskRuntimeEventListener;
+import org.activiti.runtime.api.model.FluentTask;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.Task;
 import org.activiti.runtime.api.model.VariableInstance;
+import org.activiti.runtime.api.query.Page;
+import org.activiti.runtime.api.query.Pageable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,8 @@ import static org.assertj.core.api.Assertions.tuple;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class TaskRuntimeIT {
+
+    private static final int MAX_ITEMS = 500;
 
     @Autowired
     private TaskRuntime taskRuntime;
@@ -59,12 +64,12 @@ public class TaskRuntimeIT {
         ProcessInstance secondSimpleProcess = processRuntime.processDefinitionByKey("SimpleProcess").start();
 
         //when
-        List<Task> tasks = taskRuntime.tasks(0,
-                                             500);
+        Page<FluentTask> tasks = taskRuntime.tasks(Pageable.of(0,
+                                                               MAX_ITEMS));
 
         //then
         assertThat(tasks).isNotNull();
-        assertThat(tasks)
+        assertThat(tasks.getContent())
                 .extracting(Task::getName, Task::getProcessInstanceId)
                 .contains(tuple("Perform action",
                                 firstSimpleProcess.getId()),
@@ -79,8 +84,8 @@ public class TaskRuntimeIT {
                 .startProcessWith()
                 .variable("processVariable", "myProcVar")
                 .doIt();
-        Task currentTask = taskRuntime.tasks(0,
-                                             500).stream()
+        FluentTask currentTask = taskRuntime.tasks(Pageable.of(0,
+                                                               MAX_ITEMS)).getContent().stream()
                 .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
                 .findFirst().orElse(null);
         assertThat(currentTask).isNotNull();
@@ -117,8 +122,8 @@ public class TaskRuntimeIT {
                 .startProcessWith()
                 .variable("processVariable", "myProcVar")
                 .doIt();
-        Task currentTask = taskRuntime.tasks(0,
-                                             500).stream()
+        FluentTask currentTask = taskRuntime.tasks(Pageable.of(0,
+                                                               MAX_ITEMS)).getContent().stream()
                 .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
                 .findFirst().orElse(null);
         assertThat(currentTask).isNotNull();
@@ -167,7 +172,7 @@ public class TaskRuntimeIT {
     @Test
     public void shouldCompleteTask() {
         //given
-        Task task = aTask();
+        FluentTask task = aTask();
 
         //when
         task.complete();
@@ -176,26 +181,26 @@ public class TaskRuntimeIT {
         assertCompleted(task);
     }
 
-    private Task aTask() {
+    private FluentTask aTask() {
         ProcessInstance processInstance = processRuntime.processDefinitionByKey("SimpleProcess").start();
-        Task currentTask = taskRuntime.tasks(0,
-                                             500).stream()
+        FluentTask currentTask = taskRuntime.tasks(Pageable.of(0,
+                                                               MAX_ITEMS)).getContent().stream()
                 .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
                 .findFirst().orElse(null);
         assertThat(currentTask).isNotNull();
         return currentTask;
     }
 
-    private void assertCompleted(Task currentTask) {
-        List<Task> tasks = taskRuntime.tasks(0,
-                                             500);
-        assertThat(tasks).doesNotContain(currentTask);
+    private void assertCompleted(FluentTask currentTask) {
+        Page<FluentTask> tasks = taskRuntime.tasks(Pageable.of(0,
+                                                               MAX_ITEMS));
+        assertThat(tasks.getContent()).doesNotContain(currentTask);
     }
 
     @Test
     public void shouldCompleteTaskWithExtraInformation() {
         //given
-        Task currentTask = aTask();
+        FluentTask currentTask = aTask();
 
         //when
         currentTask
@@ -223,7 +228,7 @@ public class TaskRuntimeIT {
     @Test
     public void claimTaskShouldSetAssignee() {
         //given
-        Task task = aTask();
+        FluentTask task = aTask();
 
         //when
         task.claim("paul");
@@ -231,13 +236,13 @@ public class TaskRuntimeIT {
         //then
         Task retrievedTask = taskRuntime.task(task.getId());
         assertThat(retrievedTask.getAssignee()).isEqualTo("paul");
-        assertThat(retrievedTask.getStatus()).isEqualTo(Task.TaskStatus.ASSIGNED);
+        assertThat(retrievedTask.getStatus()).isEqualTo(FluentTask.TaskStatus.ASSIGNED);
     }
 
     @Test
     public void releaseShouldUnSetAssignee() {
         //given
-        Task task = aTask();
+        FluentTask task = aTask();
         task.claim("paul");
 
         //when
@@ -246,6 +251,6 @@ public class TaskRuntimeIT {
         //then
         Task retrievedTask = taskRuntime.task(task.getId());
         assertThat(retrievedTask.getAssignee()).isNull();
-        assertThat(retrievedTask.getStatus()).isEqualTo(Task.TaskStatus.CREATED);
+        assertThat(retrievedTask.getStatus()).isEqualTo(FluentTask.TaskStatus.CREATED);
     }
 }

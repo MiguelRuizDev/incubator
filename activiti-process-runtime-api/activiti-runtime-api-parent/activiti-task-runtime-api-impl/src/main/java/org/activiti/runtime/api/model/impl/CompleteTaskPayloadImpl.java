@@ -29,27 +29,32 @@ public class CompleteTaskPayloadImpl implements CompleteTaskPayload {
 
     private Map<String, Object> variables = new HashMap<>();
 
-    public CompleteTaskPayloadImpl(TaskService taskService, String taskId) {
+    public CompleteTaskPayloadImpl(TaskService taskService,
+                                   String taskId) {
         this.taskService = taskService;
         this.taskId = taskId;
     }
 
     @Override
     public CompleteTaskPayload variable(String name,
-                                            Object value) {
-        variables.put(name, value);
+                                        Object value) {
+        variables.put(name,
+                      value);
         return this;
     }
 
     @Override
     public CompleteTaskPayload variables(Map<String, Object> variables) {
-        this.variables.putAll(variables);
+        if (variables != null) {
+            this.variables.putAll(variables);
+        }
         return this;
     }
 
     @Override
     public Void doIt() {
-        taskService.complete(taskId, variables);
+        taskService.complete(taskId,
+                             variables);
         return null;
     }
 }

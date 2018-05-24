@@ -19,8 +19,11 @@ package org.activiti.runtime.api;
 import java.util.List;
 
 import org.activiti.runtime.api.model.FluentProcessInstance;
+import org.activiti.runtime.api.model.FluentTask;
 import org.activiti.runtime.api.model.Task;
 import org.activiti.runtime.api.model.VariableInstance;
+import org.activiti.runtime.api.query.Page;
+import org.activiti.runtime.api.query.Pageable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +62,10 @@ public class ProcessRuntimeSignalIT {
         //then
         await().untilAsserted(() -> {
 
-            List<Task> tasks = taskRuntime.tasks(0,
-                                                 1000);
-            assertThat(tasks)
+            Page<FluentTask> tasks = taskRuntime.tasks(Pageable.of(0,
+                                                                   500)
+            );
+            assertThat(tasks.getContent())
                     .filteredOn(task -> task.getProcessInstanceId().equals(processInstance.getId()))
                     .extracting(Task::getName)
                     .contains("Boundary target");

@@ -16,18 +16,23 @@
 
 package org.activiti.runtime.api;
 
-import java.util.List;
-
 import org.activiti.runtime.api.conf.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.model.Task;
+import org.activiti.runtime.api.model.FluentTask;
+import org.activiti.runtime.api.model.builder.TaskCreator;
+import org.activiti.runtime.api.query.Page;
+import org.activiti.runtime.api.query.Pageable;
+import org.activiti.runtime.api.query.TaskFilter;
 
 public interface TaskRuntime {
 
     TaskRuntimeConfiguration configuration();
 
-    Task task(String taskId);
+    TaskCreator createTaskWith();
 
-    List<Task> tasks(int firstResult,
-                     int maxResults);
+    FluentTask task(String taskId);
+
+    Page<FluentTask> tasks(Pageable pageable);
+
+    Page<FluentTask> tasks(Pageable pageable, TaskFilter filter);
 
 }

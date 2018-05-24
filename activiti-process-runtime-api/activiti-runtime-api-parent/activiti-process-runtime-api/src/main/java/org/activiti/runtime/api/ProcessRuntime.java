@@ -29,7 +29,7 @@ public interface ProcessRuntime {
 
     ProcessRuntimeConfiguration configuration();
 
-    Page<FluentProcessDefinition>  processDefinitions(Pageable pageable);
+    Page<FluentProcessDefinition> processDefinitions(Pageable pageable);
 
     Page<FluentProcessDefinition>  processDefinitions(Pageable pageable,
                                               ProcessDefinitionFilter filter);

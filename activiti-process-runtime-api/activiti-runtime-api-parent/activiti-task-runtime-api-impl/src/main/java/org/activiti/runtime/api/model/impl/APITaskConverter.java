@@ -17,11 +17,9 @@
 package org.activiti.runtime.api.model.impl;
 
 import org.activiti.engine.TaskService;
-import org.activiti.runtime.api.model.Task;
-import org.springframework.stereotype.Component;
+import org.activiti.runtime.api.model.FluentTask;
 
-@Component
-public class APITaskConverter extends ListConverter<org.activiti.engine.task.Task, Task> implements ModelConverter<org.activiti.engine.task.Task, Task> {
+public class APITaskConverter extends ListConverter<org.activiti.engine.task.Task, FluentTask> implements ModelConverter<org.activiti.engine.task.Task, FluentTask> {
 
     private final TaskService taskService;
     private final APIVariableInstanceConverter variableInstanceConverter;
@@ -33,12 +31,14 @@ public class APITaskConverter extends ListConverter<org.activiti.engine.task.Tas
     }
 
     @Override
-    public Task from(org.activiti.engine.task.Task internalTask) {
-        TaskImpl task = new TaskImpl(taskService,
-                                     variableInstanceConverter,
-                                     internalTask.getId(),
-                                     internalTask.getName(),
-                                     calculateStatus(internalTask));
+    public FluentTask from(org.activiti.engine.task.Task internalTask) {
+        FluentTaskImpl task = new FluentTaskImpl(taskService,
+                                                 variableInstanceConverter,
+                                                 this,
+                                                 internalTask.getId(),
+                                                 internalTask.getName(),
+                                                 calculateStatus(internalTask)
+        );
         task.setProcessDefinitionId(internalTask.getProcessDefinitionId());
         task.setProcessInstanceId(internalTask.getProcessInstanceId());
         task.setAssignee(internalTask.getAssignee());
@@ -52,13 +52,13 @@ public class APITaskConverter extends ListConverter<org.activiti.engine.task.Tas
         return task;
     }
 
-    private Task.TaskStatus calculateStatus(org.activiti.engine.task.Task source) {
+    private FluentTask.TaskStatus calculateStatus(org.activiti.engine.task.Task source) {
         if (source.isSuspended()) {
-            return org.activiti.runtime.api.model.Task.TaskStatus.SUSPENDED;
+            return FluentTask.TaskStatus.SUSPENDED;
         } else if (source.getAssignee() != null && !source.getAssignee().isEmpty()) {
-            return org.activiti.runtime.api.model.Task.TaskStatus.ASSIGNED;
+            return FluentTask.TaskStatus.ASSIGNED;
         }
-        return org.activiti.runtime.api.model.Task.TaskStatus.CREATED;
+        return FluentTask.TaskStatus.CREATED;
     }
 
 }

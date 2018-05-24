@@ -110,11 +110,6 @@ public class ProcessRuntimeAutoConfiguration {
     }
 
     @Bean
-    public APIVariableInstanceConverter apiVariableInstanceConverter() {
-        return new APIVariableInstanceConverter();
-    }
-
-    @Bean
     public ProcessStartedEventListenerDelegate processStartedEventListenerDelegate(
             @Autowired(required = false) List<ProcessRuntimeEventListener> listeners,
             APIProcessStartedEventConverter processStartedEventConverter) {

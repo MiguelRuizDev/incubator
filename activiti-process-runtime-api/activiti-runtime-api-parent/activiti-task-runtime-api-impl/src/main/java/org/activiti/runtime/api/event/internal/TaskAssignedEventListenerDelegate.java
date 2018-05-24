@@ -20,12 +20,10 @@ import java.util.List;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
+import org.activiti.runtime.api.event.TaskAssignedEvent;
 import org.activiti.runtime.api.event.impl.APITaskAssignedEventConverter;
 import org.activiti.runtime.api.event.listener.TaskRuntimeEventListener;
-import org.activiti.runtime.api.event.TaskAssignedEvent;
-import org.springframework.stereotype.Component;
 
-@Component
 public class TaskAssignedEventListenerDelegate implements ActivitiEventListener {
 
     private final List<TaskRuntimeEventListener> taskRuntimeEventListeners;

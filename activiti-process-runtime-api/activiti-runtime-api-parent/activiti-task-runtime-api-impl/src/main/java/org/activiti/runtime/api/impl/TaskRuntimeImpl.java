@@ -19,13 +19,20 @@ package org.activiti.runtime.api.impl;
 import java.util.List;
 
 import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
+import org.activiti.runtime.api.NotFoundException;
 import org.activiti.runtime.api.TaskRuntime;
 import org.activiti.runtime.api.conf.TaskRuntimeConfiguration;
-import org.activiti.runtime.api.model.Task;
+import org.activiti.runtime.api.model.FluentTask;
+import org.activiti.runtime.api.model.builder.TaskCreator;
 import org.activiti.runtime.api.model.impl.APITaskConverter;
-import org.springframework.stereotype.Component;
+import org.activiti.runtime.api.model.impl.TaskCreatorImpl;
+import org.activiti.runtime.api.query.Page;
+import org.activiti.runtime.api.query.Pageable;
+import org.activiti.runtime.api.query.TaskFilter;
+import org.activiti.runtime.api.query.impl.PageImpl;
 
-@Component
 public class TaskRuntimeImpl implements TaskRuntime {
 
     private final TaskService taskService;
@@ -48,14 +55,41 @@ public class TaskRuntimeImpl implements TaskRuntime {
     }
 
     @Override
-    public Task task(String taskId) {
-        return taskConverter.from(taskService.createTaskQuery().taskId(taskId).singleResult());
+    public TaskCreator createTaskWith() {
+        return new TaskCreatorImpl(taskService, taskConverter);
     }
 
     @Override
-    public List<Task> tasks(int firstResult,
-                            int maxResults) {
-        return taskConverter.from(taskService.createTaskQuery().listPage(firstResult,
-                                                                         maxResults));
+    public FluentTask task(String taskId) {
+        Task internalTask = taskService.createTaskQuery().taskId(taskId).singleResult();
+        if (internalTask == null) {
+            throw new NotFoundException("Unable to find task for the given id: " + taskId);
+        }
+        return taskConverter.from(internalTask);
+    }
+
+    @Override
+    public Page<FluentTask> tasks(Pageable pageable) {
+        return tasks(pageable,
+                     null);
+    }
+
+    @Override
+    public Page<FluentTask> tasks(Pageable pageable,
+                                  TaskFilter filter) {
+        TaskQuery taskQuery = taskService.createTaskQuery();
+        if (filter != null) {
+            if (filter.getAssigneeId() != null) {
+                taskQuery = taskQuery.taskCandidateOrAssigned(filter.getAssigneeId(),
+                                                              filter.getGroups());
+            }
+            if (filter.getProcessInstanceId() != null) {
+                taskQuery = taskQuery.processInstanceId(filter.getProcessInstanceId());
+            }
+        }
+        List<FluentTask> tasks = taskConverter.from(taskQuery.listPage(pageable.getStartIndex(),
+                                                                       pageable.getMaxItems()));
+        return new PageImpl<>(tasks,
+                              Math.toIntExact(taskQuery.count()));
     }
 }

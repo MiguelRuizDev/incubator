@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.event;
+package org.activiti.runtime.api.model.builder;
 
-import org.activiti.runtime.api.model.FluentProcessInstance;
+import java.util.Date;
 
-public interface ProcessRuntimeEvent extends RuntimeEvent<FluentProcessInstance> {
+import org.activiti.runtime.api.model.FluentTask;
+
+public interface TaskCreator {
+
+    TaskCreator name(String name);
+
+    TaskCreator description(String description);
+
+    TaskCreator priority(Integer priority);
+
+    TaskCreator dueDate(Date dueDate);
+
+    TaskCreator assignee(String assignee);
+
+    FluentTask create();
 
 }

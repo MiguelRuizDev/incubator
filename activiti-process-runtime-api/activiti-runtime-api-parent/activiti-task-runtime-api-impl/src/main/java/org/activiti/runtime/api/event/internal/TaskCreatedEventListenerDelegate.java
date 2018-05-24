@@ -20,19 +20,14 @@ import java.util.List;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
+import org.activiti.runtime.api.event.TaskCreatedEvent;
 import org.activiti.runtime.api.event.impl.APITaskCreatedEventConverter;
 import org.activiti.runtime.api.event.listener.TaskRuntimeEventListener;
-import org.activiti.runtime.api.event.TaskCreatedEvent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class TaskCreatedEventListenerDelegate implements ActivitiEventListener {
 
-    @Autowired(required = false)
     private List<TaskRuntimeEventListener> taskRuntimeEventListeners;
 
-    @Autowired
     private APITaskCreatedEventConverter taskCreatedEventConverter;
 
     public TaskCreatedEventListenerDelegate(List<TaskRuntimeEventListener> taskRuntimeEventListeners,

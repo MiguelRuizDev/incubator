@@ -16,11 +16,12 @@
 
 package org.activiti.runtime.api;
 
-import java.util.List;
-
 import org.activiti.runtime.api.model.FluentProcessInstance;
+import org.activiti.runtime.api.model.FluentTask;
 import org.activiti.runtime.api.model.Task;
 import org.activiti.runtime.api.model.VariableInstance;
+import org.activiti.runtime.api.query.Page;
+import org.activiti.runtime.api.query.Pageable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ import static org.assertj.core.api.Assertions.tuple;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class ConnectorIT {
+
+    private static final int MAX_ITEMS = 500;
 
     @Autowired
     private ProcessRuntime processRuntime;
@@ -49,11 +52,11 @@ public class ConnectorIT {
 
 
         //then: process should automatically execute the service task
-        List<Task> tasks = taskRuntime.tasks(0,
-                                             500);
+        Page<FluentTask> tasks = taskRuntime.tasks(Pageable.of(0,
+                                                               MAX_ITEMS));
 
         //the execution should point to the user task following the service task
-        assertThat(tasks)
+        assertThat(tasks.getContent())
                 .filteredOn(task -> task.getProcessInstanceId().equals(processInstance.getId()))
                 .extracting(Task::getName)
                 .contains("Schedule meeting after service");

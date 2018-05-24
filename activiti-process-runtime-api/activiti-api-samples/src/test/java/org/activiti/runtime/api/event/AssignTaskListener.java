@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.activiti.runtime.api.event.listener.TaskRuntimeEventListener;
-import org.activiti.runtime.api.model.Task;
+import org.activiti.runtime.api.model.FluentTask;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,7 +34,7 @@ public class AssignTaskListener implements TaskRuntimeEventListener {
 
     @Override
     public void onTaskCreated(TaskCreatedEvent event) {
-        Task task = event.getEntity();
+        FluentTask task = event.getEntity();
         task.claim(getUsername());
 
     }

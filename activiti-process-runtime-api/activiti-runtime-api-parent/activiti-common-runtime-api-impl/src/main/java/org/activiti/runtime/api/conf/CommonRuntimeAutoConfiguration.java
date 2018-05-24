@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package org.activiti.runtime.api.event;
+package org.activiti.runtime.api.conf;
 
-import org.activiti.runtime.api.model.FluentProcessInstance;
+import org.activiti.runtime.api.model.impl.APIVariableInstanceConverter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-public interface ProcessRuntimeEvent extends RuntimeEvent<FluentProcessInstance> {
+@Configuration
+public class CommonRuntimeAutoConfiguration {
+
+    @Bean
+    public APIVariableInstanceConverter apiVariableInstanceConverter() {
+        return new APIVariableInstanceConverter();
+    }
 
 }

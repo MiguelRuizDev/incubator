@@ -17,9 +17,6 @@
 package org.activiti.runtime.api.model;
 
 import java.util.Date;
-import java.util.List;
-
-import org.activiti.runtime.api.model.builder.CompleteTaskPayload;
 
 public interface Task {
 
@@ -54,22 +51,4 @@ public interface Task {
     String getParentTaskId();
 
     TaskStatus getStatus();
-
-    <T> void variable(String name,
-                      T value);
-
-    <T> void localVariable(String name,
-                           T value);
-
-    List<VariableInstance> variables();
-
-    List<VariableInstance> localVariables();
-
-    void complete();
-
-    CompleteTaskPayload completeWith();
-
-    void claim(String username);
-
-    void release();
 }

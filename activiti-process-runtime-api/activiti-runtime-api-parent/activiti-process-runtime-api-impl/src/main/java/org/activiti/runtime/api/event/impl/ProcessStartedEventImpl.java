@@ -17,12 +17,12 @@
 package org.activiti.runtime.api.event.impl;
 
 import org.activiti.runtime.api.event.ProcessStartedEvent;
-import org.activiti.runtime.api.model.ProcessInstance;
+import org.activiti.runtime.api.model.FluentProcessInstance;
 
-public class ProcessStartedEventImpl extends RuntimeEventImpl<ProcessInstance>
+public class ProcessStartedEventImpl extends RuntimeEventImpl<FluentProcessInstance>
         implements ProcessStartedEvent {
 
-    public ProcessStartedEventImpl(ProcessInstance entity) {
+    public ProcessStartedEventImpl(FluentProcessInstance entity) {
         super(entity);
     }
 

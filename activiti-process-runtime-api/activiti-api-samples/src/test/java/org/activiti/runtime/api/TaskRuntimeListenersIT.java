@@ -17,8 +17,10 @@
 package org.activiti.runtime.api;
 
 import org.activiti.runtime.api.event.AssignTaskListener;
+import org.activiti.runtime.api.model.FluentTask;
 import org.activiti.runtime.api.model.ProcessInstance;
 import org.activiti.runtime.api.model.Task;
+import org.activiti.runtime.api.query.Pageable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,15 +70,15 @@ public class TaskRuntimeListenersIT {
                 .start();
 
         //then: the task should be assigned by the listener
-        Task currentTask = getCurrentTask(processInstance);
+        FluentTask currentTask = getCurrentTask(processInstance);
         currentTask.claim("jack");
 
         assertThat(assignTaskListener.getAssignedTasks()).containsEntry(currentTask.getId(), "jack");
     }
 
-    private Task getCurrentTask(ProcessInstance processInstance) {
-        return taskRuntime.tasks(0,
-                                           500)
+    private FluentTask getCurrentTask(ProcessInstance processInstance) {
+        return taskRuntime.tasks(Pageable.of(0,
+                                             500)).getContent()
                     .stream()
                     .filter(task -> task.getProcessInstanceId().equals(processInstance.getId()))
                     .findFirst().orElse(null);

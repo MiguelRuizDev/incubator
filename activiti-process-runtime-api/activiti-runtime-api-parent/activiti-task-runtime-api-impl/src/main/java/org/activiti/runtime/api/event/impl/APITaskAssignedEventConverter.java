@@ -21,9 +21,7 @@ import org.activiti.engine.delegate.event.impl.ActivitiEntityEventImpl;
 import org.activiti.engine.task.Task;
 import org.activiti.runtime.api.event.TaskAssignedEvent;
 import org.activiti.runtime.api.model.impl.APITaskConverter;
-import org.springframework.stereotype.Component;
 
-@Component
 public class APITaskAssignedEventConverter implements EventConverter<TaskAssignedEvent> {
 
     private final APITaskConverter taskConverter;
