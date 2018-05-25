@@ -31,6 +31,10 @@ public interface FluentProcessInstance extends ProcessInstance {
 
     void variables(Map<String, Object> variables);
 
+    void removeVariables(List<String> variableNames);
+
+    List<VariableInstance> localVariables();
+
     List<String> activeActivityIds();
 
 }

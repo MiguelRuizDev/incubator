@@ -105,7 +105,7 @@ public class  ProcessRuntimeImpl implements ProcessRuntime {
                 .processInstanceId(processInstanceId)
                 .singleResult();
         if (internalProcessInstance == null) {
-            throw new NotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
+            throw new NotFoundException("Unable to find process instance for the given id:'" + processInstanceId + "'");
         }
         return processInstanceConverter.from(
                 internalProcessInstance);

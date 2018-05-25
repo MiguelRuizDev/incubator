@@ -46,6 +46,17 @@ public class FluentProcessInstanceImpl extends ProcessInstanceImpl implements Fl
     }
 
     @Override
+    public void removeVariables(List<String> variableNames) {
+        runtimeService.removeVariables(getId(), variableNames);
+    }
+
+    @Override
+    public List<VariableInstance> localVariables() {
+        Map<String, org.activiti.engine.impl.persistence.entity.VariableInstance> variableInstancesLocal = runtimeService.getVariableInstancesLocal(getId());
+        return variableInstanceConverter.from(variableInstancesLocal.values());
+    }
+
+    @Override
     public void suspend() {
         runtimeService.suspendProcessInstanceById(getId());
     }

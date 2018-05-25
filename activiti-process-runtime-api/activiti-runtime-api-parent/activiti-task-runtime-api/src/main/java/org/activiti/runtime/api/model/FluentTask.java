@@ -18,6 +18,7 @@ package org.activiti.runtime.api.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.activiti.runtime.api.model.builder.CompleteTaskPayload;
 import org.activiti.runtime.api.model.builder.TaskCreator;
@@ -27,8 +28,12 @@ public interface FluentTask extends Task {
     <T> void variable(String name,
                       T value);
 
+    void variables(Map<String, Object> variables);
+
     <T> void localVariable(String name,
                            T value);
+
+    void localVariables(Map<String, Object> variables);
 
     List<VariableInstance> variables();
 
@@ -59,5 +64,4 @@ public interface FluentTask extends Task {
     //TODO should we use a page here? in this case we need to add the possibility
     // to filter based on the parent task id in the internal task query
     List<FluentTask> subTasks();
-
 }

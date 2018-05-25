@@ -18,6 +18,7 @@ package org.activiti.runtime.api.model.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
@@ -54,9 +55,23 @@ public class FluentTaskImpl extends TaskImpl implements FluentTask {
     }
 
     @Override
+    public void variables(Map<String, Object> variables) {
+        if (variables != null && !variables.isEmpty()) {
+            taskService.setVariables(getId(), variables);
+        }
+    }
+
+    @Override
     public <T> void localVariable(String name,
                                   T value) {
         taskService.setVariableLocal(getId(), name, value);
+    }
+
+    @Override
+    public void localVariables(Map<String, Object> variables) {
+        if (variables != null && !variables.isEmpty()) {
+            taskService.setVariablesLocal(getId(), variables);
+        }
     }
 
     @Override
