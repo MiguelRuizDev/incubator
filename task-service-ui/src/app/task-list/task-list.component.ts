@@ -20,7 +20,8 @@ export class TaskListComponent implements OnInit {
   @ViewChild(MatTable) 
   table: MatTable<Task>;
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) 
+  sort: MatSort;
 
   tasks: Task[]; //only used to load the dataSource field
 

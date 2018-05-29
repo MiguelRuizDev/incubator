@@ -5,6 +5,8 @@ import { Observable} from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { forEach } from 'typescript-collections/dist/lib/arrays';
 
+import {map} from "rxjs/operators";
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -17,6 +19,34 @@ export class TaskService {
   private mainUrl = 'http://localhost:8080/tasks';
 
   constructor(private http: HttpClient) { }
+
+  //implementing pagination the correct way
+
+  getAllTaskP(state: string,
+              filter = '', 
+              sortOrder = 'asc',
+              pageNumber = 0, 
+              pageSize = 3):  Observable<Task[]> {
+
+    return this.http.get( this.mainUrl, {
+        params: new HttpParams()
+            .set('state', state)
+            .set('filter', filter)
+            .set('sortOrder', sortOrder)
+            .set('pageNumber', pageNumber.toString())
+            .set('pageSize', pageSize.toString())
+    }).pipe(
+        map(res =>  res["payload"])
+    );
+
+  }
+
+
+
+
+
+
+  //end of pagination code
 
   getAllTasks(state: string): Observable<Task[]>{
     if(state != "any"){
