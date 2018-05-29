@@ -4,9 +4,11 @@ import org.activiti.incubator.taskservice.domain.Task;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 
+import java.util.List;
+
 public class TaskResource extends Resource <Task>  {
 
-    public TaskResource(Task content, Link... links) {
+    public TaskResource(Task content, List<Link> links) {
         super(content, links);
     }
 

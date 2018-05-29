@@ -36,11 +36,7 @@ public class Task {
     private String description;
 
     @ElementCollection
-    private Map<String, String> data = new HashMap<String, String>() {{
-            put("email", "asdf@gmail.com");
-            put("phone", "07761875369");
-            put("address", "Saint's Faiths Road, SE21 832");
-    }};
+    private List<String> data = new ArrayList<String>();
 
     public String getId() { return id; }
 
@@ -98,11 +94,11 @@ public class Task {
 
     public void setDescription(String description) { this.description = description; }
 
-    public Map<String, String> getData() {
+    public List <String> getData() {
         return data;
     }
 
-    public void setData(Map<String, String> information) {
+    public void setData(List <String> information) {
         this.data = information;
     }
 

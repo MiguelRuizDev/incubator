@@ -44,17 +44,32 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity <Collection<TaskResource>> findAll(@RequestParam(value="state", defaultValue= "any") String state,
-                                                            Pageable page){
+    public ResponseEntity <PagedResources<TaskResource>> findAll (@RequestParam(value="state", defaultValue= "any") String state,
+                                                                                                                    Pageable page){
         try{
             Page <Task> pages = taskService.findAll(State.valueOf(state.toUpperCase()), page);
 
-            return new ResponseEntity<>(pagedResourcesAssembler.toResource(pages,taskResourceAssembler).getContent(), HttpStatus.OK );
+            return new ResponseEntity<>(pagedResourcesAssembler.toResource(pages,taskResourceAssembler), HttpStatus.OK );
 
         }catch (IllegalArgumentException ex){
             throw new StateNotFoundException("State " + state.toUpperCase() + " does not exist. ");
         }
     }
+
+////    OLD ANGULAR COMPATIBLE VERSION
+//
+//    @GetMapping
+//    public ResponseEntity <Collection<TaskResource>> findAll(@RequestParam(value="state", defaultValue= "any") String state,
+//                                                                                                               Pageable page){
+//        try{
+//            Page <Task> pages = taskService.findAll(State.valueOf(state.toUpperCase()), page);
+//
+//            return new ResponseEntity<>(pagedResourcesAssembler.toResource(pages,taskResourceAssembler).getContent(), HttpStatus.OK );
+//
+//        }catch (IllegalArgumentException ex){
+//            throw new StateNotFoundException("State " + state.toUpperCase() + " does not exist. ");
+//        }
+//    }
 
     @GetMapping (path = "/{id}")
     public TaskResource findById(@PathVariable("id") String id){
@@ -81,7 +96,6 @@ public class TaskController {
     public ResponseEntity<TaskResource> activateTask (@PathVariable("id") String id){
 
         Task task = taskService.activateTask(id);
-
         return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
     }
 
@@ -89,7 +103,6 @@ public class TaskController {
     public ResponseEntity<TaskResource> completeTask (@PathVariable("id") String id){
 
         Task task = taskService.completeTask(id);
-
         return new ResponseEntity<>(taskResourceAssembler.toResource(task), HttpStatus.OK);
     }
 
