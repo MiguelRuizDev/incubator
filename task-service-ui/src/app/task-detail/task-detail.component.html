@@ -1,0 +1,102 @@
+<div *ngIf="task">
+
+  <h2>{{ task.title | uppercase }} </h2>
+
+  <ul class="list-group text-left">
+    <li class="list-group-item"> <b> Id: </b>  {{task.id}} </li>
+    <li class="list-group-item"> 
+        <b> Title: </b>  {{task.title}} |     
+      <input
+            [(ngModel)]="task.title" 
+            placeholder="title" 
+            [disabled]="task.state=='SUSPENDED' || task.state=='COMPLETED'" 
+            (focusout)="save()">
+    </li>
+  <li class="list-group-item"> 
+        <b> State: </b>  {{task.state}}  
+    <li class="list-group-item"> 
+        <b> Creation Date:  </b> {{task.creationDate}}
+    </li>
+    <li class="list-group-item"> 
+        <b> Due Date:  </b>  {{task.dueDate}}  |  
+      <input [(ngModel)]="task.dueDate" type="date"placeholder="dueDate" [disabled]="task.state=='SUSPENDED' || task.state=='COMPLETED'" (focusout)="save()">
+    </li>
+    <li class="list-group-item"> 
+     <b> Priority: </b> {{task.priority}} |  
+      Low <input [(ngModel)]="task.priority"type="radio" name="priority" value="LOW" [disabled]="task.state=='SUSPENDED' || task.state=='COMPLETED'" (focusout)="save()"> 
+      Normal <input [(ngModel)]="task.priority"type="radio" name="priority" value="NORMAL" [disabled]="task.state=='SUSPENDED' || task.state=='COMPLETED'" (focusout)="save()"checked> 
+      Important <input [(ngModel)]="task.priority"type="radio" name="priority" value="IMPORTANT" [disabled]="task.state=='SUSPENDED' || task.state=='COMPLETED'" (focusout)="save()"> 
+      Critical <input [(ngModel)]="task.priority"type="radio" name="priority" value="CRITICAL" [disabled]="task.state=='SUSPENDED' || task.state=='COMPLETED'" (focusout)="save()"> 
+    </li>
+    <li class="list-group-item"> 
+        <b> Parent:  </b>  {{task.parent}} |  
+      <input [(ngModel)]="task.parent" placeholder="parent" [disabled]=" task.state=='SUSPENDED' || task.state=='COMPLETED'" (focusout)="save()">
+    </li>
+    <li class="list-group-item"> 
+      <b> Description: </b>  {{task.description}}  |  
+      <input [(ngModel)]="task.description" placeholder="description" [disabled]="task.state=='SUSPENDED' ||  task.state=='COMPLETED'" (focusout)="save()">
+    </li>
+    <li class="list-group-item"> 
+      <b> Assigned User: </b>  {{task.assignedUser}}
+    </li> 
+  </ul>
+
+  <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Data</b>
+          </mat-panel-title>
+          <mat-panel-description>
+              Additional data regarding the task and its assignees
+          </mat-panel-description>
+      </mat-expansion-panel-header>
+
+        <table class="table table-striped">
+          <tr *ngFor="let item of task.data">
+            <td >
+                {{item}}
+            </td>
+            <td>
+                <span class="btn btn-warning btn-xs" (click)="deleteItemData(item)">x</span>
+            </td>
+          </tr>
+        </table>
+
+        <input  #itemInput type="text" placeholder="Item" (keyup.enter)="addItemData(itemInput.value); itemInput.value = ''" [disabled] = "task.state=='SUSPENDED'">
+
+        <button   class="btn btn-success" 
+                  (click) = "addItemData(itemInput.value); itemInput.value = ''"
+                  [disabled] = "task.state=='SUSPENDED'">
+                  +Add
+        </button>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <hr>
+
+  <h3>Action Buttons</h3>
+
+  <span *ngFor="let key of getKeys(this.filterLinks)">
+
+    <button
+    class="btn btn-info"
+    (click)="genericAction(task._links[key].href, keyValue)">
+        {{ key }}
+    </button>
+
+    <span *ngIf="hasParameter(task._links[key].href)">
+        <input  #actionInput 
+                type="text" 
+                [placeholder]="key + ' input...'" 
+                [(ngModel)]="keyValue" >
+    </span>
+
+  </span>
+
+  <hr>
+  
+  <a class="btn btn-primary" routerLink="/tasks">Go back</a>
+
+</div>
