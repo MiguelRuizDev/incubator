@@ -105,6 +105,7 @@ public class TaskService {
 
             task.setState(State.COMPLETED);
             return saveTask(task);
+
         }else{
             throw new TaskNotModifiedException("The task with id: " + task.getId() + " could not be modified.");
         }
@@ -114,7 +115,7 @@ public class TaskService {
 
         Task task = this.findById(id);
 
-        if(task.getState() != State.SUSPENDED){
+        if(task.getState() == State.ACTIVE){
 
             task.setAssignedUser(user);
             task.setState(State.ASSIGNED);

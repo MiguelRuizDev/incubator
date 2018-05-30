@@ -36,7 +36,7 @@ public class Task {
     private String description;
 
     @ElementCollection
-    private List<String> data = new ArrayList<String>();
+    private List<String> data = new ArrayList<>();
 
     public String getId() { return id; }
 
