@@ -9,7 +9,6 @@ import { TaskDetailComponent } from './task-detail/task-detail.component';
 import { AppRoutingModule } from './/app-routing.module';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './in-memory-data.service';
 import { HttpClientModule } from '@angular/common/http';
 
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
