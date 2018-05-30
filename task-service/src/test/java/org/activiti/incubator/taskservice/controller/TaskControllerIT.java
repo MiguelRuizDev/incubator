@@ -160,10 +160,6 @@ public class TaskControllerIT {
         //given
         Task task1 = new Task();
         task1.setTitle("Greeting");
-        task1.setCreationDate(new Timestamp(System.currentTimeMillis()));
-        task1.setDueDate(new Timestamp(System.currentTimeMillis() + 60000));
-        task1.setPriority(2);
-        task1.setParent(null);
         task1.setDescription("Good morning everyone!!");
         task1.setState(State.SUSPENDED);
 
