@@ -17,8 +17,6 @@ export class TaskDetailComponent implements OnInit {
   @Input() 
   task: Task;
 
-
-
   constructor(
     private taskService: TaskService,
     private location: Location,
