@@ -17,18 +17,15 @@
   
   <h2>Task list</h2> 
 
-  <button class="btn btn-info" (click)="getAllTasks('any')">All tasks</button>
+  <button class="btn btn-info" (click)="this.dataSource.loadTasks('any')">All tasks</button>
 
-  <button class="btn btn-info" (click)="getAllTasks('active')">Active tasks</button>
+  <button class="btn btn-info" (click)="this.dataSource.loadTasks('active')">Active tasks</button>
 
-  <button class="btn btn-info" (click)="getAllTasks('suspended')">Suspended tasks</button>
+  <button class="btn btn-info" (click)="this.dataSource.loadTasks('suspended')">Suspended tasks</button>
 
-  <button class="btn btn-info" (click)="getAllTasks('assigned')">Assigned tasks</button>
+  <button class="btn btn-info" (click)="this.dataSource.loadTasks('assigned')">Assigned tasks</button>
 
-  <button class="btn btn-info" (click)="getAllTasks('completed')">Completed tasks</button>
-
- 
-
+  <button class="btn btn-info" (click)="this.dataSource.loadTasks('completed')">Completed tasks</button>
 
   <hr>  
   
@@ -98,6 +95,7 @@
   </div>
 
   <mat-paginator  #paginator
+                  [length]="items"
                   [pageSize]="5"
                   [pageSizeOptions]="[5, 10, 20]"
                   [showFirstLastButtons]="true">

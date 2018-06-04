@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {Task} from '../domain';
 import {TaskService} from '../task.service';
 
-import {DataSource} from '@angular/cdk/table';
-
 import {MatPaginator, MatTableDataSource, MatTable, MatSort} from '@angular/material';
+
+import {TaskDataSource} from "../task.datasource";
+import {map, tap, filter} from "rxjs/operators";
 
 
 @Component({
@@ -12,7 +13,7 @@ import {MatPaginator, MatTableDataSource, MatTable, MatSort} from '@angular/mate
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css']
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) 
   paginator: MatPaginator;
@@ -23,28 +24,54 @@ export class TaskListComponent implements OnInit {
   @ViewChild(MatSort) 
   sort: MatSort;
 
-  tasks: Task[]; //only used to load the dataSource field
-
   displayedColumns = [ 'title','state', 
                       'creationDate', 'dueDate', 'assignedUser', 
                       'priority', 'parent', 'description', 'actions'];
                       
-  dataSource: MatTableDataSource <Task>;
 
+  dataSource: TaskDataSource;
+
+  items: number = 0;
 
   constructor(private taskService : TaskService) {}
 
   ngOnInit() {
-    this.getAllTasks("any");
+
+    this.dataSource = new TaskDataSource(this.taskService);
+    
+    this.dataSource.loadTasks();
+
+    this.loadNumberOfItems();
   }
 
+ngAfterViewInit() {
+    this.paginator.page
+        .pipe(
+            tap(() => this.loadLessonsPage())
+        )
+        .subscribe();
+}
+
+loadLessonsPage() {
+    this.dataSource.loadTasks(
+        'any',
+        this.paginator.pageIndex,
+        this.paginator.pageSize);
+}
+
+loadNumberOfItems(): any{
+  this.taskService.getAllTaskCustomDataSource('any', 0, 3).subscribe( res => {
+     this.items = res['page'].totalElements;
+   });
+}
+
   getAllTasks(state:string):void {
-    this.taskService.getAllTasks(state).subscribe((data) => {
-      this.tasks = data;
-      this.dataSource = new MatTableDataSource<Task>(this.tasks);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+    // this.taskService.getAllTasks(state).subscribe((data) => {
+    //   this.tasks = data;
+    //   this.dataSource = new MatTableDataSource<Task>(this.tasks);
+    //   this.dataSource.paginator = this.paginator;
+    //   this.dataSource.sort = this.sort;
+    // });
   }
 
   createTask(title:string, description: string):void{
@@ -53,9 +80,11 @@ export class TaskListComponent implements OnInit {
       this.taskService.createTask(task)
         .subscribe(task => {
           //we refresh the displayed data right away
-          const data = this.dataSource.data;
-          data.push(task);
-          this.dataSource.data = data;
+          this.loadLessonsPage(); 
+          this.loadNumberOfItems();
+          // const data = this.dataSource.data;
+          // data.push(task);
+          // this.dataSource.data = data;
         }
       );
     }
@@ -63,9 +92,16 @@ export class TaskListComponent implements OnInit {
   }
 
   deleteTask(task :Task):void{
-    this.taskService.deleteTask(task).subscribe();
+    this.taskService.deleteTask(task).subscribe(()=> {
+      this.loadLessonsPage(); 
+      this.loadNumberOfItems();
+     } 
+    );
     //we refresh the displayed data right away
-    this.dataSource.data = this.dataSource.data.filter( t => t !== task);
+    // this.dataSource.data = this.dataSource.data.filter( t => t !== task);
+    // this.dataSource.connect(null).subscribe((tasks) =>{
+    //   console.log(tasks);
+    // });
   }
 
 

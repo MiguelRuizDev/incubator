@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Task} from './domain';
+import {Task, ResponseTasks} from './domain';
 import { Observable} from 'rxjs';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -22,29 +22,29 @@ export class TaskService {
 
   //implementing pagination the correct way
 
-  getAllTaskP(state: string,
-              filter = '', 
-              sortOrder = 'asc',
-              pageNumber = 0, 
-              pageSize = 3):  Observable<Task[]> {
+  getAllTaskCustomDataSource(state: string,
+              // filter = '', 
+              // sortOrder = 'asc',
+              page = 0, 
+              size = 3):  Observable<ResponseTasks> {
 
+               
     return this.http.get( this.mainUrl, {
         params: new HttpParams()
             .set('state', state)
-            .set('filter', filter)
-            .set('sortOrder', sortOrder)
-            .set('pageNumber', pageNumber.toString())
-            .set('pageSize', pageSize.toString())
+            // .set('filter', filter)
+            // .set('sortOrder', sortOrder)
+            .set('page', page.toString())
+            .set('size', size.toString())
     }).pipe(
-        map(res =>  res["payload"])
+        map(res =>  {
+          return <ResponseTasks>res;
+          //return res["_embedded"].tasks;
+          
+        })
     );
 
   }
-
-
-
-
-
 
   //end of pagination code
 

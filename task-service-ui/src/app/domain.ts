@@ -23,3 +23,17 @@ export class Task {
     
 }
 
+export class ResponseTasks {
+    
+    _embedded: Task[];
+    _links: any;
+    page: any;
+
+    constructor (embedded: Task[], links: any, page: any){
+        this._embedded = embedded;
+        this._links = links;
+        this.page = page;
+
+    }
+}
+

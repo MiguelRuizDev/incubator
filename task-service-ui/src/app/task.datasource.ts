@@ -1,5 +1,5 @@
 import {CollectionViewer, DataSource} from "@angular/cdk/collections";
-import { Task } from "./domain";
+import { Task, ResponseTasks } from "./domain";
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import { Observable} from 'rxjs';
 import {TaskService} from './task.service';
@@ -9,40 +9,42 @@ import {of} from "rxjs/internal/observable/of";
 
 export class TaskDataSource implements DataSource<Task> {
 
-    private tasksSubject = new BehaviorSubject<Task[]>([]);
+    private taskSubject = new BehaviorSubject<Task[]>([]);
 
-    private loadingSubject = new BehaviorSubject<boolean>(false);
-    public loading$ = this.loadingSubject.asObservable();
-    
+    public numberOfItems: number; 
 
     constructor(private taskService: TaskService) {}
 
     connect(collectionViewer: CollectionViewer): Observable<Task[]> {
-        return this.tasksSubject.asObservable();
+        return this.taskSubject.asObservable();
     }
 
     disconnect(collectionViewer: CollectionViewer): void {
-        this.tasksSubject.complete();
-        this.loadingSubject.complete();
+        this.taskSubject.complete();
     }
 
-    loadTasks(  state = 'any',
-                filter = '',
-                sortDirection = 'asc',
-                pageIndex = 0, 
-                pageSize = 3) {
+    loadTasks(  state='any',
+                // filter = '',
+                // sortDirection = 'asc',
+                page = 0, 
+                size = 5) {
 
-        this.loadingSubject.next(true);
-
-        this.taskService.getAllTaskP(   state,
-                                        filter, 
-                                        sortDirection,
-                                        pageIndex, 
-                                        pageSize)
+        this.taskService.getAllTaskCustomDataSource(   state,
+                                        // filter, 
+                                        // sortDirection,
+                                        page, 
+                                        size)
                                         .pipe(
             catchError(() => of([])),
-            finalize(() => this.loadingSubject.next(false))
         )
-        .subscribe(tasks => this.tasksSubject.next(tasks));
+        .subscribe(response => {
+            if(response['_embedded'] != undefined){
+                this.taskSubject.next(response['_embedded'].tasks);
+            }else{
+                this.taskSubject.next([]);
+            }
+            this.numberOfItems = response['page'].totalElements;
+            
+        } );
     }    
 }
