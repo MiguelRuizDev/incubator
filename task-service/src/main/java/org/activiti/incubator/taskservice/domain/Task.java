@@ -36,10 +36,7 @@ public class Task {
     private String description;
 
     @ElementCollection
-    private List<Entry> data = new ArrayList<Entry>(){{
-        add(new Entry("a","b"));
-        add(new Entry("c","d"));
-    }};
+    private List<Entry> data = new ArrayList<>();
 
     public String getId() { return id; }
 
