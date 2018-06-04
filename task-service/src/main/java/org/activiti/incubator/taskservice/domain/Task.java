@@ -36,7 +36,10 @@ public class Task {
     private String description;
 
     @ElementCollection
-    private List<String> data = new ArrayList<>();
+    private List<Entry> data = new ArrayList<Entry>(){{
+        add(new Entry("a","b"));
+        add(new Entry("c","d"));
+    }};
 
     public String getId() { return id; }
 
@@ -94,11 +97,11 @@ public class Task {
 
     public void setDescription(String description) { this.description = description; }
 
-    public List <String> getData() {
+    public List <Entry> getData() {
         return data;
     }
 
-    public void setData(List <String> information) {
+    public void setData(List <Entry> information) {
         this.data = information;
     }
 
