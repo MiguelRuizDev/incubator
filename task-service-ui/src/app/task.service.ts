@@ -20,11 +20,8 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
-  //implementing pagination the correct way
-
-  getAllTaskCustomDataSource(state: string,
-              // filter = '', 
-              // sortOrder = 'asc',
+  getAllTaskCustomDataSource(
+              state: string,
               page = 0, 
               size = 3):  Observable<ResponseTasks> {
 
@@ -32,21 +29,15 @@ export class TaskService {
     return this.http.get( this.mainUrl, {
         params: new HttpParams()
             .set('state', state)
-            // .set('filter', filter)
-            // .set('sortOrder', sortOrder)
             .set('page', page.toString())
             .set('size', size.toString())
     }).pipe(
         map(res =>  {
           return <ResponseTasks>res;
-          //return res["_embedded"].tasks;
-          
         })
     );
 
   }
-
-  //end of pagination code
 
   getAllTasks(state: string): Observable<Task[]>{
     if(state != "any"){
@@ -83,7 +74,6 @@ export class TaskService {
 
       const params = new HttpParams()
       .set('user', input);
-
       return this.http.post(url, httpOptions, {params});
 
     }else {

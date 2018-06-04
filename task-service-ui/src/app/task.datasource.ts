@@ -24,14 +24,11 @@ export class TaskDataSource implements DataSource<Task> {
     }
 
     loadTasks(  state='any',
-                // filter = '',
-                // sortDirection = 'asc',
                 page = 0, 
                 size = 5) {
 
-        this.taskService.getAllTaskCustomDataSource(   state,
-                                        // filter, 
-                                        // sortDirection,
+        this.taskService.getAllTaskCustomDataSource(   
+                                        state,
                                         page, 
                                         size)
                                         .pipe(
@@ -44,7 +41,6 @@ export class TaskDataSource implements DataSource<Task> {
                 this.taskSubject.next([]);
             }
             this.numberOfItems = response['page'].totalElements;
-            
         } );
     }    
 }

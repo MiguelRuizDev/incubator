@@ -38,9 +38,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   ngOnInit() {
 
     this.dataSource = new TaskDataSource(this.taskService);
-    
     this.dataSource.loadTasks();
-
     this.loadNumberOfItems();
   }
 
@@ -60,19 +58,11 @@ loadLessonsPage() {
 }
 
 loadNumberOfItems(): any{
-  this.taskService.getAllTaskCustomDataSource('any', 0, 3).subscribe( res => {
+  this.taskService.getAllTaskCustomDataSource('any', 0, 3)
+  .subscribe( res => {
      this.items = res['page'].totalElements;
    });
 }
-
-  getAllTasks(state:string):void {
-    // this.taskService.getAllTasks(state).subscribe((data) => {
-    //   this.tasks = data;
-    //   this.dataSource = new MatTableDataSource<Task>(this.tasks);
-    //   this.dataSource.paginator = this.paginator;
-    //   this.dataSource.sort = this.sort;
-    // });
-  }
 
   createTask(title:string, description: string):void{
     if (title!="" && description!=""){
@@ -82,13 +72,9 @@ loadNumberOfItems(): any{
           //we refresh the displayed data right away
           this.loadLessonsPage(); 
           this.loadNumberOfItems();
-          // const data = this.dataSource.data;
-          // data.push(task);
-          // this.dataSource.data = data;
         }
       );
     }
-
   }
 
   deleteTask(task :Task):void{
@@ -97,11 +83,6 @@ loadNumberOfItems(): any{
       this.loadNumberOfItems();
      } 
     );
-    //we refresh the displayed data right away
-    // this.dataSource.data = this.dataSource.data.filter( t => t !== task);
-    // this.dataSource.connect(null).subscribe((tasks) =>{
-    //   console.log(tasks);
-    // });
   }
 
 
