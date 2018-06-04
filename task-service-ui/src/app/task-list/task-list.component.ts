@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {Task} from '../domain';
 import {TaskService} from '../task.service';
-
 import {MatPaginator, MatTableDataSource, MatTable, MatSort} from '@angular/material';
 
 import {TaskDataSource} from "../task.datasource";
@@ -50,7 +49,7 @@ ngAfterViewInit() {
         .subscribe();
 }
 
-loadLessonsPage() {
+loadLessonsPage(): void {
     this.dataSource.loadTasks(
         'any',
         this.paginator.pageIndex,

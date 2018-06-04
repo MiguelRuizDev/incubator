@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import {Task} from '../domain';
+import {Task, Entry} from '../domain';
 
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -45,18 +45,19 @@ export class TaskDetailComponent implements OnInit {
     this.location.back();
   }
 
-  addItemData(item: string ): void {
-    this.task.data.push(item);
-    this.save();
+  addItemData(key: string, value: string ): void {
+    if(key != "" && value != ""){
+      let newItem = new Entry(key, value);
+      this.task.data.push(newItem);
+      this.save();
+    }
+    
   }
 
-  deleteItemData(itemToDelete: string){
+  deleteItemData(itemToDelete: Entry){
     this.task.data = this.task.data.filter(item => item !== itemToDelete);
     this.save();
   }
-
-
-
 
   filterLinks: Array<string> = ['self', 'Update', 'Delete']
 

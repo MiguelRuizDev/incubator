@@ -8,18 +8,12 @@ import { TaskListComponent } from './task-list/task-list.component';
 import { TaskDetailComponent } from './task-detail/task-detail.component';
 import { AppRoutingModule } from './/app-routing.module';
 
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { HttpClientModule } from '@angular/common/http';
 
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableModule } from "@angular/material";
-
-import { AngularPaginatorModule } from 'angular-paginator';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatTooltipModule} from '@angular/material/tooltip';
-
-
-
 
 @NgModule({
   declarations: [

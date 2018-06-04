@@ -55,7 +55,7 @@
         <table class="table table-striped">
           <tr *ngFor="let item of task.data">
             <td >
-                {{item}}
+                {{item.key}}: {{item.value}}
             </td>
             <td>
                 <span class="btn btn-warning btn-xs" (click)="deleteItemData(item)">x</span>
@@ -63,11 +63,12 @@
           </tr>
         </table>
 
-        <input  #itemInput type="text" placeholder="Item" (keyup.enter)="addItemData(itemInput.value); itemInput.value = ''" [disabled] = "task.state=='SUSPENDED'">
+        <input  #itemInputKey type="text" placeholder="Item Key" (keyup.enter)="addItemData(itemInputKey.value, itemInputValue.value); itemInput.value = ''" [disabled] = "task.state=='SUSPENDED'">
+        <input  #itemInputValue type="text" placeholder="Item Value" (keyup.enter)="addItemData(itemInputKey.value, itemInputValue.value); itemInput.value = ''" [disabled] = "task.state=='SUSPENDED'">
 
         <button   class="btn btn-success" 
-                  (click) = "addItemData(itemInput.value); itemInput.value = ''"
-                  [disabled] = "task.state=='SUSPENDED'">
+                  (click) = "addItemData(itemInputKey.value, itemInputValue.value); itemInputKey.value = ''; itemInputValue.value = ''"
+                  [disabled] = "task.state=='SUSPENDED' ">
                   +Add
         </button>
 

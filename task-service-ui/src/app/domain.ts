@@ -12,7 +12,7 @@ export class Task {
     parent:string;
     description:string;
 
-    data: Array<string>;
+    data: Array<Entry>;
 
     _links: any;
 
@@ -34,6 +34,16 @@ export class ResponseTasks {
         this._links = links;
         this.page = page;
 
+    }
+}
+
+export class Entry {
+    key: string;
+    value: string;
+
+    constructor (key: string, value: string){
+        this.key = key;
+        this.value = value;
     }
 }
 
